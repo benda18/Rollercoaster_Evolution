@@ -50,6 +50,8 @@ get_park_urls <- function(searchpage.url){
   return(out)
 }
 
+
+
 park_info <- function(park.url){
   park.html <- read_html(park.url)
   
@@ -104,9 +106,21 @@ park_info <- function(park.url){
                    yr_opened = NA_real_, 
                    yr_closed = NA_real_, 
                    park_name = the.parkname, 
-                   ride_status = temp.table_name)
+                   ride_status = temp.table_name, 
+                   ride_url = NA)
           
           for(i in 1:nrow(temp.table)){
+            temp.ride_url <- html_element(x = park.html, 
+                                          xpath = glue("/html/body/section[{s}]/div/table")) %>%
+              html_children() %>%
+              .[2] %>%  
+              html_children() %>%
+              .[i] %>%  
+              html_children() %>%
+              .[2] %>%
+              html_element(., xpath = "a") %>%
+              .[[1]] %>%
+              xml2::xml_attrs() 
             temp.date <- html_element(x = park.html, 
                                       xpath = glue("/html/body/section[{s}]/div/table")) %>%
               html_children() %>%
@@ -122,7 +136,7 @@ park_info <- function(park.url){
             temp.table$Opened[i] <- temp.date[2]
             #df.ex_rides$Opened2[i] <- temp.date[4]
             temp.table$yr_opened[i] <- as.numeric(temp.date[2]) %/% 10000
-            
+            temp.table$ride_url[i] <- temp.ride_url
           }
           temp.table
         }
@@ -141,9 +155,21 @@ park_info <- function(park.url){
                    yr_opened = NA_real_, 
                    yr_closed = NA_real_, 
                    park_name = the.parkname, 
-                   ride_status = temp.table_name)
+                   ride_status = temp.table_name, 
+                   ride_url = NA)
           
           for(i in 1:nrow(temp.table)){
+            temp.ride_url <- html_element(x = park.html, 
+                                          xpath = glue("/html/body/section[{s}]/div/table")) %>%
+              html_children() %>%
+              .[2] %>%  
+              html_children() %>%
+              .[i] %>%  
+              html_children() %>%
+              .[2] %>%
+              html_element(., xpath = "a") %>%
+              .[[1]] %>%
+              xml2::xml_attrs() 
             temp.date <- html_element(x = park.html, 
                                       xpath = glue("/html/body/section[{s}]/div/table")) %>%
               html_children() %>%
@@ -159,7 +185,7 @@ park_info <- function(park.url){
             temp.table$Opened[i] <- temp.date[2]
             #df.ex_rides$Opened2[i] <- temp.date[4]
             temp.table$yr_opened[i] <- as.numeric(temp.date[2]) %/% 10000
-            
+            temp.table$ride_url[i] <- temp.ride_url
           }
           temp.table <- temp.table[!colnames(temp.table) %in% c("Opening")]
           
@@ -179,9 +205,21 @@ park_info <- function(park.url){
                    yr_opened = NA_real_, 
                    yr_closed = NA_real_, 
                    park_name = the.parkname, 
-                   ride_status = temp.table_name)
+                   ride_status = temp.table_name, 
+                   ride_url = NA)
           
           for(i in 1:nrow(temp.table)){
+            temp.ride_url <- html_element(x = park.html, 
+                                          xpath = glue("/html/body/section[{s}]/div/table")) %>%
+              html_children() %>%
+              .[2] %>%  
+              html_children() %>%
+              .[i] %>%  
+              html_children() %>%
+              .[2] %>%
+              html_element(., xpath = "a") %>%
+              .[[1]] %>%
+              xml2::xml_attrs() 
             temp.date <- html_element(x = park.html, 
                                       xpath = glue("/html/body/section[{s}]/div/table")) %>%
               html_children() %>%
@@ -197,7 +235,7 @@ park_info <- function(park.url){
             temp.table$Opened[i] <- temp.date[2]
             #df.ex_rides$Opened2[i] <- temp.date[4]
             temp.table$yr_opened[i] <- as.numeric(temp.date[2]) %/% 10000
-            
+            temp.table$ride_url[i] <- temp.ride_url
           }
           temp.table <- temp.table[!colnames(temp.table) %in% c("Since")]
         }
@@ -217,10 +255,21 @@ park_info <- function(park.url){
                    yr_opened = NA_real_, 
                    yr_closed = NA_real_, 
                    park_name = the.parkname, 
-                   ride_status = temp.table_name)
+                   ride_status = temp.table_name, 
+                   ride_url = NA)
           
           for(i in 1:nrow(temp.table)){
-            
+            temp.ride_url <- html_element(x = park.html, 
+                                          xpath = glue("/html/body/section[{s}]/div/table")) %>%
+              html_children() %>%
+              .[2] %>%  
+              html_children() %>%
+              .[i] %>%  
+              html_children() %>%
+              .[2] %>%
+              html_element(., xpath = "a") %>%
+              .[[1]] %>%
+              xml2::xml_attrs() 
             # opening date
             temp.date <- html_element(x = park.html, 
                                       xpath = glue("/html/body/section[{s}]/div/table")) %>%
@@ -253,7 +302,7 @@ park_info <- function(park.url){
             temp.table$Closed[i] <- temp.date[2]
             #df.ex_rides$Opened2[i] <- temp.date[4]
             temp.table$yr_closed[i] <- as.numeric(temp.date[2]) %/% 10000
-            
+            temp.table$ride_url[i] <- temp.ride_url
           }
           temp.table
           
@@ -268,6 +317,10 @@ park_info <- function(park.url){
   
   # add park_url 
   df.out$park_url <- park.url
+  
+  # fix ride_url 
+  df.out$ride_url <-  paste("https://rcdb.com", 
+                            df.out$ride_url, sep = "")
   
   return(df.out)
 }
@@ -390,3 +443,10 @@ setwd(wd$home)
 # Build ride_specs.csv
 
 # Build ride_status.csv
+setwd(wd$data)
+
+park_inventory <- read_csv("park_inventory.csv")
+
+park_inventory %>%
+  group_by(park_name, park_url, 
+           ride_name = Name, )
