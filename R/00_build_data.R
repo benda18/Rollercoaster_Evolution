@@ -22,19 +22,30 @@ get_park_urls <- function(searchpage.url){
   
   out <- NULL
   for(i in 1:length(temp)){
-    out <- c(out, 
-             temp %>%
+    out.url <- temp %>%
                .[i] %>%  # replace # with 'i'
                html_children() %>%
                .[2] %>%#   #2 (of 6) represents the park name and url
                as.character() %>%
                strsplit(., "\"") %>%
                unlist() %>%
-               .[grepl(pattern = "\\d{4,}\\.htm$", .)])
+               .[grepl(pattern = "\\d{4,}\\.htm$", .)]
+    out.park <- temp %>%
+                    .[i] %>%  # replace # with 'i'
+                    html_children() %>%
+                    .[2] %>%#   #2 (of 6) represents the park name and url
+                    as.character() %>%
+                    strsplit(., "\"") %>%
+                    unlist() %>%
+                    .[3] %>%
+                    gsub("^>|</a>|</td>|\n", "", .) 
+    out <- rbind(out, 
+                 data.frame(park_name = out.park, 
+                            park_url = out.url))
   }
-  
+  out
   # append url prefix
-  out <- paste("https://rcdb.com", out, 
+  out$park_url <- paste("https://rcdb.com", out$park_url, 
                sep = "")
   return(out)
 }
@@ -289,13 +300,13 @@ if(!"selected_parks.csv" %in% list.files()){
     Sys.sleep(rand_sleep())
     # generate each search page's url iteratively  
     ps_url_str <- glue::glue("https://rcdb.com/r.htm?order=28&page={i}&st=93&ot=3&ol=59&ex")
-    temp.selectedparks <- c(temp.selectedparks, 
+    temp.selectedparks <- rbind(temp.selectedparks, 
                             get_park_urls(ps_url_str))
   }
   
   
   # convert from vector to data.frame 
-  selected_parks <- data.frame(park_url = temp.selectedparks)
+  selected_parks <- temp.selectedparks
   
   # write to csv
   setwd(wd$data)
@@ -321,9 +332,32 @@ setwd(wd$home)
 # Build park_inventory.csv----
 setwd(wd$data)
 
-# Pre-build logic check so as to conserve resources / not re-build data that has
-# already been built
-if(!"park_inventory" %in% list.files()){
+# Pre-build logic is now 2-step:  
+
+# 1) If 'park_inventory.csv' is not already written to dir, proceed as normal by
+# generating a new file from scratch and variable 'park_inventory' from NULL
+
+# 2) If 'park_inventory.csv' is written to dir, create variable 'park_inventory'
+# from importing it, then as you loop through every park in your park.url list,
+# before pinging that url check to see if you've already pulled down that data.
+# If so, skip; if not - ping & log.
+
+if(!"park_inventory.csv" %in% list.files()){
+  # park_inventory.csv HAS NOT BEEN created
+  temp.park_urls <- read_csv("selected_parks.csv")$park_url
+  park_inventory <- NULL
+  
+  
+}else{
+  # park_inventory.csv HAS BEEN created
+  temp.park_urls <- read_csv("selected_parks.csv")$park_url
+  park_inventory <- read_csv("park_inventory.csv")
+}
+
+
+
+
+if(!"park_inventory.csv" %in% list.files()){
   
   # import list of park urls
   temp.park_urls <- read_csv("selected_parks.csv")$park_url
