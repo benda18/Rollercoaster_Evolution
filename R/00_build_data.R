@@ -327,10 +327,9 @@ park_info <- function(park.url){
 
 rand_sleep <- function(n.times=1){
   temp <-  abs(log(c(runif(n = 560, 3,5),
-                     runif(n = 1000, 0, 4)))) + runif(1,0,1) * prod(runif(2,0.5,2))
+                     runif(n = 1000, 0, 4)))) + runif(1,0,1) * prod(runif(2,0.5,0.9))
   return(sample(temp, size = n.times, replace = T))
 }
-
 
 # DIRS ----
 wd        <- list()
@@ -354,7 +353,7 @@ if(!"selected_parks.csv" %in% list.files()){
   temp.selectedparks <- NULL
   for(i in 1:17){
     # sleep 
-    Sys.sleep(rand_sleep())
+    Sys.sleep(rand_sleep()*2.1+0.5)
     # generate each search page's url iteratively  
     ps_url_str <- glue::glue("https://rcdb.com/r.htm?order=28&page={i}&st=93&ot=3&ol=59&ex")
     temp.selectedparks <- rbind(temp.selectedparks, 
@@ -399,7 +398,10 @@ setwd(wd$data)
 if(!"park_inventory.csv" %in% list.files()){
   # park_inventory.csv HAS NOT BEEN created
   temp.park_urls <- read_csv("selected_parks.csv")
-  park_inventory <- NULL
+  write_csv(x = park_info("https://rcdb.com/4540.htm"), 
+            file = "park_inventory.csv", 
+            append = F)
+  park_inventory <- read_csv("park_inventory.csv")
 }else{
   # park_inventory.csv HAS BEEN created
   temp.park_urls <- read_csv("selected_parks.csv")
@@ -416,7 +418,7 @@ for(i in 1:nrow(temp.park_urls)){
   
   if(!temp.park_urls$park_url[i] %in% unique(park_inventory$park_url)){
     # sleep
-    Sys.sleep(rand_sleep())
+    Sys.sleep(rand_sleep()*2.1+0.5)
     print(Sys.time())
     # ping website and write to csv
     try(write_csv(x = park_info(temp.park_urls$park_url[i]), 
