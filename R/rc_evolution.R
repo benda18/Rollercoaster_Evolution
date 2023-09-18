@@ -85,36 +85,9 @@ ride_info <- function(ride.url){
 
 # generate all the urls for the theme parks in north america that are extant----
 
-for(i in 1:17){
-  ps_url_str <- glue::glue("https://rcdb.com/r.htm?order=28&page={i}&st=93&ot=3&ol=59&ex")
-  
-}
 
-get_park_url <- function(searchpage.url = "https://rcdb.com/r.htm?order=28&page=9&st=93&ot=3&ol=59&ex"){
-  temp <- searchpage.url %>%
-    read_html() %>%
-    html_element(., 
-                 xpath = "/html/body/section/div[2]/table/tbody") %>%
-    html_children()
-  
-  out <- NULL
-  for(i in 1:length(temp)){
-    out <- c(out, 
-             temp %>%
-               .[i] %>%  # replace # with 'i'
-               html_children() %>%
-               .[2] %>%#   #2 (of 6) represents the park name and url
-               as.character() %>%
-               strsplit(., "\"") %>%
-               unlist() %>%
-               .[grepl(pattern = "\\d{4,}\\.htm$", .)])
-  }
-  
-  # append url prefix
-  out <- paste("https://rcdb.com", out, 
-               sep = "")
-  return(out)
-}
+
+
 
 
 
