@@ -477,7 +477,8 @@ all.rcs$yr_closed[is.na(all.rcs$yr_closed)] <- year(Sys.Date())
 
 ggplot() + 
   geom_segment(data = all.rcs[all.rcs$park_name == "Kings Island",], 
-               aes(x = yr_opened, xend = yr_closed, 
+               aes(x = yr_opened, 
+                   xend = yr_closed, 
                    y = Name, yend = Name, 
                    color = Design, 
                    linewidth = 4, linetype = Scale)) +
