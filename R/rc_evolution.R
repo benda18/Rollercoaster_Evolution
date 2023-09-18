@@ -87,7 +87,7 @@ ride_info <- function(ride.url){
 
 for(i in 1:17){
   ps_url_str <- glue::glue("https://rcdb.com/r.htm?order=28&page={i}&st=93&ot=3&ol=59&ex")
-  print(ps_url_str)
+  
 }
 
 get_park_url <- function(searchpage.url = "https://rcdb.com/r.htm?order=28&page=9&st=93&ot=3&ol=59&ex"){
@@ -97,11 +97,7 @@ get_park_url <- function(searchpage.url = "https://rcdb.com/r.htm?order=28&page=
                  xpath = "/html/body/section/div[2]/table/tbody") %>%
     html_children()
   
-  
-  
   out <- NULL
-  
-  
   for(i in 1:length(temp)){
     out <- c(out, 
              temp %>%
@@ -114,10 +110,10 @@ get_park_url <- function(searchpage.url = "https://rcdb.com/r.htm?order=28&page=
                .[grepl(pattern = "\\d{4,}\\.htm$", .)])
   }
   
-  # tidy up
+  # append url prefix
   out <- paste("https://rcdb.com", out, 
                sep = "")
-   return(out)
+  return(out)
 }
 
 

@@ -13,6 +13,31 @@ library(readr)
 rm(list=ls());cat('\f');gc()
 
 # FUNS ----
+get_park_urls <- function(searchpage.url = "https://rcdb.com/r.htm?order=28&page=9&st=93&ot=3&ol=59&ex"){
+  temp <- searchpage.url %>%
+    read_html() %>%
+    html_element(., 
+                 xpath = "/html/body/section/div[2]/table/tbody") %>%
+    html_children()
+  
+  out <- NULL
+  for(i in 1:length(temp)){
+    out <- c(out, 
+             temp %>%
+               .[i] %>%  # replace # with 'i'
+               html_children() %>%
+               .[2] %>%#   #2 (of 6) represents the park name and url
+               as.character() %>%
+               strsplit(., "\"") %>%
+               unlist() %>%
+               .[grepl(pattern = "\\d{4,}\\.htm$", .)])
+  }
+  
+  # append url prefix
+  out <- paste("https://rcdb.com", out, 
+               sep = "")
+  return(out)
+}
 
 # DIRS ----
 wd        <- list()
@@ -24,71 +49,48 @@ wd$home   <- "C:/Users/bende/Documents/R/play/rollercoaster_evolution"
 # VARS ----
 
 # BUILD ----
-# Build selected_parks.csv
+# Build selected_parks.csv ----
 
+# Pre-build logic check so as to conserve resources / not re-build data that has
+# already been built
 setwd(wd$data)
+if(!"selected_parks.csv" %in% list.files()){
+  # build
+  setwd(wd$data)
+  
+  temp.selectedparks <- NULL
+  for(i in 1:17){
+    # sleep 
+    Sys.sleep(1)
+    # generate each search page's url iteratively  
+    ps_url_str <- glue::glue("https://rcdb.com/r.htm?order=28&page={i}&st=93&ot=3&ol=59&ex")
+    temp.selectedparks <- c(temp.selectedparks, 
+                            get_park_urls(ps_url_str))
+  }
+  
+  
+  # convert from vector to data.frame 
+  selected_parks <- data.frame(park_url = temp.selectedparks)
+  
+  # write to csv
+  setwd(wd$data)
+  write_csv(x = selected_parks, 
+            file = "selected_parks.csv")
+  
+  # cleanup
+  rm(temp.selectedparks, selected_parks,i,ps_url_str)
+  
+}else{
+  # no-build
+  print("skipping build of 'selected_parks.csv'; was built previously")
+}
 
-selected_parks <- data.frame(park_url = c("https://rcdb.com/4540.htm", 
-                                         "https://rcdb.com/4593.htm", 
-                                         "https://rcdb.com/4734.htm", 
-                                         "https://rcdb.com/4736.htm", 
-                                         "https://rcdb.com/4546.htm", 
-                                         "https://rcdb.com/4552.htm", 
-                                         "https://rcdb.com/4533.htm", 
-                                         "https://rcdb.com/4588.htm", 
-                                         "https://rcdb.com/4578.htm", 
-                                         "https://rcdb.com/4541.htm", 
-                                         "https://rcdb.com/4539.htm", 
-                                         "https://rcdb.com/4542.htm", 
-                                         "https://rcdb.com/4544.htm", 
-                                         "https://rcdb.com/4529.htm", 
-                                         "https://rcdb.com/4532.htm", 
-                                         "https://rcdb.com/4534.htm", 
-                                         "https://rcdb.com/4530.htm",
-                                         "https://rcdb.com/4531.htm", 
-                                         "https://rcdb.com/4545.htm", 
-                                         "https://rcdb.com/4535.htm", 
-                                         "https://rcdb.com/4538.htm", 
-                                         "https://rcdb.com/4565.htm", 
-                                         "https://rcdb.com/4570.htm", 
-                                         "https://rcdb.com/4548.htm", 
-                                         "https://rcdb.com/4711.htm", 
-                                         "https://rcdb.com/4536.htm", 
-                                         "https://rcdb.com/4558.htm", 
-                                         "https://rcdb.com/4543.htm", 
-                                         "https://rcdb.com/9250.htm", 
-                                         "https://rcdb.com/4581.htm",
-                                         "https://rcdb.com/4746.htm",
-                                         "https://rcdb.com/4553.htm", 
-                                         "https://rcdb.com/4579.htm", 
-                                         "https://rcdb.com/4564.htm", 
-                                         "https://rcdb.com/4599.htm", 
-                                         "https://rcdb.com/4560.htm", 
-                                         "https://rcdb.com/4576.htm", 
-                                         "https://rcdb.com/4601.htm", 
-                                         "https://rcdb.com/4703.htm", 
-                                         "https://rcdb.com/4574.htm", 
-                                         "https://rcdb.com/5320.htm", 
-                                         "https://rcdb.com/4554.htm",
-                                         "https://rcdb.com/4563.htm", 
-                                         "https://rcdb.com/4596.htm", 
-                                         "https://rcdb.com/4557.htm", 
-                                         "https://rcdb.com/4584.htm", 
-                                         "https://rcdb.com/18828.htm", 
-                                         "https://rcdb.com/4683.htm", 
-                                         "https://rcdb.com/4682.htm", 
-                                         "https://rcdb.com/4597.htm", 
-                                         "https://rcdb.com/4547.htm",
-                                         "https://rcdb.com/15593.htm", 
-                                         "https://rcdb.com/4575.htm", 
-                                         "https://rcdb.com/4559.htm", 
-                                         "https://rcdb.com/4646.htm", 
-                                         "https://rcdb.com/4561.htm"))
+setwd(wd$home)
 
 
-selected_parks
 
-# Build crosswalk_pr.csv
+
+# Build crosswalk_pr.csv----
 
 # Build park_inventory.csv
 
