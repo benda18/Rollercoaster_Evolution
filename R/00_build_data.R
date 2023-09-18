@@ -266,6 +266,9 @@ park_info <- function(park.url){
     }
   }
   
+  # add park_url 
+  df.out$park_url <- park.url
+  
   return(df.out)
 }
 rand_sleep <- function(n.times=1){
