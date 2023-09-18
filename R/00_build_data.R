@@ -381,9 +381,11 @@ for(i in 1:nrow(temp.park_urls)){
 
 # cleanup
 rm(temp.park_urls, i, park_inventory)
+setwd(wd$home)
 
-
-# Build ride_inventory.csv
+# Build ride_inventory.csv----
+# ride_inventory.csv is no longer needed; coverage provided by
+# park_inventory.csv
 
 # Build ride_specs.csv
 
