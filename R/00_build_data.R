@@ -366,9 +366,9 @@ for(i in 1:nrow(temp.park_urls)){
     Sys.sleep(rand_sleep())
     print(Sys.time())
     # ping website and write to csv
-    write_csv(x = park_info(temp.park_urls$park_url[i]), 
+    try(write_csv(x = park_info(temp.park_urls$park_url[i]), 
               file = "park_inventory.csv",
-              append = T)
+              append = T))
     # # also, append to park_inventory
     # park_inventory <- rbind(park_inventory, 
     #       park_info(temp.park_urls$park_url[i])) %>%
