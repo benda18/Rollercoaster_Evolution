@@ -359,155 +359,149 @@ from the perspective of amusement park visitors, circa 1850 -
 Present.</p>
 <div id="workflow" class="section level3">
 <h3><strong>Workflow</strong></h3>
-<div id="desired-data" class="section level4">
-<h4>0. Desired Data</h4>
-<ul>
-<li><p>Data Ouput</p>
+<div id="described-data" class="section level4">
+<h4>0. Described Data</h4>
+<p>All input and output data needed and generated, including a reference
+to the applicapble function that will generate or use the data in the
+code.</p>
 <table>
 <thead>
 <tr class="header">
 <th align="center">tbl_name</th>
 <th align="center">data_item</th>
 <th align="center">key_id</th>
-<th align="center">build_source</th>
+<th align="center">function</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">park_inventory</td>
+<td align="center">park_inventory.csv</td>
 <td align="center">park_name</td>
 <td align="center">FALSE</td>
 <td align="center">park_info(park_url)</td>
 </tr>
 <tr class="even">
-<td align="center">park_inventory</td>
+<td align="center">park_inventory.csv</td>
 <td align="center">ride_name</td>
 <td align="center">FALSE</td>
 <td align="center">park_info(park_url)</td>
 </tr>
 <tr class="odd">
-<td align="center">park_inventory</td>
+<td align="center">park_inventory.csv</td>
 <td align="center">park_url</td>
 <td align="center">TRUE</td>
 <td align="center">park_info(park_url)</td>
 </tr>
 <tr class="even">
-<td align="center">park_inventory</td>
+<td align="center">park_inventory.csv</td>
 <td align="center">ride_url</td>
 <td align="center">TRUE</td>
 <td align="center">park_info(park_url)</td>
 </tr>
 <tr class="odd">
-<td align="center">ride_inventory</td>
+<td align="center">ride_inventory.csv</td>
 <td align="center">ride_name</td>
 <td align="center">FALSE</td>
 <td align="center">park_info(park_url)</td>
 </tr>
 <tr class="even">
-<td align="center">ride_inventory</td>
+<td align="center">ride_inventory.csv</td>
 <td align="center">park_name</td>
 <td align="center">FALSE</td>
 <td align="center">park_info(park_url)</td>
 </tr>
 <tr class="odd">
-<td align="center">ride_specs</td>
+<td align="center">ride_specs.csv</td>
 <td align="center">ride_name</td>
 <td align="center">FALSE</td>
 <td align="center">ride_info(ride_url)</td>
 </tr>
 <tr class="even">
-<td align="center">ride_specs</td>
+<td align="center">ride_specs.csv</td>
 <td align="center">park_name</td>
 <td align="center">FALSE</td>
 <td align="center">ride_info(ride_url)</td>
 </tr>
 <tr class="odd">
-<td align="center">ride_specs</td>
+<td align="center">ride_specs.csv</td>
 <td align="center">ride_url</td>
 <td align="center">TRUE</td>
 <td align="center">ride_info(ride_url)</td>
 </tr>
 <tr class="even">
-<td align="center">ride_specs</td>
+<td align="center">ride_specs.csv</td>
 <td align="center">park_url</td>
 <td align="center">TRUE</td>
 <td align="center">ride_info(ride_url)</td>
 </tr>
 <tr class="odd">
-<td align="center">ride_specs</td>
+<td align="center">ride_specs.csv</td>
 <td align="center">ride_height</td>
 <td align="center">FALSE</td>
 <td align="center">ride_info(ride_url)</td>
 </tr>
 <tr class="even">
-<td align="center">ride_specs</td>
+<td align="center">ride_specs.csv</td>
 <td align="center">ride_length</td>
 <td align="center">FALSE</td>
 <td align="center">ride_info(ride_url)</td>
 </tr>
 <tr class="odd">
-<td align="center">ride_specs</td>
+<td align="center">ride_specs.csv</td>
 <td align="center">ride_speed</td>
 <td align="center">FALSE</td>
 <td align="center">ride_info(ride_url)</td>
 </tr>
 <tr class="even">
-<td align="center">ride_specs</td>
+<td align="center">ride_specs.csv</td>
 <td align="center">ride_design</td>
 <td align="center">FALSE</td>
 <td align="center">ride_info(ride_url)</td>
 </tr>
 <tr class="odd">
-<td align="center">ride_status</td>
+<td align="center">ride_status.csv</td>
 <td align="center">yr_opened</td>
 <td align="center">FALSE</td>
 <td align="center">park_info(park_url)</td>
 </tr>
 <tr class="even">
-<td align="center">ride_status</td>
+<td align="center">ride_status.csv</td>
 <td align="center">yr_closed</td>
 <td align="center">FALSE</td>
 <td align="center">park_info(park_url)</td>
 </tr>
 <tr class="odd">
-<td align="center">ride_status</td>
+<td align="center">ride_status.csv</td>
 <td align="center">ride_status</td>
 <td align="center">FALSE</td>
 <td align="center">park_info(park_url)</td>
 </tr>
 <tr class="even">
-<td align="center">crosswalk_A</td>
-<td align="center">park_name</td>
-<td align="center">FALSE</td>
-<td align="center">built manually</td>
-</tr>
-<tr class="odd">
-<td align="center">crosswalk_A</td>
-<td align="center">park_url</td>
-<td align="center">TRUE</td>
-<td align="center">built manually</td>
-</tr>
-<tr class="even">
-<td align="center">crosswalk_B</td>
+<td align="center">crosswalk_pr.csv</td>
 <td align="center">park_url</td>
 <td align="center">TRUE</td>
 <td align="center">park_rides(park_url)</td>
 </tr>
 <tr class="odd">
-<td align="center">crosswalk_B</td>
+<td align="center">crosswalk_pr.csv</td>
 <td align="center">ride_name</td>
 <td align="center">FALSE</td>
 <td align="center">park_rides(park_url)</td>
 </tr>
 <tr class="even">
-<td align="center">crosswalk_B</td>
+<td align="center">crosswalk_pr.csv</td>
 <td align="center">ride_url</td>
 <td align="center">TRUE</td>
 <td align="center">park_rides(park_url)</td>
 </tr>
+<tr class="odd">
+<td align="center">selected_parks.csv</td>
+<td align="center">park_url</td>
+<td align="center">TRUE</td>
+<td align="center">built manually</td>
+</tr>
 </tbody>
-</table></li>
-</ul>
+</table>
 </div>
 <div id="build-data" class="section level4">
 <h4>1. Build Data</h4>
