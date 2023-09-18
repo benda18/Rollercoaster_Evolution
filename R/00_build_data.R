@@ -271,6 +271,7 @@ park_info <- function(park.url){
   
   return(df.out)
 }
+
 rand_sleep <- function(n.times=1){
   temp <-  abs(log(c(runif(n = 560, 3,5),
                      runif(n = 1000, 0, 4)))) + runif(1,0,1) * prod(runif(2,0.5,2))
@@ -338,64 +339,48 @@ setwd(wd$data)
 # Pre-build logic is now 2-step:  
 
 # 1) If 'park_inventory.csv' is not already written to dir, proceed as normal by
-# generating a new file from scratch and variable 'park_inventory' from NULL
-
-# 2) If 'park_inventory.csv' is written to dir, create variable 'park_inventory'
-# from importing it, then as you loop through every park in your park.url list,
-# before pinging that url check to see if you've already pulled down that data.
-# If so, skip; if not - ping & log.
+# generating a new file from scratch and variable 'park_inventory' from NULL. If
+# 'park_inventory.csv' is written to dir, create variable 'park_inventory' from
+# importing it
 
 if(!"park_inventory.csv" %in% list.files()){
   # park_inventory.csv HAS NOT BEEN created
-  temp.park_urls <- read_csv("selected_parks.csv")$park_url
+  temp.park_urls <- read_csv("selected_parks.csv")
   park_inventory <- NULL
-  
-  
 }else{
   # park_inventory.csv HAS BEEN created
-  temp.park_urls <- read_csv("selected_parks.csv")$park_url
+  temp.park_urls <- read_csv("selected_parks.csv")
   park_inventory <- read_csv("park_inventory.csv")
 }
 
+# 2) Then you loop through every park in temp.park_urls, before pinging that url
+# check to see if you've already pulled down that data. If so, skip; if not -
+# ping & log. if is.null(park_inventory) you will need to skip this
 
-
-
-if(!"park_inventory.csv" %in% list.files()){
+for(i in 1:nrow(temp.park_urls)){
+  # check to see if park_url from temp.park_urls$park_url[i] is in
+  # park_inventory$park_url
   
-  # import list of park urls
-  temp.park_urls <- read_csv("selected_parks.csv")$park_url
-  
-  park_inventory <- NULL
-  for(i in temp.park_urls){
+  if(!temp.park_urls$park_url[i] %in% unique(park_inventory$park_url)){
     # sleep
     Sys.sleep(rand_sleep())
-    
-    park_inventory <- rbind(park_inventory, 
-                            park_info(i))
+    print(Sys.time())
+    # ping website and write to csv
+    write_csv(x = park_info(temp.park_urls$park_url[i]), 
+              file = "park_inventory.csv",
+              append = T)
+    # # also, append to park_inventory
+    # park_inventory <- rbind(park_inventory, 
+    #       park_info(temp.park_urls$park_url[i])) %>%
+    #   .[!duplicated(.),]
+  }else{
+    print("skipped running 'park_info()' bc data has already been logged")
   }
   
-  # write csv
-  write_csv(park_inventory, 
-            file = "park_inventory.csv",
-            append = T)
-  # cleanup
-  rm(i, temp.park.urls, park_inventory)
-  
-}else{
-  # no-build
-  print("skipping build of 'park_inventory.csv'; was built previously")
 }
 
-
-
-
-
-
-
-
-
-
-
+# cleanup
+rm(temp.park_urls, i, park_inventory)
 
 
 # Build ride_inventory.csv
