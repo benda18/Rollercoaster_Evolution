@@ -13,6 +13,80 @@ library(readr)
 rm(list=ls());cat('\f');gc()
 
 # FUNS ----
+ride_info <- function(ride.url){
+  ride.html <- read_html(ride.url)
+  
+  # get park name
+  
+  the.ridename <- html_element(x = ride.html, 
+                               xpath = "//*[@id=\"objdiv\"]") %>%
+    html_children() %>%
+    html_children() %>%
+    .[2] %>%
+    .[1] %>%
+    as.character() %>%
+    strsplit(., 
+             "\n") %>% 
+    unlist() %>%
+    .[grepl("<h1>", .)] %>%
+    gsub("<h1>|</h1>", "", .)
+  
+  the.parkname <- html_element(x = ride.html, 
+                               xpath = "//*[@id=\"objdiv\"]") %>%
+    html_children() %>%
+    html_children() %>%
+    .[2] %>%
+    .[1] %>%
+    as.character() %>%
+    strsplit(., 
+             "\n") %>% 
+    unlist() %>%
+    .[grepl("location\\.htm?", .)] %>%
+    gsub("\\(.*$", "", .) %>% 
+    trimws() %>%
+    strsplit(., "\"") %>%
+    unlist() %>%
+    .[!grepl("<a href|\\.htm", .)] %>%
+    gsub(">|</a>", "", .)
+  
+  
+  
+  the.table <- html_element(x = ride.html, 
+                            xpath = "/html/body") %>% 
+    html_children() %>%
+    .[grepl("Tracks", .)] %>%
+    html_table() %>%
+    .[[1]]
+  
+  the.table <- rbind(the.table, 
+                     data.frame(X1 = c("ride_name", "park_name"), 
+                                X2 = c(the.ridename, the.parkname)))
+  
+  out <- NULL
+  for(i in 1:nrow(the.table)){
+    temp <- the.table[i,] %>% unlist() %>% unname()
+    
+    temp.df <- data.frame(temp[2])
+    colnames(temp.df) <- temp[1]
+    
+    
+    if(is.null(out)){
+      out <- temp.df
+    }else{
+      out <- cbind(out, temp.df)
+    }
+    
+  }
+  
+  out <- out[,c("ride_name", "park_name", 
+                "Length", "Height", "Speed")]
+  
+  # add ride_url 
+  out$ride_url <- ride.url
+  
+  return(out)
+}
+
 get_park_urls <- function(searchpage.url){
   temp <- searchpage.url %>%
     read_html() %>%
@@ -438,13 +512,56 @@ for(i in 1:nrow(temp.park_urls)){
 rm(temp.park_urls, i, park_inventory)
 setwd(wd$home)
 
-# Build ride_inventory.csv----
-# ride_inventory.csv is no longer needed; coverage provided by
-# park_inventory.csv
 
-# Build ride_specs.csv
+# Build ride_specs.csv----
+setwd(wd$data)
 
-# Build ride_status.csv
+# 1) If 'ride_specs.csv' is not already written to dir, proceed as normal by
+# generating a new file from scratch and variable 'ride_specs' from NULL. If
+# 'ride_specs.csv' is written to dir, create variable 'ride_specs' from
+# importing it
+
+if(!"ride_specs.csv" %in% list.files()){
+  # ride_specs.csv HAS NOT BEEN created
+  temp.ride_urls <- read_csv("park_inventory.csv")
+  write_csv(x = ride_info("https://rcdb.com/530.htm"), # invertigo
+            file = "ride_specs.csv", 
+            append = F)
+  ride_specs <- read_csv("ride_specs.csv")
+}else{
+  # ride_specs.csv HAS BEEN created
+  temp.ride_urls <- read_csv("park_inventory.csv")
+  ride_specs <- read_csv("ride_specs.csv")
+}
+
+# 2) Then you loop through every park in temp.ride_urls, before pinging that url
+# check to see if you've already pulled down that data. If so, skip; if not -
+# ping & log. if is.null(park_inventory) you will need to skip this
+
+for(i in 1:nrow(temp.ride_urls)){
+  # check to see if park_url from temp.park_urls$park_url[i] is in
+  # park_inventory$park_url
+  
+  if(!temp.ride_urls$ride_url[i] %in% unique(ride_specs$ride_url)){
+    # sleep
+    Sys.sleep(rand_sleep()*2.1+0.5)
+    print(Sys.time())
+    # ping website and write to csv
+    try(write_csv(x = ride_info(temp.ride_urls$ride_url[i]), 
+                  file = "ride_specs.csv",
+                  append = T))
+   
+  }else{
+    print("skipped running 'ride_info()' bc data has already been logged")
+  }
+  
+}
+
+
+
+setwd(wd$home)
+
+# Build ride_status.csv----
 setwd(wd$data)
 
 park_inventory <- read_csv("park_inventory.csv")
