@@ -69,7 +69,21 @@ for(i in dat_files){
                          colname = names(read_csv(i)))
   assign(temp.varname_short, temp.var)
   # cleanup
-  
+  rm(temp.varname_long, temp.varname_short, temp.var)
 }
 
-park_inventory
+# cleanup----
+rm(list=ls(pattern = paste(gsub("\\.csv", "", dat_files),sep="",collapse="|")), 
+   i, 
+   dat_files)
+
+
+# BUILD GRAPH STRUCTURE----
+
+str_graph <- rbind(pi_str,
+                   rs_str, 
+                   sp_str) %>%
+  graph_from_data_frame()
+
+plot(str_graph)
+
