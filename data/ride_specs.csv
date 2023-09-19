@@ -1,0 +1,555 @@
+ride_name,park_name,Length,Height,Speed,ride_url
+Invertigo,Kings Island,1013.8 ft,131.3 ft,50 mph,https://rcdb.com/530.htm
+Snoopy's Soap Box Racers,Kings Island,672.6 ft,75.5 ft,37.3 mph,https://rcdb.com/21087.htm
+Flying Ace Aerial Chase,Kings Island,1122 ft,48.6 ft,26 mph,https://rcdb.com/1037.htm
+Backlot Stunt Coaster,Kings Island,1960 ft,45.2 ft,40 mph,https://rcdb.com/2860.htm
+Flight of Fear,Kings Island,2705 ft,74.2 ft,54 mph,https://rcdb.com/66.htm
+Beast,Kings Island,7361 ft,110 ft,64.8 mph,https://rcdb.com/67.htm
+Adventure Express,Kings Island,2963 ft,63 ft,35 mph,https://rcdb.com/70.htm
+Woodstock Express,Kings Island,1350 ft,38.6 ft,35 mph,https://rcdb.com/72.htm
+Bat,Kings Island,2352 ft,78 ft,51 mph,https://rcdb.com/73.htm
+Diamondback,Kings Island,5282 ft,230 ft,80 mph,https://rcdb.com/4253.htm
+Banshee,Kings Island,4124 ft,167 ft,68 mph,https://rcdb.com/6640.htm
+Orion,Kings Island,5321 ft,287 ft,91 mph,https://rcdb.com/11437.htm
+Mystic Timbers,Kings Island,3265 ft,109.2 ft,53 mph,https://rcdb.com/14116.htm
+Son Of Beast,Kings Island,7032 ft,218 ft,78.4 mph,https://rcdb.com/584.htm
+Bat,Kings Island,2456 ft,100 ft,34 mph,https://rcdb.com/627.htm
+Demon,Kings Island,635 ft,56 ft,45 mph,https://rcdb.com/313.htm
+Vortex,Kings Island,3800 ft,148 ft,55 mph,https://rcdb.com/71.htm
+King Cobra,Kings Island,2219 ft,95 ft,50 mph,https://rcdb.com/68.htm
+Firehawk,Kings Island,3339.9 ft,115 ft,50 mph,https://rcdb.com/3793.htm
+Ninja,Six Flags Magic Mountain,2700 ft,60 ft,55 mph,https://rcdb.com/129.htm
+New Revolution,Six Flags Magic Mountain,3457 ft,113 ft,55 mph,https://rcdb.com/130.htm
+Gold Rusher,Six Flags Magic Mountain,2590 ft,70 ft,35 mph,https://rcdb.com/266.htm
+Riddler's Revenge,Six Flags Magic Mountain,4370 ft,156 ft,65 mph,https://rcdb.com/470.htm
+Goliath,Six Flags Magic Mountain,4500 ft,235 ft,85 mph,https://rcdb.com/615.htm
+Batman The Ride,Six Flags Magic Mountain,2700 ft,105 ft,50 mph,https://rcdb.com/24.htm
+Viper,Six Flags Magic Mountain,3830 ft,188 ft,70 mph,https://rcdb.com/25.htm
+Magic Flyer,Six Flags Magic Mountain,350 ft,10 ft,10 mph,https://rcdb.com/749.htm
+X2,Six Flags Magic Mountain,3610 ft,175 ft,76 mph,https://rcdb.com/750.htm
+Scream!,Six Flags Magic Mountain,3985 ft,150 ft,63 mph,https://rcdb.com/2169.htm
+Tatsu,Six Flags Magic Mountain,3602 ft,170 ft,62 mph,https://rcdb.com/3305.htm
+Apocalypse the Ride,Six Flags Magic Mountain,2877 ft,95 ft,50.1 mph,https://rcdb.com/4173.htm
+Road Runner Express,Six Flags Magic Mountain,679.1 ft,27.9 ft,21.7 mph,https://rcdb.com/4346.htm
+Full Throttle,Six Flags Magic Mountain,2200 ft,164 ft,70 mph,https://rcdb.com/10948.htm
+Twisted Colossus,Six Flags Magic Mountain,4990 ft,121 ft,57 mph,https://rcdb.com/12282.htm
+West Coast Racers,Six Flags Magic Mountain,4000 ft,67 ft,55 mph,https://rcdb.com/16588.htm
+Wonder Woman Flight of Courage,Six Flags Magic Mountain,3300 ft,131 ft,58 mph,https://rcdb.com/19515.htm
+Green Lantern: First Flight,Six Flags Magic Mountain,810.4 ft,105 ft,34.2 mph,https://rcdb.com/9519.htm
+Sarajevo Bobsleds,Six Flags Magic Mountain,1490 ft,60 ft,32 mph,https://rcdb.com/98.htm
+Flashback,Six Flags Magic Mountain,1900 ft,86 ft,35 mph,https://rcdb.com/128.htm
+Mountain Express,Six Flags Magic Mountain,1837 ft,50 ft,40 mph,https://rcdb.com/709.htm
+Déjà Vu,Six Flags Magic Mountain,1204.1 ft,177.2 ft,61.5 mph,https://rcdb.com/748.htm
+Raptor,Cedar Point,3790 ft,137 ft,57 mph,https://rcdb.com/1.htm
+Rougarou,Cedar Point,3900 ft,145 ft,60 mph,https://rcdb.com/7.htm
+Magnum XL-200,Cedar Point,5106 ft,205 ft,72 mph,https://rcdb.com/11.htm
+Blue Streak,Cedar Point,2558 ft,78 ft,40 mph,https://rcdb.com/12.htm
+Corkscrew,Cedar Point,2050 ft,85 ft,48 mph,https://rcdb.com/13.htm
+Wilderness Run,Cedar Point,443 ft,19 ft,6 mph,https://rcdb.com/15.htm
+Woodstock Express,Cedar Point,1099.1 ft,42.7 ft,28.5 mph,https://rcdb.com/553.htm
+Millennium Force,Cedar Point,6595 ft,310 ft,93 mph,https://rcdb.com/594.htm
+Iron Dragon,Cedar Point,2800 ft,76 ft,40 mph,https://rcdb.com/17.htm
+Cedar Creek Mine Ride,Cedar Point,2540 ft,48 ft,42 mph,https://rcdb.com/18.htm
+Maverick,Cedar Point,4450 ft,105 ft,70 mph,https://rcdb.com/3570.htm
+GateKeeper,Cedar Point,4164 ft,170 ft,67 mph,https://rcdb.com/10891.htm
+Valravn,Cedar Point,3415 ft,223 ft,75 mph,https://rcdb.com/13383.htm
+Steel Vengeance,Cedar Point,5740 ft,205 ft,74 mph,https://rcdb.com/15411.htm
+Wild Mouse,Cedar Point,1312 ft,52 ft,35 mph,https://rcdb.com/20342.htm
+Top Thrill 2,Cedar Point,2800 ft,420 ft,120 mph,https://rcdb.com/1896.htm
+Disaster Transport,Cedar Point,1932 ft,63 ft,40 mph,https://rcdb.com/19.htm
+Wildcat,Cedar Point,1837 ft,50 ft,40 mph,https://rcdb.com/20.htm
+Wicked Twister,Cedar Point,689 ft,216.5 ft,72.1 mph,https://rcdb.com/1571.htm
+Mean Streak,Cedar Point,5427 ft,161 ft,65 mph,https://rcdb.com/16.htm
+Superman - Ultimate Flight,Six Flags Great Adventure,2759 ft,106 ft,51 mph,https://rcdb.com/1976.htm
+Kingda Ka,Six Flags Great Adventure,3118 ft,456 ft,128 mph,https://rcdb.com/2832.htm
+El Toro,Six Flags Great Adventure,4400 ft,181 ft,70 mph,https://rcdb.com/3183.htm
+Green Lantern,Six Flags Great Adventure,4155 ft,154 ft,63 mph,https://rcdb.com/8932.htm
+Joker,Six Flags Great Adventure,1019 ft,120 ft,38 mph,https://rcdb.com/13421.htm
+Jersey Devil Coaster,Six Flags Great Adventure,3000 ft,130 ft,58 mph,https://rcdb.com/17658.htm
+Batman The Ride,Six Flags Great Adventure,2693 ft,105 ft,50 mph,https://rcdb.com/32.htm
+Skull Mountain,Six Flags Great Adventure,1377 ft,40.5 ft,33 mph,https://rcdb.com/35.htm
+Medusa,Six Flags Great Adventure,3985 ft,142 ft,61 mph,https://rcdb.com/502.htm
+Harley Quinn Crazy Train,Six Flags Great Adventure,1181.1 ft,26.3 ft,22.4 mph,https://rcdb.com/567.htm
+Nitro,Six Flags Great Adventure,5394 ft,230 ft,80 mph,https://rcdb.com/1106.htm
+Lightnin' Loops,Six Flags Great Adventure,635 ft,56 ft,45 mph,https://rcdb.com/585.htm
+Lightnin' Loops,Six Flags Great Adventure,635 ft,56 ft,45 mph,https://rcdb.com/151.htm
+Sarajevo Bobsled,Six Flags Great Adventure,1490 ft,64 ft,35 mph,https://rcdb.com/493.htm
+Ultra Twister,Six Flags Great Adventure,1421 ft,96.8 ft,44 mph,https://rcdb.com/45.htm
+Viper,Six Flags Great Adventure,1670 ft,88.6 ft,48 mph,https://rcdb.com/33.htm
+Great American Scream Machine,Six Flags Great Adventure,3800 ft,173 ft,68 mph,https://rcdb.com/34.htm
+Demon,Six Flags Great America,2130 ft,103.7 ft,50 mph,https://rcdb.com/3.htm
+Batman The Ride,Six Flags Great America,2700 ft,100 ft,50 mph,https://rcdb.com/5.htm
+Viper,Six Flags Great America,3458 ft,100 ft,50 mph,https://rcdb.com/10.htm
+Whizzer,Six Flags Great America,3100 ft,70 ft,42 mph,https://rcdb.com/113.htm
+Sprocket Rockets,Six Flags Great America,679.1 ft,27.9 ft,21.7 mph,https://rcdb.com/488.htm
+Raging Bull,Six Flags Great America,5057 ft,202 ft,73 mph,https://rcdb.com/535.htm
+Flash: Vertical Velocity,Six Flags Great America,630 ft,185 ft,70 mph,https://rcdb.com/747.htm
+Superman - Ultimate Flight,Six Flags Great America,2798 ft,106 ft,51 mph,https://rcdb.com/1977.htm
+Goliath,Six Flags Great America,3100 ft,165 ft,72 mph,https://rcdb.com/9972.htm
+Joker,Six Flags Great America,1019 ft,120 ft,38 mph,https://rcdb.com/14187.htm
+Maxx Force,Six Flags Great America,1800 ft,175 ft,78 mph,https://rcdb.com/16586.htm
+Ragin' Cajun,Six Flags Great America,1377.9 ft,42.7 ft,29.1 mph,https://rcdb.com/2654.htm
+Déjà Vu,Six Flags Great America,1204.1 ft,177.2 ft,61.5 mph,https://rcdb.com/746.htm
+Rolling Thunder,Six Flags Great America,1490 ft,64 ft,35 mph,https://rcdb.com/494.htm
+Z-Force,Six Flags Great America,1900 ft,86 ft,35 mph,https://rcdb.com/126.htm
+Tidal Wave,Six Flags Great America,863 ft,137.8 ft,57 mph,https://rcdb.com/38.htm
+Iron Wolf,Six Flags Great America,2900 ft,100 ft,55 mph,https://rcdb.com/6.htm
+Shockwave,Six Flags Great America,3900 ft,170 ft,65 mph,https://rcdb.com/4.htm
+Carolina Cyclone,Carowinds,2100 ft,95 ft,41 mph,https://rcdb.com/81.htm
+Hurler,Carowinds,3157 ft,83 ft,50 mph,https://rcdb.com/85.htm
+Vortex,Carowinds,2040 ft,90 ft,50 mph,https://rcdb.com/86.htm
+Afterburn,Carowinds,2956 ft,113 ft,62 mph,https://rcdb.com/527.htm
+Ricochet,Carowinds,1213.9 ft,45.9 ft,28 mph,https://rcdb.com/1478.htm
+Kiddy Hawk,Carowinds,1122 ft,48.6 ft,26 mph,https://rcdb.com/1897.htm
+Nighthawk,Carowinds,2765.7 ft,115 ft,51 mph,https://rcdb.com/2514.htm
+Flying Cobras,Carowinds,935 ft,116.5 ft,47 mph,https://rcdb.com/4269.htm
+Intimidator,Carowinds,5316 ft,232 ft,75 mph,https://rcdb.com/8588.htm
+Fury 325,Carowinds,6602 ft,325 ft,95 mph,https://rcdb.com/12273.htm
+Copperhead Strike,Carowinds,3255 ft,82 ft,50 mph,https://rcdb.com/16349.htm
+Flying Super Saturator,Carowinds,1087 ft,42.4 ft,30 mph,https://rcdb.com/598.htm
+White Lightnin',Carowinds,863 ft,137.8 ft,57 mph,https://rcdb.com/667.htm
+Shock Wave,Six Flags Over Texas,3600 ft,116 ft,60 mph,https://rcdb.com/28.htm
+Judge Roy Scream,Six Flags Over Texas,2670 ft,71 ft,45 mph,https://rcdb.com/29.htm
+Runaway Mountain,Six Flags Over Texas,1500 ft,65 ft,40 mph,https://rcdb.com/31.htm
+La Vibora,Six Flags Over Texas,1490 ft,60 ft,32 mph,https://rcdb.com/99.htm
+Mr. Freeze,Six Flags Over Texas,1300 ft,218 ft,70 mph,https://rcdb.com/281.htm
+Batman The Ride,Six Flags Over Texas,2700 ft,105 ft,50 mph,https://rcdb.com/552.htm
+Titan,Six Flags Over Texas,5312 ft,245 ft,85 mph,https://rcdb.com/742.htm
+Pandemonium,Six Flags Over Texas,1351 ft,53 ft,31 mph,https://rcdb.com/4042.htm
+New Texas Giant,Six Flags Over Texas,4200 ft,153 ft,65 mph,https://rcdb.com/11662.htm
+Joker,Six Flags Over Texas,1019 ft,120 ft,38 mph,https://rcdb.com/14188.htm
+Aquaman: Power Wave,Six Flags Over Texas,708.7 ft,146.3 ft,62.1 mph,https://rcdb.com/17653.htm
+Texas Giant,Six Flags Over Texas,4920 ft,143 ft,62 mph,https://rcdb.com/2.htm
+Flashback,Six Flags Over Texas,935 ft,116.5 ft,47 mph,https://rcdb.com/8.htm
+Big Bend,Six Flags Over Texas,2876 ft,81 ft,52 mph,https://rcdb.com/1119.htm
+Comet,Hersheypark,3360 ft,84 ft,50 mph,https://rcdb.com/106.htm
+Jolly Rancher Remix,Hersheypark,935 ft,116.5 ft,47 mph,https://rcdb.com/109.htm
+Great Bear,Hersheypark,2800 ft,90 ft,58 mph,https://rcdb.com/468.htm
+Wild Mouse,Hersheypark,1213.9 ft,45.9 ft,28 mph,https://rcdb.com/539.htm
+Fahrenheit,Hersheypark,2700 ft,121 ft,58 mph,https://rcdb.com/4049.htm
+Skyrush,Hersheypark,3600 ft,200 ft,75 mph,https://rcdb.com/10089.htm
+Candymonium,Hersheypark,4636 ft,210 ft,76 mph,https://rcdb.com/16682.htm
+Wildcat's Revenge,Hersheypark,3510 ft,140 ft,62 mph,https://rcdb.com/20462.htm
+Storm Runner,Hersheypark,2600 ft,150 ft,75 mph,https://rcdb.com/2498.htm
+Wildcat,Hersheypark,3183 ft,106 ft,50 mph,https://rcdb.com/100.htm
+Roller Soaker,Hersheypark,1300 ft,70 ft,20.5 mph,https://rcdb.com/1497.htm
+unknown,Six Flags Over Georgia,590 ft,144 ft,60 mph,https://rcdb.com/21112.htm
+Riddler Mindbender,Six Flags Over Georgia,3253 ft,80 ft,50 mph,https://rcdb.com/37.htm
+Superman - Ultimate Flight,Six Flags Over Georgia,2759 ft,106 ft,51 mph,https://rcdb.com/1568.htm
+Goliath,Six Flags Over Georgia,4480 ft,200 ft,70 mph,https://rcdb.com/3290.htm
+Dare Devil Dive,Six Flags Over Georgia,2099 ft,95 ft,52 mph,https://rcdb.com/9430.htm
+Twisted Cyclone,Six Flags Over Georgia,2400 ft,100 ft,50 mph,https://rcdb.com/15457.htm
+Blue Hawk,Six Flags Over Georgia,2739.5 ft,122 ft,52 mph,https://rcdb.com/40.htm
+Great American Scream Machine,Six Flags Over Georgia,3450 ft,105 ft,57 mph,https://rcdb.com/41.htm
+Dahlonega Mine Train,Six Flags Over Georgia,2327 ft,37 ft,29 mph,https://rcdb.com/42.htm
+Batman The Ride,Six Flags Over Georgia,2700 ft,105 ft,50 mph,https://rcdb.com/421.htm
+Georgia Scorcher,Six Flags Over Georgia,3000 ft,107 ft,54 mph,https://rcdb.com/556.htm
+Déjà Vu,Six Flags Over Georgia,1204.1 ft,177.2 ft,61.5 mph,https://rcdb.com/1040.htm
+Z-Force,Six Flags Over Georgia,1900 ft,86 ft,35 mph,https://rcdb.com/127.htm
+Viper,Six Flags Over Georgia,863 ft,137.8 ft,57 mph,https://rcdb.com/39.htm
+Georgia Cyclone,Six Flags Over Georgia,2970 ft,95 ft,50 mph,https://rcdb.com/36.htm
+Woodstock Express,Kings Dominion,1385 ft,35 ft,35 mph,https://rcdb.com/89.htm
+Flight of Fear,Kings Dominion,2705 ft,74.2 ft,54 mph,https://rcdb.com/138.htm
+Apple Zapple,Kings Dominion,1312.3 ft,51.8 ft,35 mph,https://rcdb.com/930.htm
+Backlot Stunt Coaster,Kings Dominion,1960 ft,45.2 ft,40 mph,https://rcdb.com/3302.htm
+Dominator,Kings Dominion,4210 ft,157 ft,65 mph,https://rcdb.com/4079.htm
+Intimidator 305,Kings Dominion,5100 ft,305 ft,90 mph,https://rcdb.com/4520.htm
+Twisted Timbers,Kings Dominion,3361 ft,111 ft,54 mph,https://rcdb.com/15028.htm
+Tumbili,Kings Dominion,770 ft,112 ft,34 mph,https://rcdb.com/18846.htm
+Anaconda,Kings Dominion,2700 ft,128 ft,50 mph,https://rcdb.com/92.htm
+Hurler,Kings Dominion,3157 ft,83 ft,50 mph,https://rcdb.com/93.htm
+"Volcano, The Blast Coaster",Kings Dominion,2757 ft,155 ft,70 mph,https://rcdb.com/474.htm
+King Kobra,Kings Dominion,722 ft,137.8 ft,53 mph,https://rcdb.com/637.htm
+HyperSonic XLC,Kings Dominion,1560 ft,165 ft,80 mph,https://rcdb.com/729.htm
+Shockwave,Kings Dominion,2231 ft,95 ft,50 mph,https://rcdb.com/91.htm
+Iron Rattler,Six Flags Fiesta Texas,3266 ft,179 ft,70 mph,https://rcdb.com/11663.htm
+Batman The Ride,Six Flags Fiesta Texas,1019 ft,120 ft,38 mph,https://rcdb.com/12283.htm
+Wonder Woman Golden Lasso Coaster,Six Flags Fiesta Texas,1800 ft,113 ft,52 mph,https://rcdb.com/15368.htm
+Dr. Diabolical's Cliffhanger,Six Flags Fiesta Texas,2501 ft,150 ft,60 mph,https://rcdb.com/19495.htm
+Poltergeist,Six Flags Fiesta Texas,2705 ft,78.8 ft,60 mph,https://rcdb.com/528.htm
+Boomerang,Six Flags Fiesta Texas,935 ft,116.5 ft,47 mph,https://rcdb.com/529.htm
+Superman Krypton Coaster,Six Flags Fiesta Texas,4025 ft,168 ft,70 mph,https://rcdb.com/605.htm
+Pandemonium,Six Flags Fiesta Texas,1351 ft,48 ft,31 mph,https://rcdb.com/3751.htm
+Goliath,Six Flags Fiesta Texas,2693 ft,105 ft,50 mph,https://rcdb.com/3976.htm
+Boardwalk Canyon Blaster,Six Flags Fiesta Texas,1181.1 ft,26.3 ft,22.4 mph,https://rcdb.com/4003.htm
+Rattler,Six Flags Fiesta Texas,5080 ft,179.7 ft,65 mph,https://rcdb.com/56.htm
+Joker's Revenge,Six Flags Fiesta Texas,1935.7 ft,79 ft,40 mph,https://rcdb.com/206.htm
+Thunderbolt,Six Flags New England,2600 ft,70 ft,40 mph,https://rcdb.com/182.htm
+Riddler Revenge,Six Flags New England,2260.5 ft,109.3 ft,49.7 mph,https://rcdb.com/429.htm
+Superman the Ride,Six Flags New England,5400 ft,208 ft,77 mph,https://rcdb.com/628.htm
+Flashback,Six Flags New England,935 ft,116.5 ft,47 mph,https://rcdb.com/629.htm
+Catwoman's Whip,Six Flags New England,1181.1 ft,26.3 ft,22.4 mph,https://rcdb.com/630.htm
+Batman - The Dark Knight,Six Flags New England,2600 ft,117.8 ft,55 mph,https://rcdb.com/1549.htm
+Wicked Cyclone,Six Flags New England,3320 ft,109 ft,55 mph,https://rcdb.com/1981.htm
+Gotham City Gauntlet Escape from Arkham Asylum,Six Flags New England,1213.9 ft,49.3 ft,28 mph,https://rcdb.com/9431.htm
+Joker,Six Flags New England,1019 ft,120 ft,38 mph,https://rcdb.com/14189.htm
+Goliath,Six Flags New England,1204.1 ft,177.2 ft,61.5 mph,https://rcdb.com/10138.htm
+Cyclone,Six Flags New England,3600 ft,112 ft,45 mph,https://rcdb.com/180.htm
+Black Widow,Six Flags New England,635 ft,56 ft,45 mph,https://rcdb.com/181.htm
+Roller Coaster,Lagoon,2500 ft,62 ft,45 mph,https://rcdb.com/196.htm
+Colossus the Fire Dragon,Lagoon,2296.6 ft,86.9 ft,49.1 mph,https://rcdb.com/197.htm
+Puff the Little Fire Dragon,Lagoon,197.5 ft,10.8 ft,16.2 mph,https://rcdb.com/199.htm
+Wild Mouse,Lagoon,1213.9 ft,49.3 ft,28 mph,https://rcdb.com/507.htm
+Bat,Lagoon,1122 ft,48.6 ft,26 mph,https://rcdb.com/2954.htm
+Wicked,Lagoon,2050.5 ft,110 ft,55 mph,https://rcdb.com/3534.htm
+Bombora,Lagoon,1040 ft,45 ft,31 mph,https://rcdb.com/9223.htm
+Spider,Lagoon,1391.1 ft,50.8 ft,37.3 mph,https://rcdb.com/2164.htm
+Cannibal,Lagoon,2735 ft,208 ft,70 mph,https://rcdb.com/11579.htm
+Loch Ness Monster,Busch Gardens Williamsburg,3240 ft,130 ft,60 mph,https://rcdb.com/110.htm
+Alpengeist,Busch Gardens Williamsburg,3828 ft,195 ft,67 mph,https://rcdb.com/277.htm
+Griffon,Busch Gardens Williamsburg,3108 ft,205 ft,71 mph,https://rcdb.com/3631.htm
+Tempesto,Busch Gardens Williamsburg,863 ft,150 ft,62 mph,https://rcdb.com/12277.htm
+Pantheon,Busch Gardens Williamsburg,3328 ft,178 ft,73 mph,https://rcdb.com/16812.htm
+Apollo's Chariot,Busch Gardens Williamsburg,4882 ft,170 ft,73 mph,https://rcdb.com/531.htm
+Wild Maus,Busch Gardens Williamsburg,1213.9 ft,45.9 ft,28 mph,https://rcdb.com/455.htm
+Big Bad Wolf,Busch Gardens Williamsburg,2800 ft,100 ft,48 mph,https://rcdb.com/111.htm
+Drachen Fire,Busch Gardens Williamsburg,3550 ft,150 ft,60 mph,https://rcdb.com/112.htm
+Medusa,Six Flags Discovery Kingdom,3937 ft,150 ft,65 mph,https://rcdb.com/617.htm
+Cobra,Six Flags Discovery Kingdom,1181.1 ft,26.3 ft,22.4 mph,https://rcdb.com/691.htm
+Flash: Vertical Velocity,Six Flags Discovery Kingdom,630 ft,150 ft,65 mph,https://rcdb.com/1143.htm
+Kong,Six Flags Discovery Kingdom,2260.5 ft,109.3 ft,49.7 mph,https://rcdb.com/163.htm
+Boomerang,Six Flags Discovery Kingdom,935 ft,116.5 ft,47 mph,https://rcdb.com/357.htm
+Superman Ultimate Flight,Six Flags Discovery Kingdom,863 ft,150 ft,62 mph,https://rcdb.com/10139.htm
+Joker,Six Flags Discovery Kingdom,3200 ft,100 ft,53 mph,https://rcdb.com/13422.htm
+Batman The Ride,Six Flags Discovery Kingdom,1019 ft,120 ft,38 mph,https://rcdb.com/16587.htm
+Sidewinder Safari,Six Flags Discovery Kingdom,1378 ft,42.7 ft,29.1 mph,https://rcdb.com/17660.htm
+Harley Quinn Crazy Coaster,Six Flags Discovery Kingdom,360 ft,62 ft,35 mph,https://rcdb.com/15674.htm
+Roar,Six Flags Discovery Kingdom,3291 ft,94.6 ft,50.5 mph,https://rcdb.com/543.htm
+Zonga,Six Flags Discovery Kingdom,3675 ft,115 ft,54 mph,https://rcdb.com/2264.htm
+Greased Lightnin',Six Flags Discovery Kingdom,863 ft,137.8 ft,57 mph,https://rcdb.com/2379.htm
+Pandemonium,Six Flags Discovery Kingdom,1351 ft,53 ft,31 mph,https://rcdb.com/4044.htm
+Rookie Racer,Six Flags St. Louis,843 ft,41 ft,27 mph,https://rcdb.com/20702.htm
+Pandemonium,Six Flags St. Louis,1351 ft,48 ft,31 mph,https://rcdb.com/3810.htm
+American Thunder,Six Flags St. Louis,2713 ft,82 ft,48 mph,https://rcdb.com/4045.htm
+Boomerang,Six Flags St. Louis,935 ft,116.5 ft,47 mph,https://rcdb.com/10947.htm
+Ninja,Six Flags St. Louis,2427.8 ft,108.3 ft,54.7 mph,https://rcdb.com/124.htm
+River King Mine Train,Six Flags St. Louis,2500 ft,32 ft,37 mph,https://rcdb.com/125.htm
+Mr. Freeze Reverse Blast,Six Flags St. Louis,1300 ft,218 ft,70 mph,https://rcdb.com/427.htm
+Batman The Ride,Six Flags St. Louis,2693 ft,105 ft,50 mph,https://rcdb.com/43.htm
+Screamin' Eagle,Six Flags St. Louis,3872 ft,110 ft,62 mph,https://rcdb.com/44.htm
+Boss,Six Flags St. Louis,4631 ft,122 ft,66.3 mph,https://rcdb.com/616.htm
+Jet Scream,Six Flags St. Louis,1942.3 ft,80.4 ft,47.8 mph,https://rcdb.com/49.htm
+Blazing Fury,Dollywood,1520 ft,22 ft,22 mph,https://rcdb.com/501.htm
+Tennessee Tornado,Dollywood,2682 ft,163 ft,63 mph,https://rcdb.com/534.htm
+Thunderhead,Dollywood,3230 ft,100.4 ft,53.7 mph,https://rcdb.com/2451.htm
+Mystery Mine,Dollywood,1804.5 ft,85.3 ft,43.5 mph,https://rcdb.com/3609.htm
+FireChaser Express,Dollywood,2427 ft,78 ft,34.5 mph,https://rcdb.com/6691.htm
+Big Bear Mountain,Dollywood,3990 ft,66 ft,48 mph,https://rcdb.com/20328.htm
+Sideshow Spin,Dollywood,196.8 ft,11.8 ft,14.1 mph,https://rcdb.com/2950.htm
+Thunder Express,Dollywood,2349 ft,32 ft,37 mph,https://rcdb.com/588.htm
+Wild One,Six Flags America,4000 ft,98 ft,53 mph,https://rcdb.com/148.htm
+Superman - Ride Of Steel,Six Flags America,5350 ft,197 ft,73 mph,https://rcdb.com/699.htm
+Batwing,Six Flags America,3339.9 ft,115 ft,50 mph,https://rcdb.com/1089.htm
+Roar,Six Flags America,3468 ft,94.6 ft,50.5 mph,https://rcdb.com/485.htm
+Joker's Jinx,Six Flags America,2705 ft,78.8 ft,60 mph,https://rcdb.com/544.htm
+Ragin' Cajun,Six Flags America,1377.9 ft,42.7 ft,29.1 mph,https://rcdb.com/6765.htm
+Firebird,Six Flags America,2900 ft,100 ft,55 mph,https://rcdb.com/10136.htm
+Mind Eraser,Six Flags America,2260.5 ft,109.3 ft,49.7 mph,https://rcdb.com/149.htm
+Python,Six Flags America,635 ft,56 ft,45 mph,https://rcdb.com/152.htm
+unknown,Six Flags America,1421 ft,96.8 ft,44 mph,https://rcdb.com/3535.htm
+Two-Face: The Flip Side,Six Flags America,1013.8 ft,131.3 ft,50 mph,https://rcdb.com/545.htm
+Demon,California's Great America,2130 ft,102 ft,50 mph,https://rcdb.com/76.htm
+Grizzly,California's Great America,3250 ft,91 ft,55 mph,https://rcdb.com/77.htm
+Patriot,California's Great America,1920 ft,91 ft,45 mph,https://rcdb.com/79.htm
+Flight Deck,California's Great America,2260 ft,102 ft,50 mph,https://rcdb.com/80.htm
+Gold Striker,California's Great America,3197 ft,108.2 ft,53.7 mph,https://rcdb.com/10857.htm
+RailBlazer,California's Great America,1800 ft,106 ft,52 mph,https://rcdb.com/15412.htm
+Greased Lightnin',California's Great America,863 ft,137.8 ft,57 mph,https://rcdb.com/75.htm
+Stealth,California's Great America,2765.7 ft,115 ft,51 mph,https://rcdb.com/583.htm
+Whizzer,California's Great America,3100 ft,70 ft,42 mph,https://rcdb.com/726.htm
+Invertigo,California's Great America,1013.8 ft,131.3 ft,50 mph,https://rcdb.com/473.htm
+Jaguar!,Knott's Berry Farm,2602 ft,65 ft,35 mph,https://rcdb.com/291.htm
+GhostRider,Knott's Berry Farm,4533 ft,118 ft,56 mph,https://rcdb.com/526.htm
+Silver Bullet,Knott's Berry Farm,3125 ft,146 ft,55 mph,https://rcdb.com/2536.htm
+Sierra Sidewinder,Knott's Berry Farm,1505.9 ft,64 ft,36.9 mph,https://rcdb.com/3704.htm
+Pony Express,Knott's Berry Farm,1250 ft,44.3 ft,38 mph,https://rcdb.com/4089.htm
+HangTime,Knott's Berry Farm,2198 ft,150 ft,57 mph,https://rcdb.com/15413.htm
+Xcelerator,Knott's Berry Farm,2202 ft,205 ft,82 mph,https://rcdb.com/1574.htm
+Montezooma's Revenge,Knott's Berry Farm,800 ft,148 ft,55 mph,https://rcdb.com/292.htm
+Corkscrew,Knott's Berry Farm,1250 ft,70 ft,46 mph,https://rcdb.com/177.htm
+Boomerang,Knott's Berry Farm,935 ft,116.5 ft,47 mph,https://rcdb.com/290.htm
+Montu,Busch Gardens Tampa,3983 ft,150 ft,60 mph,https://rcdb.com/87.htm
+Kumba,Busch Gardens Tampa,3978 ft,143 ft,60 mph,https://rcdb.com/94.htm
+Scorpion,Busch Gardens Tampa,1817.6 ft,60.7 ft,41 mph,https://rcdb.com/95.htm
+SheiKra,Busch Gardens Tampa,3188 ft,200 ft,70 mph,https://rcdb.com/2662.htm
+Cheetah Hunt,Busch Gardens Tampa,4429 ft,102 ft,60 mph,https://rcdb.com/9456.htm
+Cobra's Curse,Busch Gardens Tampa,2100 ft,70 ft,40 mph,https://rcdb.com/12781.htm
+Tigris,Busch Gardens Tampa,863 ft,150 ft,62 mph,https://rcdb.com/16607.htm
+Iron Gwazi,Busch Gardens Tampa,4075 ft,206 ft,76 mph,https://rcdb.com/16985.htm
+Python,Busch Gardens Tampa,1200 ft,72 ft,40 mph,https://rcdb.com/96.htm
+SandSerpent,Busch Gardens Tampa,1213.9 ft,45.9 ft,28 mph,https://rcdb.com/2595.htm
+Cyclone,Luna Park,2850.3 ft,75 ft,60 mph,https://rcdb.com/222.htm
+Thunderbolt,Luna Park,2234.3 ft,114.8 ft,55.9 mph,https://rcdb.com/8788.htm
+Circus Coaster,Luna Park,574.2 ft,29.5 ft,18.6 mph,https://rcdb.com/9254.htm
+Soarin' Eagle,Luna Park,1282.8 ft,50 ft,25.7 mph,https://rcdb.com/9515.htm
+Steeplechase,Luna Park,1194.2 ft,42.7 ft,37.3 mph,https://rcdb.com/9664.htm
+Tony's Express,Luna Park,1312.3 ft,49.9 ft,26.1 mph,https://rcdb.com/17674.htm
+High Roller,Valleyfair!,2982 ft,70 ft,50 mph,https://rcdb.com/117.htm
+Corkscrew,Valleyfair!,1950 ft,85 ft,50 mph,https://rcdb.com/118.htm
+Excalibur,Valleyfair!,2415 ft,100 ft,54.5 mph,https://rcdb.com/119.htm
+Wild Thing,Valleyfair!,5460 ft,207 ft,74 mph,https://rcdb.com/137.htm
+Mad Mouse,Valleyfair!,1257 ft,50 ft,30 mph,https://rcdb.com/547.htm
+Steel Venom,Valleyfair!,630 ft,185 ft,70 mph,https://rcdb.com/1920.htm
+Renegade,Valleyfair!,3113 ft,97.5 ft,51.3 mph,https://rcdb.com/3660.htm
+Predator,Six Flags Darien Lake,3400 ft,95 ft,50 mph,https://rcdb.com/223.htm
+Viper,Six Flags Darien Lake,3100 ft,121 ft,50 mph,https://rcdb.com/224.htm
+Mind Eraser,Six Flags Darien Lake,2260.5 ft,109.3 ft,49.7 mph,https://rcdb.com/430.htm
+Boomerang,Six Flags Darien Lake,935 ft,116.5 ft,47 mph,https://rcdb.com/490.htm
+Ride of Steel,Six Flags Darien Lake,5400 ft,208 ft,73 mph,https://rcdb.com/541.htm
+Hoot N Holler,Six Flags Darien Lake,197.5 ft,10.8 ft,16.2 mph,https://rcdb.com/751.htm
+Moto Coaster,Six Flags Darien Lake,1194.2 ft,42.7 ft,37.3 mph,https://rcdb.com/4138.htm
+Tantrum,Six Flags Darien Lake,1246.7 ft,98.4 ft,52.8 mph,https://rcdb.com/15603.htm
+Kraken,SeaWorld Orlando,4177 ft,149 ft,65 mph,https://rcdb.com/581.htm
+Manta,SeaWorld Orlando,3359 ft,140 ft,56 mph,https://rcdb.com/4190.htm
+Mako,SeaWorld Orlando,4760 ft,200 ft,73 mph,https://rcdb.com/12758.htm
+Ice Breaker,SeaWorld Orlando,1900 ft,93 ft,52 mph,https://rcdb.com/17420.htm
+Pipeline the Surf Coaster,SeaWorld Orlando,2950 ft,110 ft,60 mph,https://rcdb.com/20042.htm
+Exterminator,Kennywood,1377.9 ft,42.7 ft,29.1 mph,https://rcdb.com/538.htm
+Jack Rabbit,Kennywood,2132 ft,40 ft,45 mph,https://rcdb.com/120.htm
+Racer,Kennywood,4500 ft,72.5 ft,40 mph,https://rcdb.com/121.htm
+Thunderbolt,Kennywood,3250 ft,70 ft,55 mph,https://rcdb.com/122.htm
+Phantom's Revenge,Kennywood,3200 ft,160 ft,85 mph,https://rcdb.com/123.htm
+Sky Rocket,Kennywood,2100 ft,95 ft,50 mph,https://rcdb.com/8612.htm
+Steel Curtain,Kennywood,4000 ft,220 ft,75 mph,https://rcdb.com/16479.htm
+Timber Wolf,Worlds of Fun,4230 ft,100 ft,53 mph,https://rcdb.com/22.htm
+Mamba,Worlds of Fun,5600 ft,205 ft,75 mph,https://rcdb.com/469.htm
+Spinning Dragons,Worlds of Fun,1345 ft,54 ft,31 mph,https://rcdb.com/2572.htm
+Patriot,Worlds of Fun,3081 ft,149 ft,60 mph,https://rcdb.com/3244.htm
+Prowler,Worlds of Fun,3074 ft,102.3 ft,51.2 mph,https://rcdb.com/4296.htm
+Zambezi Zinger,Worlds of Fun,2428 ft,74 ft,45 mph,https://rcdb.com/20340.htm
+Boomerang,Worlds of Fun,935 ft,116.5 ft,47 mph,https://rcdb.com/653.htm
+Orient Express,Worlds of Fun,3470 ft,117 ft,50 mph,https://rcdb.com/21.htm
+Extremeroller,Worlds of Fun,1250 ft,70 ft,50 mph,https://rcdb.com/496.htm
+Zambezi Zinger,Worlds of Fun,2583 ft,56.8 ft,41.2 mph,https://rcdb.com/23.htm
+Iron Menace,Dorney Park &amp; Wildwater Kingdom,2169 ft,160 ft,64 mph,https://rcdb.com/21085.htm
+Hydra the Revenge,Dorney Park &amp; Wildwater Kingdom,3198 ft,95 ft,53 mph,https://rcdb.com/2528.htm
+Possessed,Dorney Park &amp; Wildwater Kingdom,629.9 ft,185 ft,70 mph,https://rcdb.com/4039.htm
+Thunderhawk,Dorney Park &amp; Wildwater Kingdom,2767 ft,80 ft,45 mph,https://rcdb.com/239.htm
+Steel Force,Dorney Park &amp; Wildwater Kingdom,5600 ft,200 ft,75 mph,https://rcdb.com/276.htm
+Wild Mouse,Dorney Park &amp; Wildwater Kingdom,1213.9 ft,49.3 ft,28 mph,https://rcdb.com/601.htm
+Talon,Dorney Park &amp; Wildwater Kingdom,3110 ft,135 ft,58 mph,https://rcdb.com/735.htm
+Laser,Dorney Park &amp; Wildwater Kingdom,2200 ft,93 ft,52 mph,https://rcdb.com/240.htm
+Hercules,Dorney Park &amp; Wildwater Kingdom,4000 ft,95 ft,65 mph,https://rcdb.com/241.htm
+Stinger,Dorney Park &amp; Wildwater Kingdom,1013.8 ft,131.3 ft,50 mph,https://rcdb.com/9849.htm
+Thunderation,Silver Dollar City,3022 ft,81 ft,48 mph,https://rcdb.com/220.htm
+Wildfire,Silver Dollar City,3073 ft,120 ft,66 mph,https://rcdb.com/720.htm
+Powder Keg: A Blast in the Wilderness,Silver Dollar City,3506 ft,98 ft,64 mph,https://rcdb.com/1903.htm
+Outlaw Run,Silver Dollar City,2937 ft,107 ft,68 mph,https://rcdb.com/10582.htm
+Time Traveler,Silver Dollar City,3020 ft,100 ft,50.3 mph,https://rcdb.com/15168.htm
+Tremors,Silverwood Theme Park,3158 ft,85 ft,50 mph,https://rcdb.com/550.htm
+Aftershock,Silverwood Theme Park,1204.1 ft,177.2 ft,61.5 mph,https://rcdb.com/4155.htm
+Stunt Pilot,Silverwood Theme Park,1800 ft,105 ft,52 mph,https://rcdb.com/18691.htm
+Timber Terror,Silverwood Theme Park,2700 ft,85 ft,55 mph,https://rcdb.com/176.htm
+Corkscrew,Silverwood Theme Park,1250 ft,70 ft,46 mph,https://rcdb.com/178.htm
+All American Triple Loop,Indiana Beach,3379.3 ft,108.3 ft,53.4 mph,https://rcdb.com/18816.htm
+Hoosier Hurricane,Indiana Beach,2891 ft,77 ft,51 mph,https://rcdb.com/270.htm
+Tig'rr Coaster,Indiana Beach,1765.1 ft,44.3 ft,31.1 mph,https://rcdb.com/285.htm
+Lost Coaster of Superstition Mountain,Indiana Beach,1400 ft,35 ft,20 mph,https://rcdb.com/460.htm
+Cornball Express,Indiana Beach,2100 ft,55 ft,45 mph,https://rcdb.com/741.htm
+Great Nor'Easter,Morey's Piers,2168.6 ft,115 ft,55 mph,https://rcdb.com/158.htm
+Sea Serpent,Morey's Piers,935 ft,116.5 ft,47 mph,https://rcdb.com/302.htm
+Great White,Morey's Piers,3300 ft,110 ft,50 mph,https://rcdb.com/408.htm
+Runaway Tram,Morey's Piers,921.9 ft,36.1 ft,28.6 mph,https://rcdb.com/16782.htm
+Zyklon,Morey's Piers,1919 ft,45 ft,35 mph,https://rcdb.com/303.htm
+Jet Star,Morey's Piers,1765.1 ft,44.3 ft,31.1 mph,https://rcdb.com/159.htm
+Corkscrew,Michigan's Adventure,1250 ft,70 ft,45 mph,https://rcdb.com/218.htm
+Wolverine Wildcat,Michigan's Adventure,3000 ft,85 ft,55 mph,https://rcdb.com/219.htm
+Shivering Timbers,Michigan's Adventure,5383 ft,122 ft,57 mph,https://rcdb.com/478.htm
+Thunderhawk,Michigan's Adventure,2260.5 ft,109.3 ft,49.7 mph,https://rcdb.com/4053.htm
+Outlaw,Adventureland,2800 ft,67 ft,48 mph,https://rcdb.com/214.htm
+Monster,Adventureland,2500 ft,133 ft,65 mph,https://rcdb.com/12896.htm
+Phoenix,Adventureland,1410.8 ft,50.9 ft,37.3 mph,https://rcdb.com/16885.htm
+Dragon Slayer,Adventureland,770 ft,112 ft,34 mph,https://rcdb.com/18398.htm
+Flying Viking,Adventureland,1312.3 ft,50 ft,26.1 mph,https://rcdb.com/20336.htm
+Tornado,Adventureland,2840 ft,93 ft,58 mph,https://rcdb.com/212.htm
+Great White,SeaWorld San Antonio,2562 ft,108 ft,50 mph,https://rcdb.com/278.htm
+Steel Eel,SeaWorld San Antonio,3700 ft,150 ft,65 mph,https://rcdb.com/532.htm
+Super Grover's Box Car Derby,SeaWorld San Antonio,229.7 ft,13.1 ft,14.9 mph,https://rcdb.com/2613.htm
+Wave Breaker: The Rescue Coaster,SeaWorld San Antonio,2600 ft,61 ft,44 mph,https://rcdb.com/14302.htm
+Texas Stingray,SeaWorld San Antonio,3379 ft,96 ft,55 mph,https://rcdb.com/17278.htm
+Boomerang,Wild Adventures,935 ft,116.5 ft,47 mph,https://rcdb.com/500.htm
+Twisted Typhoon,Wild Adventures,2260.5 ft,109.3 ft,49.7 mph,https://rcdb.com/561.htm
+Outpost Express,Wild Adventures,679.1 ft,27.9 ft,21.7 mph,https://rcdb.com/706.htm
+Marsh Mayhem,Wild Adventures,1213.9 ft,49.3 ft,28 mph,https://rcdb.com/707.htm
+Swamp Thing,Wild Adventures,1122 ft,48.6 ft,26 mph,https://rcdb.com/1572.htm
+Cheetah,Wild Adventures,2680 ft,92 ft,52 mph,https://rcdb.com/1044.htm
+Sidewinder,Elitch Gardens,635 ft,56 ft,45 mph,https://rcdb.com/209.htm
+Twister III: Storm Chaser,Elitch Gardens,4640 ft,100 ft,55 mph,https://rcdb.com/210.htm
+Mind Eraser,Elitch Gardens,2260.5 ft,109.3 ft,49.7 mph,https://rcdb.com/422.htm
+Boomerang,Elitch Gardens,935 ft,116.5 ft,47 mph,https://rcdb.com/542.htm
+Half Pipe,Elitch Gardens,229.7 ft,98.4 ft,43.5 mph,https://rcdb.com/2648.htm
+Flying Coaster,Elitch Gardens,1282.8 ft,50 ft,25.7 mph,https://rcdb.com/1711.htm
+Manta,SeaWorld San Diego,2800 ft,30 ft,43 mph,https://rcdb.com/9819.htm
+Electric Eel,SeaWorld San Diego,863 ft,150 ft,62 mph,https://rcdb.com/14683.htm
+Emperor,SeaWorld San Diego,2411 ft,153 ft,60 mph,https://rcdb.com/17030.htm
+Tidal Twister,SeaWorld San Diego,320 ft,22 ft,30 mph,https://rcdb.com/16772.htm
+Good Gravy!,Holiday World,721.8 ft,77 ft,37 mph,https://rcdb.com/21070.htm
+Raven,Holiday World,2800 ft,80 ft,48 mph,https://rcdb.com/136.htm
+Legend,Holiday World,4042 ft,99 ft,59 mph,https://rcdb.com/582.htm
+Voyage,Holiday World,6442 ft,159 ft,67 mph,https://rcdb.com/3231.htm
+Thunderbird,Holiday World,3035 ft,140 ft,60 mph,https://rcdb.com/12260.htm
+Roller Skater,Kentucky Kingdom,679.1 ft,27.9 ft,21.7 mph,https://rcdb.com/172.htm
+Thunder Run,Kentucky Kingdom,2850 ft,90 ft,53 mph,https://rcdb.com/173.htm
+Storm Chaser,Kentucky Kingdom,2744 ft,100 ft,52 mph,https://rcdb.com/12941.htm
+Kentucky Flyer,Kentucky Kingdom,1288 ft,47 ft,35 mph,https://rcdb.com/16676.htm
+T3,Kentucky Kingdom,2171.9 ft,101.7 ft,49.7 mph,https://rcdb.com/175.htm
+Chang,Kentucky Kingdom,4155 ft,154 ft,63 mph,https://rcdb.com/275.htm
+Starchaser,Kentucky Kingdom,1765.1 ft,44.3 ft,31.1 mph,https://rcdb.com/443.htm
+Road Runner Express,Kentucky Kingdom,1213.9 ft,49.3 ft,28 mph,https://rcdb.com/702.htm
+Greezed Lightnin',Kentucky Kingdom,863 ft,137.8 ft,57 mph,https://rcdb.com/2216.htm
+Vampire,Kentucky Kingdom,935 ft,116.5 ft,47 mph,https://rcdb.com/174.htm
+Bobcat,Six Flags Great Escape,1412 ft,55.4 ft,40 mph,https://rcdb.com/21145.htm
+Comet,Six Flags Great Escape,4197 ft,95 ft,55 mph,https://rcdb.com/262.htm
+Steamin' Demon,Six Flags Great Escape,1565 ft,85 ft,40 mph,https://rcdb.com/264.htm
+Flashback,Six Flags Great Escape,935 ft,116.5 ft,47 mph,https://rcdb.com/431.htm
+Canyon Blaster,Six Flags Great Escape,2036 ft,56 ft,45 mph,https://rcdb.com/2214.htm
+unknown,Six Flags Great Escape,2260.5 ft,109.3 ft,49.7 mph,https://rcdb.com/3425.htm
+Nightmare at Crack Axle Canyon,Six Flags Great Escape,1765.1 ft,44.3 ft,31.1 mph,https://rcdb.com/445.htm
+Alpine Bobsled,Six Flags Great Escape,1490 ft,64 ft,35 mph,https://rcdb.com/495.htm
+Phoenix,Knoebels Amusement Resort,3200 ft,78 ft,45 mph,https://rcdb.com/143.htm
+Twister,Knoebels Amusement Resort,3900 ft,101.6 ft,51.5 mph,https://rcdb.com/546.htm
+Flying Turns,Knoebels Amusement Resort,1300 ft,50 ft,24 mph,https://rcdb.com/3458.htm
+Impulse,Knoebels Amusement Resort,1975 ft,98 ft,55 mph,https://rcdb.com/12000.htm
+Jet Star,Knoebels Amusement Resort,1765.1 ft,44.3 ft,31.1 mph,https://rcdb.com/651.htm
+Whirlwind,Knoebels Amusement Resort,1148.3 ft,64 ft,37.3 mph,https://rcdb.com/145.htm
+Super Flight,Playland Park,1282.8 ft,50 ft,25.7 mph,https://rcdb.com/2561.htm
+Whirlwind,Playland Park,1148.3 ft,64 ft,37.3 mph,https://rcdb.com/144.htm
+Palindrome,Cotaland,1230 ft,95 ft,51 mph,https://rcdb.com/19715.htm
+Zoomerang,Lake Compounce,935 ft,116.5 ft,47 mph,https://rcdb.com/432.htm
+Phobia Phear Coaster,Lake Compounce,863 ft,150 ft,62 mph,https://rcdb.com/12897.htm
+Wildcat,Lake Compounce,2746 ft,85 ft,48 mph,https://rcdb.com/420.htm
+Big Bad John,Magic Springs Theme and Water Park,2349 ft,32 ft,37 mph,https://rcdb.com/1452.htm
+Gauntlet,Magic Springs Theme and Water Park,2260.5 ft,109 ft,49.7 mph,https://rcdb.com/2421.htm
+X Coaster,Magic Springs Theme and Water Park,492 ft,151 ft,65.3 mph,https://rcdb.com/3312.htm
+Barnstormer,Walt Disney World - Magic Kingdom,794 ft,30 ft,25 mph,https://rcdb.com/274.htm
+Pepsi Orange Streak,Nickelodeon Universe,2680 ft,60 ft,30 mph,https://rcdb.com/101.htm
+Fairly Odd Coaster,Nickelodeon Universe,1345 ft,54 ft,31 mph,https://rcdb.com/2508.htm
+SpongeBob SquarePants Rock Bottom Plunge,Nickelodeon Universe,1371.4 ft,74.5 ft,43.5 mph,https://rcdb.com/3727.htm
+Flight of the Hippogriff,Universal Studios Islands of Adventure,1099.1 ft,42.7 ft,28.5 mph,https://rcdb.com/703.htm
+VelociCoaster,Universal Studios Islands of Adventure,4700 ft,155 ft,70 mph,https://rcdb.com/6992.htm
+Hagrid's Magical Creatures Motorbike Adventure,Universal Studios Islands of Adventure,5053 ft,65 ft,50 mph,https://rcdb.com/15330.htm
+Incredible Hulk,Universal Studios Islands of Adventure,3700 ft,110 ft,67 mph,https://rcdb.com/557.htm
+TMNT Shellraiser,Nickelodeon Universe Theme Park,3280.8 ft,141 ft,62.1 mph,https://rcdb.com/15594.htm
+Shredder,Nickelodeon Universe Theme Park,2247 ft,85 ft,36 mph,https://rcdb.com/15600.htm
+Nickelodeon Slime Streak,Nickelodeon Universe Theme Park,1263 ft,70 ft,37 mph,https://rcdb.com/16775.htm
+Sandy’s Blasting Bronco,Nickelodeon Universe Theme Park,1607.6 ft,85.3 ft,47.8 mph,https://rcdb.com/16793.htm
+Wild Chipmunk,Lakeside Amusement Park,1150 ft,41 ft,21 mph,https://rcdb.com/289.htm
+Silver Bullet,Frontier City,1942 ft,80 ft,47.8 mph,https://rcdb.com/153.htm
+Wildcat,Frontier City,2653 ft,75 ft,46 mph,https://rcdb.com/155.htm
+Diamond Back,Frontier City,635 ft,56 ft,45 mph,https://rcdb.com/586.htm
+Steel Lasso,Frontier City,967.8 ft,49 ft,30 mph,https://rcdb.com/4191.htm
+Excalibur,Frontier City,2637 ft,88 ft,46 mph,https://rcdb.com/1451.htm
+Comet,Waldameer,1300 ft,37 ft,25 mph,https://rcdb.com/377.htm
+Steel Dragon,Waldameer,1391.1 ft,50.8 ft,37.3 mph,https://rcdb.com/2657.htm
+Ravine Flyer II,Waldameer,2900 ft,80 ft,57 mph,https://rcdb.com/3917.htm
+Cyclops,Mt. Olympus Water &amp; Theme Park,1900 ft,70 ft,58 mph,https://rcdb.com/161.htm
+Zeus,Mt. Olympus Water &amp; Theme Park,2900 ft,90 ft,60 mph,https://rcdb.com/280.htm
+Hades 360,Mt. Olympus Water &amp; Theme Park,4746 ft,136 ft,60 mph,https://rcdb.com/2667.htm
+Opa,Mt. Olympus Water &amp; Theme Park,1377.9 ft,42.7 ft,29.1 mph,https://rcdb.com/3386.htm
+Timberhawk: Ride of Prey,Wild Waves Theme &amp; Water Park,2600 ft,75 ft,50 mph,https://rcdb.com/1862.htm
+Bobsleds,Seabreeze,1240 ft,31 ft,23 mph,https://rcdb.com/228.htm
+Whirlwind,Seabreeze,1391.1 ft,50.8 ft,37.3 mph,https://rcdb.com/2315.htm
+Quantum Loop,Seabreeze,2822 ft,59.1 ft,56 mph,https://rcdb.com/454.htm
+Chip &amp; Dale’s Gadget Coaster,Disneyland,679.1 ft,27.9 ft,21.7 mph,https://rcdb.com/295.htm
+Revenge of the Mummy,Universal Studios Florida,2200 ft,44.4 ft,40 mph,https://rcdb.com/2232.htm
+"Hollywood Rip, Ride, Rockit",Universal Studios Florida,3800 ft,167 ft,65 mph,https://rcdb.com/3866.htm
+Woody Woodpecker's Nuthouse Coaster,Universal Studios Florida,679.2 ft,27.9 ft,21.7 mph,https://rcdb.com/563.htm
+Swamp Fox,Family Kingdom Amusement Park,2640 ft,72 ft,50 mph,https://rcdb.com/337.htm
+Crazy Mouse,Niagara Amusement Park &amp; Splash World,1377.9 ft,42.7 ft,29.1 mph,https://rcdb.com/2983.htm
+Galaxy Spin,Fun Spot America,1377.9 ft,42.7 ft,29.1 mph,https://rcdb.com/9207.htm
+Mine Blower,Fun Spot America,2290 ft,83 ft,48.5 mph,https://rcdb.com/14554.htm
+Hot Tamales,Casino Pier,196.8 ft,11.8 ft,14.1 mph,https://rcdb.com/2262.htm
+Hydrus,Casino Pier,1050 ft,72 ft,45 mph,https://rcdb.com/14231.htm
+Jet Star,Casino Pier,1765.1 ft,44.3 ft,31.1 mph,https://rcdb.com/344.htm
+GaleForce,Playland's Castaway Cove,1269 ft,125 ft,64 mph,https://rcdb.com/13346.htm
+Wild West Express,Glenwood Caverns Adventure Park,197.5 ft,10.8 ft,16.2 mph,https://rcdb.com/10463.htm
+Rampage,Alabama Adventure &amp; Splash Adventure,3500 ft,120 ft,56 mph,https://rcdb.com/475.htm
+Zoomerang,Alabama Adventure &amp; Splash Adventure,935 ft,116.5 ft,47 mph,https://rcdb.com/2953.htm
+King Kobra,Jolly Roger Amusement Park,722 ft,137.8 ft,53 mph,https://rcdb.com/638.htm
+Time Twister,Jolly Roger Amusement Park,2398.3 ft,75 ft,40 mph,https://rcdb.com/1363.htm
+Wild Mouse,Jolly Roger Amusement Park,1213.9 ft,49.3 ft,28 mph,https://rcdb.com/1815.htm
+Sea Viper,Palace Playland,1509.2 ft,68.8 ft,41.1 mph,https://rcdb.com/15462.htm
+Yankee Cannonball,Canobie Lake Park,2000 ft,63.5 ft,35 mph,https://rcdb.com/298.htm
+Untamed,Canobie Lake Park,1184.4 ft,72.2 ft,43.5 mph,https://rcdb.com/9517.htm
+Crazy Mouse,Tropic Falls Theme Park,1036.8 ft,36.1 ft,29.2 mph,https://rcdb.com/14399.htm
+Rollin' Thunder,Tropic Falls Theme Park,2234.3 ft,114.8 ft,55.9 mph,https://rcdb.com/14400.htm
+Rudy's Rapid Transit,Santa's Village,1181.1 ft,26.3 ft,22.4 mph,https://rcdb.com/390.htm
+Rattlesnake Coaster,Adventureland,652.9 ft,19.7 ft,19.9 mph,https://rcdb.com/619.htm
+Turbulence,Adventureland,1253.3 ft,55 ft,40 mph,https://rcdb.com/12224.htm
+Hurricane,Adventureland,1427 ft,59 ft,35 mph,https://rcdb.com/409.htm
+Crazy Mouse,Steel Pier,1377.9 ft,42.7 ft,29.1 mph,https://rcdb.com/458.htm
+Hurricane Coaster,Fun Spot America Atlanta,900 ft,38 ft,35 mph,https://rcdb.com/3684.htm
+ArieForce One,Fun Spot America Atlanta,3400 ft,155 ft,64 mph,https://rcdb.com/19332.htm
+Freedom Flyer,Fun Spot America,1295.9 ft,64.3 ft,34.2 mph,https://rcdb.com/10347.htm
+White Lightning,Fun Spot America,2032 ft,69.7 ft,44.3 mph,https://rcdb.com/10348.htm
+Dragon,Legoland Florida,1496.1 ft,42.7 ft,28.5 mph,https://rcdb.com/2737.htm
+Coastersaurus,Legoland Florida,1365 ft,40 ft,32 mph,https://rcdb.com/2746.htm
+Great Lego Race,Legoland Florida,1312.3 ft,51.8 ft,35 mph,https://rcdb.com/9526.htm
+Flying School,Legoland Florida,1122 ft,48.6 ft,26 mph,https://rcdb.com/2718.htm
+Galaxy Spin,Legoland Florida,1377.9 ft,42.7 ft,29.1 mph,https://rcdb.com/3105.htm
+Super Cyclone,Santa's Village AZoosment Park,1148.3 ft,32.8 ft,30 mph,https://rcdb.com/14450.htm
+Typhoon,Santa's Village AZoosment Park,1775 ft,63 ft,45 mph,https://rcdb.com/497.htm
+Giant Dipper,Santa Cruz Beach Boardwalk,2640 ft,70 ft,55 mph,https://rcdb.com/204.htm
+Undertow,Santa Cruz Beach Boardwalk,1410 ft,50 ft,40 mph,https://rcdb.com/10930.htm
+Kingdom Coaster,Dutch Wonderland,2000 ft,55 ft,40 mph,https://rcdb.com/251.htm
+Thunderbolt Express,Camden Park,635 ft,56 ft,45 mph,https://rcdb.com/314.htm
+Revenge of the Mummy the Ride,Universal Studios Hollywood,1906 ft,44.4 ft,40 mph,https://rcdb.com/2464.htm
+New Mexico Rattler,Cliff's Amusement Park,2750 ft,80 ft,47 mph,https://rcdb.com/1659.htm
+Phoenix,Deno's Wonder Wheel Amusement Park,1220.5 ft,68 ft,34 mph,https://rcdb.com/18886.htm
+Matugani,Lost Island Theme Park,1443.5 ft,78.7 ft,46.6 mph,https://rcdb.com/18326.htm
+Nopuko Air Coaster,Lost Island Theme Park,2509.8 ft,109.3 ft,49.7 mph,https://rcdb.com/18891.htm
+Technic Coaster,Legoland California,1312.3 ft,51.8 ft,35 mph,https://rcdb.com/1144.htm
+Coastersaurus,Legoland California,492.2 ft,18.1 ft,20.5 mph,https://rcdb.com/2614.htm
+Kentucky Rumbler,Beech Bend,2827 ft,96 ft,47.3 mph,https://rcdb.com/2967.htm
+Wild Mouse,Beech Bend,1377.9 ft,42.7 ft,29.1 mph,https://rcdb.com/2968.htm
+Excalibur,Funtown Splashtown U.S.A.,2700 ft,100 ft,55 mph,https://rcdb.com/471.htm
+Wild Mouse,Funtown Splashtown U.S.A.,1213.9 ft,49.3 ft,28 mph,https://rcdb.com/4318.htm
+Crazy Mouse,DelGrosso's Amusement Park,1377.9 ft,42.7 ft,29.1 mph,https://rcdb.com/2597.htm
+unknown,DelGrosso's Amusement Park,1565 ft,70 ft,55 mph,https://rcdb.com/3606.htm
+Cannon Ball,Lake Winnepesaukah,2272 ft,70 ft,50 mph,https://rcdb.com/348.htm
+Merlin's Revenge,Castle Park,679.1 ft,27.9 ft,21.7 mph,https://rcdb.com/1032.htm
+Cinder Roller Coaster,Storybook Land,370.7 ft,23 ft,18.6 mph,https://rcdb.com/20267.htm
+Wooden Warrior,Quassy Amusement Park,1239 ft,32 ft,35 mph,https://rcdb.com/4495.htm
+Tidal Wave,Jenkinson's Boardwalk,393.7 ft,20 ft,11.2 mph,https://rcdb.com/16771.htm
+Roar-O-Saurus,Story Land,1240 ft,40 ft,33 mph,https://rcdb.com/11611.htm
+Rewind Racers,Adventure City,593.8 ft,39.3 ft,31.1 mph,https://rcdb.com/10976.htm
+Barreling Rapids,Austin's Park,393.7 ft,20 ft,11.2 mph,https://rcdb.com/18856.htm
+Adrenaline Peak,Oaks Amusement Park,1050 ft,72 ft,45 mph,https://rcdb.com/15410.htm
+Classic Coaster,Washington State Fair,2650 ft,55 ft,50 mph,https://rcdb.com/257.htm
+Rainier Rush,Washington State Fair,1775 ft,63 ft,45 mph,https://rcdb.com/6478.htm
+Quicksilver Express,Gilroy Gardens Family Theme Park,2139 ft,38 ft,32 mph,https://rcdb.com/737.htm
+Hell Cat,Clementon Park,2602 ft,110 ft,56 mph,https://rcdb.com/2586.htm
+Rock 'n' Roller Coaster,Walt Disney World - Disney's Hollywood Studios,3267.7 ft,80 ft,57 mph,https://rcdb.com/560.htm
+Canyon Blaster,Adventuredome,2423 ft,94 ft,41 mph,https://rcdb.com/104.htm
+El Loco,Adventuredome,1300 ft,90 ft,45 mph,https://rcdb.com/11450.htm
+Sea Dragon,Columbus Zoo and Aquarium,1320 ft,35 ft,25 mph,https://rcdb.com/324.htm
+Tidal Twist,Columbus Zoo and Aquarium,1066 ft,36 ft,30 mph,https://rcdb.com/19230.htm
+Tidal Wave,Trimper Rides,935 ft,116.5 ft,47 mph,https://rcdb.com/300.htm
+Vapor Trail,Sesame Place,1299.2 ft,43 ft,27 mph,https://rcdb.com/487.htm
+Oscar's Wacky Taxi,Sesame Place,1205 ft,43 ft,34 mph,https://rcdb.com/15486.htm
+Zippin Pippin,Bay Beach Amusement Park,2347 ft,70 ft,42 mph,https://rcdb.com/9088.htm
+Runaway Train,Gillian's Wonderland Pier,944.9 ft,42.7 ft,31.3 mph,https://rcdb.com/2966.htm
+Roller Coaster,Playtime Family Fun,300 ft,13 ft,10 mph,https://rcdb.com/20980.htm
+Iron Shark,Galveston Island Historic Pleasure Pier,1246 ft,100 ft,52 mph,https://rcdb.com/10290.htm
+Big Apple Coaster,"New York, New York Hotel &amp; Casino",4777 ft,203 ft,67 mph,https://rcdb.com/139.htm
+FunCoaster,Funplex,1017.1 ft,36.1 ft,26.7 mph,https://rcdb.com/11294.htm
+Switchback,ZDT'S Amusement Park,1196 ft,64 ft,41 mph,https://rcdb.com/12392.htm
+Expedition Everest,Walt Disney World - Disney's Animal Kingdom,3884.5 ft,112 ft,50 mph,https://rcdb.com/2389.htm
+Primeval Whirl,Walt Disney World - Disney's Animal Kingdom,1377.9 ft,42.7 ft,29.1 mph,https://rcdb.com/1566.htm
+Primeval Whirl,Walt Disney World - Disney's Animal Kingdom,1377.9 ft,42.7 ft,29.1 mph,https://rcdb.com/1868.htm
+Speedway Coaster,NASCAR SpeedPark,413.4 ft,14.8 ft,18.6 mph,https://rcdb.com/2780.htm
+Live Oak Ladybug,Carousel Gardens,652.9 ft,19.7 ft,19.9 mph,https://rcdb.com/381.htm
+Prairie Screamer,Prairie Playland,2600 ft,90 ft,50 mph,https://rcdb.com/19262.htm
+Hurricane,Race City PCB,1427 ft,59 ft,35 mph,https://rcdb.com/12397.htm
+Boardwalk Bullet,Kemah Boardwalk,3236 ft,96 ft,51 mph,https://rcdb.com/3757.htm
+Giant Dipper,Belmont Park,2600 ft,73 ft,55 mph,https://rcdb.com/203.htm
+Mineshaft Coaster,Alpine Slide at Magic Mountain,5280 ft,24 ft,27 mph,https://rcdb.com/18493.htm
+Kombo,Indianapolis Zoo,652.9 ft,19.7 ft,19.9 mph,https://rcdb.com/739.htm
+Santa Monica West Coaster,Pacific Park,1300 ft,55 ft,35 mph,https://rcdb.com/434.htm
+Tsunami,Scene75 Entertainment Center,393.7 ft,20 ft,11.2 mph,https://rcdb.com/18301.htm
+Desperado,Buffalo Bill's Resort &amp; Casino,5843 ft,209 ft,80 mph,https://rcdb.com/103.htm
+Outlaw Mountain Coaster,Steamboat Resort,6281.1 ft,40 ft,26.7 mph,https://rcdb.com/14824.htm
+Crazy Mouse,Motor World,1377.9 ft,42.7 ft,29.1 mph,https://rcdb.com/714.htm
+Cannonball Run,Waterville USA,1700 ft,65 ft,43 mph,https://rcdb.com/360.htm
+Wildcat,Wild Island,900 ft,38 ft,35 mph,https://rcdb.com/514.htm
+Shooting Star,Coney Island,2950 ft,88 ft,43 mph,https://rcdb.com/2040.htm
