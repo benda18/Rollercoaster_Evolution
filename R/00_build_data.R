@@ -14,10 +14,10 @@ rm(list=ls());cat('\f');gc()
 
 ride.url <- "https://rcdb.com/69.htm" # the racer (dueling)
 ride.url <- "https://rcdb.com/74.htm" # kiddie (no speed)
+ride.url <- "https://rcdb.com/18488.htm" # really old ride with no data
 # ride.url <- "https://rcdb.com/530.htm"  # Invertigo
 # ride.url <- "https://rcdb.com/location.htm?id=17774"  # Mason, OH
-# 
-# ride_info("https://rcdb.com/location.htm?id=17774")
+# ride_info("https://rcdb.com/18488.htm")
 
 # FUNS ----
 ride_info <- function(ride.url){
@@ -49,7 +49,8 @@ ride_info <- function(ride.url){
      is.na(the.ridename) , 
      is.null(the.ridename) ,
      "try-error" %in% class(the.ridename))) ){
-    stop(glue("<ERROR - variable: 'the.ridename'> ({ride.url})"))
+    the.ridename <- NA
+    print(glue("<ERROR - variable: 'the.ridename'> ({ride.url})"))
   }
   # /LOGICHECK
   
@@ -76,7 +77,8 @@ ride_info <- function(ride.url){
            is.na(the.parkname) , 
            is.null(the.parkname) ,
            "try-error" %in% class(the.parkname))) ){
-    stop(glue("<ERROR - variable: 'the.parkname'> ({ride.url})"))
+    the.parkname <- NA
+    print(glue("<ERROR - variable: 'the.parkname'> ({ride.url})"))
   }
   # /LOGICHECK
   
@@ -139,7 +141,7 @@ ride_info <- function(ride.url){
   
   # add ride_url 
   out$ride_url <- ride.url
-  
+  as_tibble(out)
   return(out)
 }
 
