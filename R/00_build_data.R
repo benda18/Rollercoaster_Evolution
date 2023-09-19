@@ -12,7 +12,8 @@ library(readr)
 
 rm(list=ls());cat('\f');gc()
 
-ride.url <- "https://rcdb.com/69.htm"
+ride.url <- "https://rcdb.com/69.htm" # the racer (dueling)
+ride.url <- "https://rcdb.com/74.htm" # kiddie (no speed)
 # ride.url <- "https://rcdb.com/530.htm"  # Invertigo
 # ride.url <- "https://rcdb.com/location.htm?id=17774"  # Mason, OH
 # 
@@ -95,6 +96,23 @@ ride_info <- function(ride.url){
     stop(glue("<ERROR - variable: 'the.table'> ({ride.url})"))
   }
   # /LOGICHECK
+  
+  # check that table contains all of the following: height, length, speed
+  if(!any(grepl("speed", the.table$X1, ignore.case = T))){
+    the.table <- rbind(the.table, 
+                       data.frame(X1 = "Speed", 
+                                  X2 = NA))
+  }
+  if(!any(grepl("height", the.table$X1, ignore.case = T))){
+    the.table <- rbind(the.table, 
+                       data.frame(X1 = "Height", 
+                                  X2 = NA))
+  }
+  if(!any(grepl("length", the.table$X1, ignore.case = T))){
+    the.table <- rbind(the.table, 
+                       data.frame(X1 = "Length", 
+                                  X2 = NA))
+  }
   
   the.table <- rbind(the.table, 
                      data.frame(X1 = c("ride_name", "park_name"), 
