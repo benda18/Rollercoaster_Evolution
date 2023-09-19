@@ -10,6 +10,9 @@ library(xml2)
 rm(list=ls());cat('\f');gc()
 
 # Functions----
+
+ride_info("https://rcdb.com/530.htm")
+
 ride_info <- function(ride.url){
   ride.html <- read_html(ride.url)
   
@@ -78,6 +81,8 @@ ride_info <- function(ride.url){
   out <- out[,c("ride_name", "park_name", 
                 "Length", "Height", "Speed")]
   
+  # add ride_url 
+  out$ride_url <- ride.url
   
   return(out)
 }
