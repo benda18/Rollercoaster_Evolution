@@ -12,13 +12,24 @@ library(readr)
 
 rm(list=ls());cat('\f');gc()
 
+ride.url <- "https://rcdb.com/530.htm"  # Invertigo
+ride.url <- "https://rcdb.com/location.htm?id=17774"  # Mason, OH
+
+ride_info("https://rcdb.com/location.htm?id=17774")
+
 # FUNS ----
 ride_info <- function(ride.url){
-  ride.html <- read_html(ride.url)
+  ride.html <- try(read_html(ride.url))
+  
+  #LOGICHECK
+  if("try-error" %in% class(ride.html)){
+    stop(glue("<ERROR - variable: 'ride.html'> ({ride.url})"))
+  }
+  #/LOGICHECK
   
   # get park name
   
-  the.ridename <- html_element(x = ride.html, 
+  the.ridename <- try(html_element(x = ride.html, 
                                xpath = "//*[@id=\"objdiv\"]") %>%
     html_children() %>%
     html_children() %>%
@@ -29,9 +40,18 @@ ride_info <- function(ride.url){
              "\n") %>% 
     unlist() %>%
     .[grepl("<h1>", .)] %>%
-    gsub("<h1>|</h1>", "", .)
+    gsub("<h1>|</h1>", "", .))
   
-  the.parkname <- html_element(x = ride.html, 
+  # LOGICHECK
+  if(any(c(length(the.ridename) ==0 ,
+     is.na(the.ridename) , 
+     is.null(the.ridename) ,
+     "try-error" %in% class(the.ridename))) ){
+    stop(glue("<ERROR - variable: 'the.ridename'> ({ride.url})"))
+  }
+  # /LOGICHECK
+  
+  the.parkname <- try(html_element(x = ride.html, 
                                xpath = "//*[@id=\"objdiv\"]") %>%
     html_children() %>%
     html_children() %>%
@@ -47,16 +67,32 @@ ride_info <- function(ride.url){
     strsplit(., "\"") %>%
     unlist() %>%
     .[!grepl("<a href|\\.htm", .)] %>%
-    gsub(">|</a>", "", .)
+    gsub(">|</a>", "", .))
   
+  # LOGICHECK
+  if(any(c(length(the.parkname) ==0 ,
+           is.na(the.parkname) , 
+           is.null(the.parkname) ,
+           "try-error" %in% class(the.parkname))) ){
+    stop(glue("<ERROR - variable: 'the.parkname'> ({ride.url})"))
+  }
+  # /LOGICHECK
   
-  
-  the.table <- html_element(x = ride.html, 
+  the.table <- try(html_element(x = ride.html, 
                             xpath = "/html/body") %>% 
     html_children() %>%
     .[grepl("Tracks", .)] %>%
     html_table() %>%
-    .[[1]]
+    .[[1]])
+  
+  # LOGICHECK
+  if(#length(the.table) != 1 |
+     #is.na(the.table) | 
+     any(c(is.null(the.table),
+     "try-error" %in% class(the.table))) ){
+    stop(glue("<ERROR - variable: 'the.table'> ({ride.url})"))
+  }
+  # /LOGICHECK
   
   the.table <- rbind(the.table, 
                      data.frame(X1 = c("ride_name", "park_name"), 
@@ -123,8 +159,6 @@ get_park_urls <- function(searchpage.url){
                sep = "")
   return(out)
 }
-
-
 
 park_info <- function(park.url){
   park.html <- read_html(park.url)
@@ -569,3 +603,9 @@ park_inventory <- read_csv("park_inventory.csv")
 park_inventory %>%
   group_by(park_name, park_url, 
            ride_name = Name, )
+
+ride_specs <- read_csv("ride_specs.csv")
+
+ride_specs %>%
+  group_by(park_name) %>%
+  summarise(n = n())
