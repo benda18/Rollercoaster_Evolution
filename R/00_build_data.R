@@ -12,13 +12,30 @@ library(readr)
 
 rm(list=ls());cat('\f');gc()
 
+ride.url <- "https://rcdb.com/69.htm" # the racer (dueling)
+ride.url <- "https://rcdb.com/74.htm" # kiddie (no speed)
+ride.url <- "https://rcdb.com/18488.htm" # really old ride with no data
+# ride.url <- "https://rcdb.com/530.htm"  # Invertigo
+# ride.url <- "https://rcdb.com/location.htm?id=17774"  # Mason, OH
+# ride_info("https://rcdb.com/18488.htm")
+
 # FUNS ----
 ride_info <- function(ride.url){
-  ride.html <- read_html(ride.url)
+
+  ride.html <- try(read_html(ride.url))
+  
+  #LOGICHECK
+  if("try-error" %in% class(ride.html)){
+    stop(glue("<ERROR - variable: 'ride.html'> ({ride.url})"))
+  }
+  #/LOGICHECK
   
   # get park name
   
-  the.ridename <- html_element(x = ride.html, 
+  the.ridename <- try(html_element(x = ride.html, 
+
+  
+
                                xpath = "//*[@id=\"objdiv\"]") %>%
     html_children() %>%
     html_children() %>%
@@ -29,9 +46,22 @@ ride_info <- function(ride.url){
              "\n") %>% 
     unlist() %>%
     .[grepl("<h1>", .)] %>%
-    gsub("<h1>|</h1>", "", .)
+
+    gsub("<h1>|</h1>", "", .))
   
-  the.parkname <- html_element(x = ride.html, 
+  # LOGICHECK
+  if(any(c(length(the.ridename) ==0 ,
+     is.na(the.ridename) , 
+     is.null(the.ridename) ,
+     "try-error" %in% class(the.ridename))) ){
+    the.ridename <- NA
+    print(glue("<ERROR - variable: 'the.ridename'> ({ride.url})"))
+  }
+  # /LOGICHECK
+  
+  the.parkname <- try(html_element(x = ride.html, 
+
+
                                xpath = "//*[@id=\"objdiv\"]") %>%
     html_children() %>%
     html_children() %>%
@@ -47,16 +77,57 @@ ride_info <- function(ride.url){
     strsplit(., "\"") %>%
     unlist() %>%
     .[!grepl("<a href|\\.htm", .)] %>%
-    gsub(">|</a>", "", .)
+
+    gsub(">|</a>", "", .))
   
+  # LOGICHECK
+  if(any(c(length(the.parkname) ==0 ,
+           is.na(the.parkname) , 
+           is.null(the.parkname) ,
+           "try-error" %in% class(the.parkname))) ){
+    the.parkname <- NA
+    print(glue("<ERROR - variable: 'the.parkname'> ({ride.url})"))
+  }
+  # /LOGICHECK
   
-  
-  the.table <- html_element(x = ride.html, 
+  the.table <- try(html_element(x = ride.html, 
+
+
                             xpath = "/html/body") %>% 
     html_children() %>%
     .[grepl("Tracks", .)] %>%
     html_table() %>%
-    .[[1]]
+
+    .[[1]] %>%
+      .[,c("X1", "X2")])  # added for the racer to address racing rides with 2 or more columns
+  
+  # LOGICHECK
+  if(#length(the.table) != 1 |
+     #is.na(the.table) | 
+     any(c(is.null(the.table),
+     "try-error" %in% class(the.table))) ){
+    stop(glue("<ERROR - variable: 'the.table'> ({ride.url})"))
+  }
+  # /LOGICHECK
+  
+  # check that table contains all of the following: height, length, speed
+  if(!any(grepl("speed", the.table$X1, ignore.case = T))){
+    the.table <- rbind(the.table, 
+                       data.frame(X1 = "Speed", 
+                                  X2 = NA))
+  }
+  if(!any(grepl("height", the.table$X1, ignore.case = T))){
+    the.table <- rbind(the.table, 
+                       data.frame(X1 = "Height", 
+                                  X2 = NA))
+  }
+  if(!any(grepl("length", the.table$X1, ignore.case = T))){
+    the.table <- rbind(the.table, 
+                       data.frame(X1 = "Length", 
+                                  X2 = NA))
+  }
+
+
   
   the.table <- rbind(the.table, 
                      data.frame(X1 = c("ride_name", "park_name"), 
@@ -83,7 +154,10 @@ ride_info <- function(ride.url){
   
   # add ride_url 
   out$ride_url <- ride.url
-  
+
+  as_tibble(out)
+
+
   return(out)
 }
 
@@ -532,6 +606,8 @@ if(!"ride_specs.csv" %in% list.files()){
   ride_specs <- read_csv("ride_specs.csv")
 }
 
+
+
 # 2) Then you loop through every park in temp.ride_urls, before pinging that url
 # check to see if you've already pulled down that data. If so, skip; if not -
 # ping & log. if is.null(park_inventory) you will need to skip this
@@ -545,10 +621,17 @@ for(i in 1:nrow(temp.ride_urls)){
     Sys.sleep(rand_sleep()*2.1+0.5)
     print(Sys.time())
     # ping website and write to csv
-    try(write_csv(x = ride_info(temp.ride_urls$ride_url[i]), 
+
+    info.try <- try(write_csv(x = ride_info(temp.ride_urls$ride_url[i]), 
                   file = "ride_specs.csv",
                   append = T))
-   
+   if("try-error" %in% class(info.try)){
+     stop(glue("<ERROR> - MISSING COLUMNS ({temp.ride_urls$ride_url[i]})"))
+   }
+    
+    
+
+
   }else{
     print("skipped running 'ride_info()' bc data has already been logged")
   }
