@@ -12,10 +12,11 @@ library(readr)
 
 rm(list=ls());cat('\f');gc()
 
-ride.url <- "https://rcdb.com/530.htm"  # Invertigo
-ride.url <- "https://rcdb.com/location.htm?id=17774"  # Mason, OH
-
-ride_info("https://rcdb.com/location.htm?id=17774")
+ride.url <- "https://rcdb.com/69.htm"
+# ride.url <- "https://rcdb.com/530.htm"  # Invertigo
+# ride.url <- "https://rcdb.com/location.htm?id=17774"  # Mason, OH
+# 
+# ride_info("https://rcdb.com/location.htm?id=17774")
 
 # FUNS ----
 ride_info <- function(ride.url){
@@ -83,7 +84,8 @@ ride_info <- function(ride.url){
     html_children() %>%
     .[grepl("Tracks", .)] %>%
     html_table() %>%
-    .[[1]])
+    .[[1]] %>%
+      .[,c("X1", "X2")])  # added for the racer to address racing rides with 2 or more columns
   
   # LOGICHECK
   if(#length(the.table) != 1 |
@@ -581,10 +583,14 @@ for(i in 1:nrow(temp.ride_urls)){
     Sys.sleep(rand_sleep()*2.1+0.5)
     print(Sys.time())
     # ping website and write to csv
-    try(write_csv(x = ride_info(temp.ride_urls$ride_url[i]), 
+    info.try <- try(write_csv(x = ride_info(temp.ride_urls$ride_url[i]), 
                   file = "ride_specs.csv",
                   append = T))
-   
+   if("try-error" %in% class(info.try)){
+     stop(glue("<ERROR> - MISSING COLUMNS ({temp.ride_urls$ride_url[i]})"))
+   }
+    
+    
   }else{
     print("skipped running 'ride_info()' bc data has already been logged")
   }
