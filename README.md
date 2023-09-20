@@ -39,8 +39,9 @@ All input and output data needed and generated, including a reference to the app
   - [...]
   
 #### 3.  Explore
-  - [...]
-  - [...]
+  - Graph how the sale of coasters and coaster assets (if possible) from one park to another creates a relational network between US amusement parks. 
+  - Number of rides by park by year, gross vs net
+  - Type of rides by park by year
   
 #### 4. Design Dashboard Layout
   - [...]

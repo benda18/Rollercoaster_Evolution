@@ -12,16 +12,9 @@ library(readr)
 
 rm(list=ls());cat('\f');gc()
 
-ride.url <- "https://rcdb.com/69.htm" # the racer (dueling)
-ride.url <- "https://rcdb.com/74.htm" # kiddie (no speed)
-ride.url <- "https://rcdb.com/18488.htm" # really old ride with no data
-# ride.url <- "https://rcdb.com/530.htm"  # Invertigo
-# ride.url <- "https://rcdb.com/location.htm?id=17774"  # Mason, OH
-# ride_info("https://rcdb.com/18488.htm")
 
 # FUNS ----
 ride_info <- function(ride.url){
-
   ride.html <- try(read_html(ride.url))
   
   #LOGICHECK
@@ -33,9 +26,6 @@ ride_info <- function(ride.url){
   # get park name
   
   the.ridename <- try(html_element(x = ride.html, 
-
-  
-
                                xpath = "//*[@id=\"objdiv\"]") %>%
     html_children() %>%
     html_children() %>%
@@ -46,7 +36,6 @@ ride_info <- function(ride.url){
              "\n") %>% 
     unlist() %>%
     .[grepl("<h1>", .)] %>%
-
     gsub("<h1>|</h1>", "", .))
   
   # LOGICHECK
@@ -60,8 +49,6 @@ ride_info <- function(ride.url){
   # /LOGICHECK
   
   the.parkname <- try(html_element(x = ride.html, 
-
-
                                xpath = "//*[@id=\"objdiv\"]") %>%
     html_children() %>%
     html_children() %>%
@@ -77,7 +64,6 @@ ride_info <- function(ride.url){
     strsplit(., "\"") %>%
     unlist() %>%
     .[!grepl("<a href|\\.htm", .)] %>%
-
     gsub(">|</a>", "", .))
   
   # LOGICHECK
@@ -91,13 +77,10 @@ ride_info <- function(ride.url){
   # /LOGICHECK
   
   the.table <- try(html_element(x = ride.html, 
-
-
                             xpath = "/html/body") %>% 
     html_children() %>%
     .[grepl("Tracks", .)] %>%
     html_table() %>%
-
     .[[1]] %>%
       .[,c("X1", "X2")])  # added for the racer to address racing rides with 2 or more columns
   
@@ -126,8 +109,6 @@ ride_info <- function(ride.url){
                        data.frame(X1 = "Length", 
                                   X2 = NA))
   }
-
-
   
   the.table <- rbind(the.table, 
                      data.frame(X1 = c("ride_name", "park_name"), 
@@ -154,10 +135,7 @@ ride_info <- function(ride.url){
   
   # add ride_url 
   out$ride_url <- ride.url
-
   as_tibble(out)
-
-
   return(out)
 }
 
@@ -606,8 +584,6 @@ if(!"ride_specs.csv" %in% list.files()){
   ride_specs <- read_csv("ride_specs.csv")
 }
 
-
-
 # 2) Then you loop through every park in temp.ride_urls, before pinging that url
 # check to see if you've already pulled down that data. If so, skip; if not -
 # ping & log. if is.null(park_inventory) you will need to skip this
@@ -621,7 +597,6 @@ for(i in 1:nrow(temp.ride_urls)){
     Sys.sleep(rand_sleep()*2.1+0.5)
     print(Sys.time())
     # ping website and write to csv
-
     info.try <- try(write_csv(x = ride_info(temp.ride_urls$ride_url[i]), 
                   file = "ride_specs.csv",
                   append = T))
@@ -630,8 +605,6 @@ for(i in 1:nrow(temp.ride_urls)){
    }
     
     
-
-
   }else{
     print("skipped running 'ride_info()' bc data has already been logged")
   }
