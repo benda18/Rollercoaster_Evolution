@@ -35,6 +35,64 @@ for(i in dat_files){
 rm(i,dat_files)
 
 
+# Use Cedar Fair Parks As Baseline to Gauge Data Accuracy----
+setwd(wd$data)
+
+cw_cedarfair <- data.frame(operator_name = c("Cedar Fair"), 
+                           operator_url = "https://rcdb.com/12487.htm", 
+                           #park_name = c(NA), 
+                           park_url = c("4541", 
+                                        #"4539",  # canada's wonderland - not in dataset bc outside usa 
+                                        4542, 4529, 4588, 4544,
+                                        4540,4546,4578,4552,4533)) %>%
+  as_tibble()
+
+cw_cedarfair$park_url <- cw_cedarfair$park_url %>%
+  paste(., ".htm", sep = "") %>%
+  paste("https://rcdb.com/", ., 
+        sep = "")
+
+cw_cedarfair <- left_join(cw_cedarfair, 
+          park_inventory[,c("park_name", "park_url")] ) %>%
+  .[!duplicated(.),]
+
+
+#cw_cedarfair$park_name[cw_cedarfair$park_url == "https://rcdb.com/4539.htm"] <- "Canada's Wonderland"
+
+cf_park_inventory <- park_inventory %>%
+  .[.$park_url %in% cw_cedarfair$park_url,]
+
+cf_ride_specs <- ride_specs %>%
+  .[.$ride_url %in% cf_park_inventory$ride_url,]
+
+# Confirm parks are in the base data
+cf_park_inventory %>%
+  group_by(park_url) %>%
+  summarise(n_rides = n_distinct(Name, na.rm = T)) %>%
+  full_join(., 
+            cw_cedarfair)
+
+
+
+
+# QA ride dates
+qa_ride.dates <- full_join(cf_park_inventory[!colnames(cf_park_inventory) %in% "park_name"], 
+          cw_cedarfair) %>%
+  .[!duplicated(.),]
+
+qa_ride.dates$Opened_ymd <- qa_ride.dates$Opened %>% ymd
+qa_ride.dates$Closed_ymd <- qa_ride.dates$Closed %>% ymd
+
+unique(qa_ride.dates$ride_status)
+
+qa_ride.dates %>%
+  group_by(ride_status, park_name) %>%
+  summarise(n_rides = n_distinct(ride_url)) %>%
+  as.data.table() %>%
+  dcast(., park_name ~ ride_status) %>% clean_names()
+
+is.na(qa_ride.dates$Closed) & 
+  is.na(qa_ride.dates$yr_closed)
 
 # TIMELINES----
 
