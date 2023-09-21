@@ -1,21 +1,17 @@
-# data_corrections
+# Cedar Fair Only
 
+# Build Data
 library(dplyr)
-library(rvest)
-library(glue)
-library(lubridate)
-#library(ggplot2)
-library(xml2)
-#library(igraph)
-library(data.table)
 library(janitor)
 library(readr)
+library(igraph)
 
 rm(list=ls());cat('\f');gc()
 
 # FUNS ----
-get_ride_years <- function(park.url = "https://rcdb.com/5056.htm"){
-  Sys.sleep(3)
+# functions----
+get_ride_years <- function(park.url){
+  Sys.sleep(1.5)
   park.html <- read_html(park.url)
   
   # get park name
@@ -67,7 +63,7 @@ get_ride_years <- function(park.url = "https://rcdb.com/5056.htm"){
             html_children() %>%
             .[2:length(.)]
           
-            
+          
           #out.df <- NULL  
           for(i in 1:length(temp.table)){
             #print(paste("i = ", i, sep = ""))
@@ -140,7 +136,7 @@ get_ride_years <- function(park.url = "https://rcdb.com/5056.htm"){
                                        Opened = temp.Opened, 
                                        Closed = temp.Closed))
           }
-          }
+        }
         
         # sbno table----
         if(grepl("SBNO", temp.table_name)){
@@ -197,7 +193,7 @@ get_ride_years <- function(park.url = "https://rcdb.com/5056.htm"){
                                        Opened = temp.Opened, 
                                        Closed = temp.Closed))
           }
-          }
+        }
         
         # defunct table----
         if(grepl("Defunct", temp.table_name)){
@@ -235,9 +231,9 @@ get_ride_years <- function(park.url = "https://rcdb.com/5056.htm"){
                 .[1] %>%
                 xml_attr(., "datetime")
               
-              try(if(nchar(temp.Opened) == 4){
+              if(nchar(temp.Opened) == 4){
                 temp.Opened <- paste(temp.Opened, "1111", sep = "")
-              })
+              }
               
             }
             
@@ -280,8 +276,43 @@ get_ride_years <- function(park.url = "https://rcdb.com/5056.htm"){
   
   return(df.out)
 }
+fun_tidy.years <- function(park.inventory = 'read_csv("park_inventory.csv")'){
+  
+  # simplify dataset
+  dfqa <- park.inventory %>%
+    .[colnames(.) %in% 
+        c("park_url", "ride_url",
+          "Opened", "Closed", "yr_opened", "yr_closed")] %>%
+    .[!duplicated(.),]
+  
+  # fix problem with 'Opened' and 'Closed' dates ending in '0000'
+  dfqa$Opened <- ifelse(nchar(as.numeric(dfqa$Opened)) %in% c(5,8), 
+                        #gsub(pattern = "\\d{4,4}$", "1111", dfqa$Opened), 
+                        substr(dfqa$Opened, 1, 4),
+                        dfqa$Opened) %>% as.numeric() 
+  dfqa$Closed <- ifelse(nchar(as.numeric(dfqa$Closed)) %in% c(5,8), 
+                        #gsub(pattern = "\\d{4,4}$", "1111", dfqa$Closed), 
+                        substr(dfqa$Closed, 1, 4),
+                        dfqa$Closed) %>% as.numeric() 
+  
+  # if Opened and yr_opened don't match...
+  dfqa$yro_best <- ifelse(mapply(identical, 
+                                 x = as.numeric(dfqa$Opened), 
+                                 y = as.numeric(dfqa$yr_opened)), 
+                          yes = as.numeric(dfqa$Opened), 
+                          no  = "no match")
+  dfqa$yrc_best <- ifelse(mapply(identical, 
+                                 x = as.numeric(dfqa$Closed), 
+                                 y = as.numeric(dfqa$yr_closed)), 
+                          yes = as.numeric(dfqa$Closed), 
+                          no  = "no match")
+  
+  dfqa <- dfqa[,c("ride_url", "park_url", "yro_best", "yrc_best")]
+  
+  return(dfqa)
+  # end
+}
 
-get_ride_years()
 
 # DIRS ----
 wd        <- list()
@@ -290,53 +321,37 @@ wd$R      <- "C:/Users/bende/Documents/R/play/rollercoaster_evolution/R"
 wd$output <- "C:/Users/bende/Documents/R/play/rollercoaster_evolution/output"
 wd$home   <- "C:/Users/bende/Documents/R/play/rollercoaster_evolution"
 
-
-# park_inventory.csv fixes----
 setwd(wd$data)
 
-# load data
-park_inventory <- read_csv("park_inventory.csv")
+# VARS ----
+dat_files <- list.files(pattern = "park|ride")
 
-# change data
-
-
-park_inventory[park_inventory$Name == "Super Coaster" & park_inventory$park_name == "Cedar Point",]$Closed <- "19641111"
-park_inventory[park_inventory$Name == "Super Coaster" & park_inventory$park_name == "Cedar Point",]$yr_closed <- 1964
-
-park_inventory[park_inventory$Name == "Kiddie Coaster" & grepl("Dorney Park", park_inventory$park_name),]$Closed <- "19801111"
-park_inventory[park_inventory$Name == "Kiddie Coaster" & grepl("Dorney Park", park_inventory$park_name),]$yr_closed <- 1980
-
-park_inventory[park_inventory$Name == "Roller Coaster" & grepl("Adventureland", park_inventory$park_name),]$Opened    <- "19631111"
-park_inventory[park_inventory$Name == "Roller Coaster" & grepl("Adventureland", park_inventory$park_name),]$yr_opened <- 1963
-park_inventory[park_inventory$Name == "Roller Coaster" & grepl("Adventureland", park_inventory$park_name),]$Closed    <- "19801111"
-park_inventory[park_inventory$Name == "Roller Coaster" & grepl("Adventureland", park_inventory$park_name),]$yr_closed <- 1980
-
-park_inventory[park_inventory$Name == "Tater Bug Terror" & grepl("Adventurers Family", park_inventory$park_name),]$Opened <- "20021111"
-park_inventory[park_inventory$Name == "Tater Bug Terror" & grepl("Adventurers Family", park_inventory$park_name),]$yr_opened <- 2002
-
-park_inventory[park_inventory$Name == "Flash" & grepl("Adventurers Family", park_inventory$park_name),]$Opened <- "19821111"
-park_inventory[park_inventory$Name == "Flash" & grepl("Adventurers Family", park_inventory$park_name),]$yr_opened <- 1982
-
-park_inventory[park_inventory$Name == "Kiddie Coaster" & grepl("Adventurers Family", park_inventory$park_name),]$Closed <- "20021111"
-park_inventory[park_inventory$Name == "Kiddie Coaster" & grepl("Adventurers Family", park_inventory$park_name),]$yr_closed <- 2002
-park_inventory[park_inventory$Name == "Kiddie Coaster" & grepl("Adventurers Family", park_inventory$park_name),]$Opened <- "19661111"
-park_inventory[park_inventory$Name == "Kiddie Coaster" & grepl("Adventurers Family", park_inventory$park_name),]$yr_opened <- 1966
-
-# write data
-write_csv(park_inventory, 
-          file = "park_inventory.csv")
+# load cedar fair parks
+cw_cedarfair <- data.frame(operator_name = c("Cedar Fair"), 
+                           operator_url = "https://rcdb.com/12487.htm", 
+                           
+                           park_url = paste("https://rcdb.com/", 
+                                            c("4541", 
+                                        #"4539",  # canada's wonderland - not in dataset bc outside usa 
+                                        4542, 4529, 4588, 4544,
+                                        4540,4546,4578,4552,4533), 
+                                        ".htm",
+                                        sep = "")) %>%
+  as_tibble()
 
 
-# ride_specs.csv tidying and fixes----
-setwd(wd$data)
-ride_specs <- read_csv("ride_specs.csv")
+# IMPORT DATA ----
+
+for(i in dat_files){
+  # format variable name
+  temp.varname <- gsub(pattern = "\\.csv", replacement = "", x = i)
+  # assign i to variable
+  assign(temp.varname,read_csv(i))
+  # cleanup
+  rm(temp.varname)
+}
 
 
-ride_specs$length.ft <- gsub(" ft$", "", ride_specs$Length) %>%
-  as.numeric()
-ride_specs$height.ft <- gsub(" ft$", "", ride_specs$Height) %>%
-  as.numeric()
-ride_specs$speed.mph <- gsub(" mph$", "", ride_specs$Speed) %>%
-  as.numeric()
-
-write_csv(x = ride_specs, file = "ride_specs.csv")
+# FILTER DATA TO CEDAR FAIR----
+cf_park_inventory <- park_inventory[park_inventory$park_url %in% cw_cedarfair$park_url,]
+cf_ride_specs     <- ride_specs[ride_specs$ride_url %in% cf_park_inventory$ride_url,]
