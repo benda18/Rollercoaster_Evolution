@@ -4,7 +4,7 @@
 library(dplyr)
 library(janitor)
 library(readr)
-library(igraph)
+library(ggplot2)
 
 rm(list=ls());cat('\f');gc()
 
@@ -332,11 +332,11 @@ cw_cedarfair <- data.frame(operator_name = c("Cedar Fair"),
                            
                            park_url = paste("https://rcdb.com/", 
                                             c("4541", 
-                                        #"4539",  # canada's wonderland - not in dataset bc outside usa 
-                                        4542, 4529, 4588, 4544,
-                                        4540,4546,4578,4552,4533), 
-                                        ".htm",
-                                        sep = "")) %>%
+                                              #"4539",  # canada's wonderland - not in dataset bc outside usa 
+                                              4542, 4529, 4588, 4544,
+                                              4540,4546,4578,4552,4533), 
+                                            ".htm",
+                                            sep = "")) %>%
   as_tibble()
 
 
@@ -353,5 +353,77 @@ for(i in dat_files){
 
 
 # FILTER DATA TO CEDAR FAIR----
-cf_park_inventory <- park_inventory[park_inventory$park_url %in% cw_cedarfair$park_url,]
-cf_ride_specs     <- ride_specs[ride_specs$ride_url %in% cf_park_inventory$ride_url,]
+cf_park_inventory <- park_inventory[park_inventory$park_url %in% cw_cedarfair$park_url,] 
+cf_ride_specs     <- ride_specs[ride_specs$ride_url %in% cf_park_inventory$ride_url,] 
+
+# ride_years----
+cf_years     <- fun_tidy.years(park.inventory = cf_park_inventory)
+
+# cleanup----
+colnames(cf_park_inventory)[colnames(cf_park_inventory) == "Name"] <- "ride_name"
+cf_park_inventory <- clean_names(cf_park_inventory)
+cf_ride_specs     <- clean_names(cf_ride_specs)
+
+# simplify----
+cf_ride_specs     <- cf_ride_specs[,c("ride_url", "length_ft", "height_ft", "speed_mph")]
+cf_park_inventory <- cf_park_inventory[!colnames(cf_park_inventory) %in% 
+                                         c("closed", "yr_closed", "opened", "yr_opened")] 
+
+# simplify park inventory
+cf_park_inventory$ride_status <- cf_park_inventory$ride_status %>%
+  gsub("Roller Coasters", "", .) %>%
+  trimws() %>%
+  tolower() %>%
+  gsub(" ", "_", .)
+
+cf_park_inventory$design <- cf_park_inventory$design %>% 
+  gsub(" ", "_", .) %>%
+  tolower() 
+
+cf_park_inventory$scale <- cf_park_inventory$scale %>% tolower()
+cf_park_inventory$scale <- ifelse(is.na(cf_park_inventory$scale), 
+                                  "none_provided", cf_park_inventory$scale)
+
+cf_park_inventory$park_name <- cf_park_inventory$park_name %>% 
+  gsub("[[:punct:]]", "", .) %>%
+  gsub(" amp ", " and ", .) %>%
+  tolower() %>%
+  gsub(" ", "_", .)
+
+cf_park_inventory$ride_name <- cf_park_inventory$ride_name %>% 
+  gsub("[[:punct:]]", "", .) %>%
+  gsub(" amp ", " and ", .) %>%
+  tolower() %>%
+  gsub(" ", "_", .)
+
+
+# simplify ride_specs
+cf_ride_specs
+
+# reorg----
+
+cf_parks <- full_join(cf_park_inventory, cf_ride_specs) %>%
+  group_by(park_name, park_url, ride_url) %>%
+  summarise() %>%
+  ungroup()
+
+cf_rides <- full_join(cf_park_inventory, cf_ride_specs) %>%
+  group_by(ride_name, ride_url, park_url, type, design, scale, 
+           ride_status, length_ft, height_ft, speed_mph) %>%
+  summarise() %>%
+  ungroup() %>%
+  left_join(., cf_years)
+
+# cleanup----
+rm(park_inventory, ride_specs, selected_parks, 
+   cf_park_inventory, cf_ride_specs)
+
+# ALL DATA----
+cw_cedarfair
+cf_parks
+cf_rides
+cf_years
+
+
+
+
