@@ -22,8 +22,41 @@ wd$home   <- "C:/Users/bende/Documents/R/play/rollercoaster_evolution"
 
 # FUNS ----
 
-back_in_time <- function(){
-  # build data set showing how many rides were in a park in any given year
+fun_tidy.years <- function(park.inventory = read_csv("park_inventory.csv")){
+  
+  # simplify dataset
+  dfqa <- park.inventory %>%
+    .[colnames(.) %in% 
+        c("park_url", "ride_url",
+          "Opened", "Closed", "yr_opened", "yr_closed")] %>%
+    .[!duplicated(.),]
+  
+  # fix problem with 'Opened' and 'Closed' dates ending in '0000'
+  dfqa$Opened <- ifelse(nchar(as.numeric(dfqa$Opened)) %in% c(5,8), 
+                        #gsub(pattern = "\\d{4,4}$", "1111", dfqa$Opened), 
+                        substr(dfqa$Opened, 1, 4),
+                        dfqa$Opened) %>% as.numeric() 
+  dfqa$Closed <- ifelse(nchar(as.numeric(dfqa$Closed)) %in% c(5,8), 
+                        #gsub(pattern = "\\d{4,4}$", "1111", dfqa$Closed), 
+                        substr(dfqa$Closed, 1, 4),
+                        dfqa$Closed) %>% as.numeric() 
+  
+  # if Opened and yr_opened don't match...
+  dfqa$yro_best <- ifelse(mapply(identical, 
+                                 x = as.numeric(dfqa$Opened), 
+                                 y = as.numeric(dfqa$yr_opened)), 
+                          yes = as.numeric(dfqa$Opened), 
+                          no  = "no match")
+  dfqa$yrc_best <- ifelse(mapply(identical, 
+                                 x = as.numeric(dfqa$Closed), 
+                                 y = as.numeric(dfqa$yr_closed)), 
+                          yes = as.numeric(dfqa$Closed), 
+                          no  = "no match")
+  
+  dfqa <- dfqa[,c("ride_url", "park_url", "yro_best", "yrc_best")]
+  
+  return(dfqa)
+  # end
 }
 
 best_open.date <- function(yr.opened, opened){
@@ -132,28 +165,38 @@ cf_park_inventory %>%
             cw_cedarfair)
 
 
-park_density <- park_inventory %>%
-  .[.$ride_status == "Operating Roller Coasters",] %>%
-  group_by(park_name, Design) %>%
-  summarise(n = n()) %>%
-  as.data.table() %>%
-  dcast(., park_name ~ Design, value.var = "n", 
-        fun.aggregate = sum, fill = 0, 
-        drop = F) %>%
-  as.data.frame() %>%
-  as_tibble() %>%
-  clean_names() %>%
-  mutate(., 
-         total_rides = bobsled + flying + inverted + sit_down + 
-           stand_up + suspended + wing) %>%
-  .[order(.$total_rides, decreasing = T),]
-
-ggplot() + 
-  geom_density(data = park_density, 
-               aes(x = total_rides))+
-  scale_x_continuous(limits = c(0,NA), 
-                     breaks = seq(0,1000,by = 5))
-  
+# park_density <- park_inventory %>%
+#   .[.$ride_status == "Operating Roller Coasters",] %>%
+#   group_by(park_name, Design) %>%
+#   summarise(n = n()) %>%
+#   as.data.table() %>%
+#   dcast(., park_name ~ Design, value.var = "n", 
+#         fun.aggregate = sum, fill = 0, 
+#         drop = F) %>%
+#   as.data.frame() %>%
+#   as_tibble() %>%
+#   clean_names() %>%
+#   mutate(., 
+#          total_rides = bobsled + flying + inverted + sit_down + 
+#            stand_up + suspended + wing) %>%
+#   .[order(.$total_rides, decreasing = T),]
+# 
+# ggplot() + 
+#   geom_density(data = park_density, 
+#                aes(x = total_rides))+
+#   scale_x_continuous(limits = c(0,NA), 
+#                      breaks = seq(0,1000,by = 5))
+#   
+# 
+# park_inventory %>%
+#   #.[.$ride_status == "Operating Roller Coasters",] %>%
+#   group_by(ride_url, park_url, Type, Design, Scale, ride_status) %>%
+#   summarise() %>%
+#   group_by(park_url, by_var = ride_status, by_color = Scale) %>%
+#   summarise(n = n()) %>%
+#   ggplot(data = ., 
+#          aes(x = by_var,  y = n, fill = (by_color))) +
+#   geom_boxplot()
 
 # QA ride dates----
 
@@ -168,7 +211,6 @@ qa_ride.dates <- full_join(cf_park_inventory[!colnames(cf_park_inventory) %in% "
 
 # try based on manual look----
 keep.cols <- c("park_url", "ride_url",
-               #"park_name", "Name", 
                "Opened", "Closed", "yr_opened", "yr_closed")
 
 # create data subset to work with
@@ -188,37 +230,22 @@ dfqa$yro_best <- ifelse(mapply(identical,
                                x = as.numeric(dfqa$Opened), 
                                y = as.numeric(dfqa$yr_opened)), 
                         yes = as.numeric(dfqa$Opened), 
-                        #no  = as.numeric(dfqa$yr_opened))
                         no  = "no match")
 dfqa$yrc_best <- ifelse(mapply(identical, 
                                x = as.numeric(dfqa$Closed), 
                                y = as.numeric(dfqa$yr_closed)), 
                         yes = as.numeric(dfqa$Closed), 
-                        #no  = as.numeric(dfqa$yr_closed))
                         no  = "no match")
-                       
-
 
 dfqa <- dfqa[,c("ride_url", "park_url", "yro_best", "yrc_best")]
 
 
-# left_join(qa_ride.dates, 
-#           dfqa) %>%
-#   group_by(yr_opened, Opened = substr(Opened, 1, 4), yro_best, 
-#            yr_closed, Closed = substr(Closed, 1, 4), yrc_best) %>%
-#   summarise(n = n()) %>%
-#   .[.$yrc_best == "no match" | 
-#       .$yro_best == "no match",] %>%
-#   .[complete.cases(.),]
+# end
 
-# qa_ride.dates <- left_join(qa_ride.dates, 
-#           dfqa) %>%
-#   .[!colnames(.) %in% c("Opened", "Closed", 
-#                         "yr_opened", "yr_closed")]
+
+qa_ride.dates <- left_join(qa_ride.dates, dfqa)
 
 qa_ride.dates %>%
-  # .[.$yrc_best == 0 & 
-  #     !is.na(.$yrc_best),] %>%
   group_by(ride_status) %>%
   summarise(n = n(), 
             min_yo = min((yro_best)), 
@@ -239,13 +266,16 @@ ggplot() +
                    y = Name_f, yend = Name_f)) +
   facet_grid(ride_status~., space = "free_y", scales = "free_y")
 
-  
-# # try based on best_open.date() function----
-# qa_ride.dates$yro_best <- best_open.date(yr.opened = qa_ride.dates$yr_opened, 
-#                opened = qa_ride.dates$Opened)
-# qa_ride.dates$yrc_best <- best_open.date(yr.opened = qa_ride.dates$yr_closed, 
-#                                          opened = qa_ride.dates$Closed)
 
+# YEARLY INVENTORY----
+cf_park_inventory
+qa_ride.dates
+
+
+back_in_time <- function(){
+  # build data set showing how many rides were in a park in any given year
+  
+}
 
 
 # TIMELINES----
@@ -273,75 +303,75 @@ quantify_parks %>%
   labs(title = "<add title>")
 
 
-ride_specs2 <- ride_specs
-
-ride_specs2$Length <- gsub(" ft$", "", ride_specs2$Length) %>%
-  as.numeric()
-ride_specs2$Height <- gsub(" ft$", "", ride_specs2$Height) %>%
-  as.numeric()
-ride_specs2$Speed <- gsub(" mph$", "", ride_specs2$Speed) %>%
-  as.numeric()
-ride_specs2 <- clean_names(ride_specs2)
-
-full_ridelist <- full_join(ride_specs2, park_inventory[,c("ride_url", "Type", "Design", "ride_status", 
-                  "yr_opened", "yr_closed")] %>%
-  .[!duplicated(.),]) %>%
-  .[!duplicated(.),]
-
-
-# fix yearclosed
-
-# remove NAs 
-full_ridelist <- full_ridelist 
-
-full_ridelist <- full_ridelist[!full_ridelist$yr_opened == 0,]
-full_ridelist$yr_closed[is.na(full_ridelist$yr_closed) | 
-                          full_ridelist$yr_closed == 0] <- 0
-full_ridelist[full_ridelist$yr_closed != 0,]
-
-# remove defunct rides with is.na(yr_closed) | yr_closed == 0 
-full_ridelist[full_ridelist$ride_status == "Defunct Roller Coasters",]
+# ride_specs2 <- ride_specs
+# 
+# ride_specs2$Length <- gsub(" ft$", "", ride_specs2$Length) %>%
+#   as.numeric()
+# ride_specs2$Height <- gsub(" ft$", "", ride_specs2$Height) %>%
+#   as.numeric()
+# ride_specs2$Speed <- gsub(" mph$", "", ride_specs2$Speed) %>%
+#   as.numeric()
+# ride_specs2 <- clean_names(ride_specs2)
+# 
+# full_ridelist <- full_join(ride_specs2, park_inventory[,c("ride_url", "Type", "Design", "ride_status", 
+#                   "yr_opened", "yr_closed")] %>%
+#   .[!duplicated(.),]) %>%
+#   .[!duplicated(.),]
 
 
-full_ridelist[full_ridelist$ride_status == "Operating Roller Coasters",]$yr_closed %>% range()
-full_ridelist[full_ridelist$ride_status == "Defunct Roller Coasters",]$yr_closed %>% range()
-full_ridelist[full_ridelist$ride_status == "SBNO Roller Coasters",]$yr_closed %>% range()
-full_ridelist[full_ridelist$ride_status == "Roller Coasters Under Construction",]$yr_closed %>% range()
-
-full_ridelist %>%
-  .[.$park_name %in% c("Kings Island"),] %>%
-  group_by(yr_opened, yr_closed) %>%
-  summarise(n_sbno = sum(ride_status == "SBNO Roller Coasters"), 
-            n_defu = sum(ride_status == "Defunct Roller Coasters"), 
-            n_undc = sum(ride_status == "Roller Coasters Under Construction"), 
-            n_oper = sum(ride_status == "Operating Roller Coasters")) 
-
-
-
-full_ridelist$yr_closed %>% .[!grepl("\\d{4,4}", .)]
-
-
-ggplot(data = full_ridelist[full_ridelist$yr_opened != 0 & 
-                              !is.na(full_ridelist$yr_opened),], 
-       aes(x = yr_opened, y = height)) + 
-  geom_point()+
-  geom_smooth()
-
-full_ridelist %>%
-  clean_names() %>%
-  .[c("length","height","speed","type","design","ride_status")] %>%
-  plot()
-
-full_ridelist %>%
-  .[.$park_name == "Cedar Point" & 
-      .$ride_name == "Super Coaster" & 
-      !is.na(.$ride_name),] %>%
-  ggplot(data = .) +
-  geom_segment(aes(y = ride_name, yend = ride_name, 
-                 x = yr_opened, xend = yr_closed)) +
-  facet_grid(ride_status~., scales = "free_y", space = "free_y")
-
-
+# # fix yearclosed
+# 
+# # remove NAs 
+# full_ridelist <- full_ridelist 
+# 
+# full_ridelist <- full_ridelist[!full_ridelist$yr_opened == 0,]
+# full_ridelist$yr_closed[is.na(full_ridelist$yr_closed) | 
+#                           full_ridelist$yr_closed == 0] <- 0
+# full_ridelist[full_ridelist$yr_closed != 0,]
+# 
+# # remove defunct rides with is.na(yr_closed) | yr_closed == 0 
+# full_ridelist[full_ridelist$ride_status == "Defunct Roller Coasters",]
+# 
+# 
+# full_ridelist[full_ridelist$ride_status == "Operating Roller Coasters",]$yr_closed %>% range()
+# full_ridelist[full_ridelist$ride_status == "Defunct Roller Coasters",]$yr_closed %>% range()
+# full_ridelist[full_ridelist$ride_status == "SBNO Roller Coasters",]$yr_closed %>% range()
+# full_ridelist[full_ridelist$ride_status == "Roller Coasters Under Construction",]$yr_closed %>% range()
+# 
+# full_ridelist %>%
+#   .[.$park_name %in% c("Kings Island"),] %>%
+#   group_by(yr_opened, yr_closed) %>%
+#   summarise(n_sbno = sum(ride_status == "SBNO Roller Coasters"), 
+#             n_defu = sum(ride_status == "Defunct Roller Coasters"), 
+#             n_undc = sum(ride_status == "Roller Coasters Under Construction"), 
+#             n_oper = sum(ride_status == "Operating Roller Coasters")) 
+# 
+# 
+# 
+# full_ridelist$yr_closed %>% .[!grepl("\\d{4,4}", .)]
+# 
+# 
+# ggplot(data = full_ridelist[full_ridelist$yr_opened != 0 & 
+#                               !is.na(full_ridelist$yr_opened),], 
+#        aes(x = yr_opened, y = height)) + 
+#   geom_point()+
+#   geom_smooth()
+# 
+# full_ridelist %>%
+#   clean_names() %>%
+#   .[c("length","height","speed","type","design","ride_status")] %>%
+#   plot()
+# 
+# full_ridelist %>%
+#   .[.$park_name == "Cedar Point" & 
+#       .$ride_name == "Super Coaster" & 
+#       !is.na(.$ride_name),] %>%
+#   ggplot(data = .) +
+#   geom_segment(aes(y = ride_name, yend = ride_name, 
+#                  x = yr_opened, xend = yr_closed)) +
+#   facet_grid(ride_status~., scales = "free_y", space = "free_y")
+# 
+# 
 
 
 
