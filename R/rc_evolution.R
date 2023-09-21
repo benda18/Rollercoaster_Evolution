@@ -21,6 +21,11 @@ wd$output <- "C:/Users/bende/Documents/R/play/rollercoaster_evolution/output"
 wd$home   <- "C:/Users/bende/Documents/R/play/rollercoaster_evolution"
 
 # FUNS ----
+
+back_in_time <- function(){
+  # build data set showing how many rides were in a park in any given year
+}
+
 best_open.date <- function(yr.opened, opened){
   require(lubridate)
   v1 <- yr.opened
@@ -127,7 +132,28 @@ cf_park_inventory %>%
             cw_cedarfair)
 
 
+park_density <- park_inventory %>%
+  .[.$ride_status == "Operating Roller Coasters",] %>%
+  group_by(park_name, Design) %>%
+  summarise(n = n()) %>%
+  as.data.table() %>%
+  dcast(., park_name ~ Design, value.var = "n", 
+        fun.aggregate = sum, fill = 0, 
+        drop = F) %>%
+  as.data.frame() %>%
+  as_tibble() %>%
+  clean_names() %>%
+  mutate(., 
+         total_rides = bobsled + flying + inverted + sit_down + 
+           stand_up + suspended + wing) %>%
+  .[order(.$total_rides, decreasing = T),]
 
+ggplot() + 
+  geom_density(data = park_density, 
+               aes(x = total_rides))+
+  scale_x_continuous(limits = c(0,NA), 
+                     breaks = seq(0,1000,by = 5))
+  
 
 # QA ride dates----
 
@@ -136,8 +162,28 @@ a.park <- "Kings Island"
 qa_ride.dates <- full_join(cf_park_inventory[!colnames(cf_park_inventory) %in% "park_name"], 
           cw_cedarfair) %>%
   .[!duplicated(.),] %>%
-  .[.$park_name == a.park,]
+  .[.$park_name == a.park,] %>%
+  # remove rides under construction 
+  .[!.$ride_status %in% c("Roller Coasters Under Construction"),]
 
+# try based on manual look----
+keep.cols <- c("park_name", "Name", "Opened", "Closed", "yr_opened", "yr_closed")
+
+# create data subset to work with
+dfqa <- qa_ride.dates %>%
+  .[colnames(.) %in% keep.cols]
+
+# fix problem with 'Opened' and 'Closed' dates ending in '0000'
+gsub(pattern = "0000$", 
+     replacement = "1111", 
+     x = dfqa$Opened) %>% 
+  ymd() %>% year()
+gsub(pattern = "0000$", 
+     replacement = "1111", 
+     x = dfqa$Closed) %>%
+  ymd() %>% year()
+
+# try based on best_open.date() function----
 qa_ride.dates$yro_best <- best_open.date(yr.opened = qa_ride.dates$yr_opened, 
                opened = qa_ride.dates$Opened)
 qa_ride.dates$yrc_best <- best_open.date(yr.opened = qa_ride.dates$yr_closed, 
