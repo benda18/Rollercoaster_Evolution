@@ -14,7 +14,7 @@ library(readr)
 rm(list=ls());cat('\f');gc()
 
 # FUNS ----
-get_ride_years <- function(park.url="https://rcdb.com/4717.htm"){
+get_ride_years <- function(park.url="https://rcdb.com/4540.htm"){
   park.html <- read_html(park.url)
   
   # get park name
@@ -90,7 +90,8 @@ get_ride_years <- function(park.url="https://rcdb.com/4717.htm"){
                             data.frame(section_id = s, 
                                        section_name = temp.table_name,
                                        row_id     = i,
-                                       ride_url = temp.ride_url, 
+                                       ride_url = temp.ride_url,
+                                       park_url = park.url,
                                        Opened = temp.Opened, 
                                        Closed = temp.Closed))
           }
@@ -100,167 +101,161 @@ get_ride_years <- function(park.url="https://rcdb.com/4717.htm"){
         # construction table----
         if(grepl("Under Construction", temp.table_name)){
           
-          # temp.table <- html_element(x = park.html, 
-          #                            xpath = glue("/html/body/section[{s}]")) %>%
-          #   rvest::html_table(., convert = T, trim = T) %>%
-          #   .[,2:6] %>%
-          #   mutate(., 
-          #          Opened = NA_character_, 
-          #          Closed = NA_character_,
-          #          #Opened2 = NA_character_,
-          #          yr_opened = NA_real_, 
-          #          yr_closed = NA_real_, 
-          #          park_name = the.parkname, 
-          #          ride_status = temp.table_name, 
-          #          ride_url = NA)
-          # 
-          # for(i in 1:nrow(temp.table)){
-          #   temp.ride_url <- html_element(x = park.html, 
-          #                                 xpath = glue("/html/body/section[{s}]/div/table")) %>%
-          #     html_children() %>%
-          #     .[2] %>%  
-          #     html_children() %>%
-          #     .[i] %>%  
-          #     html_children() %>%
-          #     .[2] %>%
-          #     html_element(., xpath = "a") %>%
-          #     .[[1]] %>%
-          #     xml2::xml_attrs() 
-          #   temp.date <- html_element(x = park.html, 
-          #                             xpath = glue("/html/body/section[{s}]/div/table")) %>%
-          #     html_children() %>%
-          #     .[2] %>%  # 2 = "body"
-          #     html_children() %>%
-          #     .[i] %>%  # 1 = 1st row of rides
-          #     html_children() %>%
-          #     as.character() %>%
-          #     .[6] %>% # represents columns of table (i.e. "i")
-          #     strsplit(., "\"") %>%
-          #     unlist() 
-          #   
-          #   temp.table$Opened[i] <- temp.date[2]
-          #   #df.ex_rides$Opened2[i] <- temp.date[4]
-          #   temp.table$yr_opened[i] <- as.numeric(temp.date[2]) %/% 10000
-          #   temp.table$ride_url[i] <- temp.ride_url
-          # }
-          # temp.table <- temp.table[!colnames(temp.table) %in% c("Opening")]
+          temp.table <- html_element(x = park.html, 
+                                     xpath = glue("/html/body/section[{s}]")) %>%
+            html_children() %>%
+            .[2] %>%
+            html_children()%>%
+            html_children()%>%
+            html_children() %>%
+            .[2:length(.)]
           
           
-        }
+          #out.df <- NULL  
+          for(i in 1:length(temp.table)){
+            #print(paste("i = ", i, sep = ""))
+            # ride_url
+            temp.ride_url <- temp.table[i] %>%
+              html_children() %>%
+              .[2] %>% 
+              html_children() %>%
+              xml2::xml_attr(., "href") 
+            # ride_opened
+            temp.Opened <- temp.table[i] %>%
+              html_children() %>%
+              .[6] %>%
+              xml_attr(., "data-sort")
+            
+            # ride_closed
+            temp.Closed <- NA
+            
+            # bind
+            df.out <- rbind(df.out, 
+                            data.frame(section_id = s, 
+                                       section_name = temp.table_name,
+                                       row_id     = i,
+                                       ride_url = temp.ride_url,
+                                       park_url = park.url,
+                                       Opened = temp.Opened, 
+                                       Closed = temp.Closed))
+          }
+          }
+        
         # sbno table----
         if(grepl("SBNO", temp.table_name)){
           
-          # temp.table <- html_element(x = park.html, 
-          #                            xpath = glue("/html/body/section[{s}]")) %>%
-          #   rvest::html_table(., convert = T, trim = T) %>%
-          #   .[,2:6] %>%
-          #   mutate(., 
-          #          Opened = NA_character_, 
-          #          Closed = NA_character_,
-          #          #Opened2 = NA_character_,
-          #          yr_opened = NA_real_, 
-          #          yr_closed = NA_real_, 
-          #          park_name = the.parkname, 
-          #          ride_status = temp.table_name, 
-          #          ride_url = NA)
-          # 
-          # for(i in 1:nrow(temp.table)){
-          #   temp.ride_url <- html_element(x = park.html, 
-          #                                 xpath = glue("/html/body/section[{s}]/div/table")) %>%
-          #     html_children() %>%
-          #     .[2] %>%  
-          #     html_children() %>%
-          #     .[i] %>%  
-          #     html_children() %>%
-          #     .[2] %>%
-          #     html_element(., xpath = "a") %>%
-          #     .[[1]] %>%
-          #     xml2::xml_attrs() 
-          #   temp.date <- html_element(x = park.html, 
-          #                             xpath = glue("/html/body/section[{s}]/div/table")) %>%
-          #     html_children() %>%
-          #     .[2] %>%  # 2 = "body"
-          #     html_children() %>%
-          #     .[i] %>%  # 1 = 1st row of rides
-          #     html_children() %>%
-          #     as.character() %>%
-          #     .[6] %>% # represents columns of table (i.e. "i")
-          #     strsplit(., "\"") %>%
-          #     unlist() 
-          #   
-          #   temp.table$Opened[i] <- temp.date[2]
-          #   #df.ex_rides$Opened2[i] <- temp.date[4]
-          #   temp.table$yr_opened[i] <- as.numeric(temp.date[2]) %/% 10000
-          #   temp.table$ride_url[i] <- temp.ride_url
-          # }
-          # temp.table <- temp.table[!colnames(temp.table) %in% c("Since")]
-        }
+          temp.table <- html_element(x = park.html, 
+                                     xpath = glue("/html/body/section[{s}]")) %>%
+            html_children() %>%
+            html_children() %>%
+            .[2] %>%  
+            html_children() %>%
+            html_children()%>%
+            .[2:length(.)]
+          
+          
+          #out.df <- NULL  
+          for(i in 1:length(temp.table)){
+            #print(paste("i = ", i, sep = ""))
+            # ride_url
+            temp.ride_url <- temp.table[i] %>%
+              html_children() %>%
+              .[2] %>% 
+              html_children() %>%
+              xml2::xml_attr(., "href") 
+            # ride_opened
+            temp.Opened <- temp.table[i] %>%
+              html_children() %>%
+              .[6] %>%
+              xml_attr(., "data-sort")
+            
+            if(temp.Opened == "00000000"){
+              temp.Opened <- temp.table[i] %>%
+                html_children() %>%
+                .[6] %>%
+                html_children() %>%
+                .[1] %>%
+                xml_attr(., "datetime")
+              
+              if(nchar(temp.Opened) == 4){
+                temp.Opened <- paste(temp.Opened, "1111", sep = "")
+              }
+              
+            }
+            
+            # ride_closed
+            temp.Closed <- NA
+            
+            # bind
+            df.out <- rbind(df.out, 
+                            data.frame(section_id = s, 
+                                       section_name = temp.table_name,
+                                       row_id     = i,
+                                       ride_url = temp.ride_url,
+                                       park_url = park.url, 
+                                       Opened = temp.Opened, 
+                                       Closed = temp.Closed))
+          }
+          }
         
         # defunct table----
         if(grepl("Defunct", temp.table_name)){
           
+          temp.table <- html_element(x = park.html, 
+                                     xpath = glue("/html/body/section[{s}]")) %>%
+            html_children() %>%
+            .[2] %>%
+            html_children()%>%
+            html_children()%>%
+            html_children() %>%
+            .[2:length(.)]
           
-          # temp.table <- html_element(x = park.html, 
-          #                            xpath = glue("/html/body/section[{s}]")) %>%
-          #   rvest::html_table(., convert = T, trim = T) %>%
-          #   .[,2:7] %>%
-          #   mutate(., 
-          #          Opened = NA_character_, 
-          #          Closed = NA_character_,
-          #          #Opened2 = NA_character_,
-          #          yr_opened = NA_real_, 
-          #          yr_closed = NA_real_, 
-          #          park_name = the.parkname, 
-          #          ride_status = temp.table_name, 
-          #          ride_url = NA)
-          # 
-          # for(i in 1:nrow(temp.table)){
-          #   temp.ride_url <- html_element(x = park.html, 
-          #                                 xpath = glue("/html/body/section[{s}]/div/table")) %>%
-          #     html_children() %>%
-          #     .[2] %>%  
-          #     html_children() %>%
-          #     .[i] %>%  
-          #     html_children() %>%
-          #     .[2] %>%
-          #     html_element(., xpath = "a") %>%
-          #     .[[1]] %>%
-          #     xml2::xml_attrs() 
-          #   # opening date
-          #   temp.date <- html_element(x = park.html, 
-          #                             xpath = glue("/html/body/section[{s}]/div/table")) %>%
-          #     html_children() %>%
-          #     .[2] %>%  # 2 = "body"
-          #     html_children() %>%
-          #     .[i] %>%  # 1 = 1st row of rides
-          #     html_children() %>%
-          #     as.character() %>%
-          #     .[6] %>% # represents columns of table (i.e. "i")
-          #     strsplit(., "\"") %>%
-          #     unlist() 
-          #   
-          #   temp.table$Opened[i] <- temp.date[2]
-          #   temp.table$yr_opened[i] <- as.numeric(temp.date[2]) %/% 10000
-          #   
-          #   # closed date
-          #   temp.date <- html_element(x = park.html, 
-          #                             xpath = glue("/html/body/section[{s}]/div/table")) %>%
-          #     html_children() %>%
-          #     .[2] %>%  # 2 = "body"
-          #     html_children() %>%
-          #     .[i] %>%  # 1 = 1st row of rides
-          #     html_children() %>%
-          #     as.character() %>%
-          #     .[7] %>% # represents columns of table (i.e. "i")
-          #     strsplit(., "\"") %>%
-          #     unlist() 
-          #   
-          #   temp.table$Closed[i] <- temp.date[2]
-          #   #df.ex_rides$Opened2[i] <- temp.date[4]
-          #   temp.table$yr_closed[i] <- as.numeric(temp.date[2]) %/% 10000
-          #   temp.table$ride_url[i] <- temp.ride_url
-          # }
-          # temp.table
+          
+          #out.df <- NULL  
+          for(i in 1:length(temp.table)){
+            #print(paste("i = ", i, sep = ""))
+            # ride_url
+            temp.ride_url <- temp.table[i] %>%
+              html_children() %>%
+              .[2] %>% 
+              html_children() %>%
+              xml2::xml_attr(., "href") 
+            # ride_opened
+            temp.Opened <- temp.table[i] %>%
+              html_children() %>%
+              .[6] %>%
+              xml_attr(., "data-sort")
+            
+            if(temp.Opened == "00000000"){
+              temp.Opened <- temp.table[i] %>%
+                html_children() %>%
+                .[6] %>%
+                html_children() %>%
+                .[1] %>%
+                xml_attr(., "datetime")
+              
+              if(nchar(temp.Opened) == 4){
+                temp.Opened <- paste(temp.Opened, "1111", sep = "")
+              }
+              
+            }
+            
+            # ride_closed
+            temp.Closed <- temp.table[i] %>%
+              html_children() %>%
+              .[7] %>%
+              xml_attr(., "data-sort")
+            
+            # bind
+            df.out <- rbind(df.out, 
+                            data.frame(section_id = s, 
+                                       section_name = temp.table_name,
+                                       row_id     = i,
+                                       ride_url = temp.ride_url, 
+                                       park_url = park.url,
+                                       Opened = temp.Opened, 
+                                       Closed = temp.Closed))
+          }
           
         }
         
@@ -277,6 +272,10 @@ get_ride_years <- function(park.url="https://rcdb.com/4717.htm"){
   # # fix ride_url 
   df.out$ride_url <-  paste("https://rcdb.com",
                             df.out$ride_url, sep = "")
+  
+  
+  # simplify down to urls and dates
+  df.out <- df.out[,c("ride_url", "park_url", "Opened", "Closed")]
   
   return(df.out)
 }
