@@ -157,43 +157,77 @@ ggplot() +
 
 # QA ride dates----
 
-a.park <- "Kings Island"
+#a.park <- cw_cedarfair$park_name[1]
 
 qa_ride.dates <- full_join(cf_park_inventory[!colnames(cf_park_inventory) %in% "park_name"], 
           cw_cedarfair) %>%
   .[!duplicated(.),] %>%
-  .[.$park_name == a.park,] %>%
+  #.[.$park_name == a.park,] %>%
   # remove rides under construction 
   .[!.$ride_status %in% c("Roller Coasters Under Construction"),]
 
 # try based on manual look----
-keep.cols <- c("park_name", "Name", "Opened", "Closed", "yr_opened", "yr_closed")
+keep.cols <- c("park_url", "ride_url",
+               #"park_name", "Name", 
+               "Opened", "Closed", "yr_opened", "yr_closed")
 
 # create data subset to work with
 dfqa <- qa_ride.dates %>%
   .[colnames(.) %in% keep.cols]
 
 # fix problem with 'Opened' and 'Closed' dates ending in '0000'
-gsub(pattern = "0000$", 
-     replacement = "1111", 
-     x = dfqa$Opened) %>% 
-  ymd() %>% year()
-gsub(pattern = "0000$", 
-     replacement = "1111", 
-     x = dfqa$Closed) %>%
-  ymd() %>% year()
+dfqa$Opened <- year(ymd(ifelse(nchar(dfqa$Opened)==8, 
+       gsub(pattern = "\\d{4,4}$", "1111", dfqa$Opened), 
+       dfqa$Opened)))
+dfqa$Closed <- year(ymd(ifelse(nchar(dfqa$Closed)==8, 
+       gsub(pattern = "\\d{4,4}$", "1111", dfqa$Closed), 
+       dfqa$Closed)))
 
-# try based on best_open.date() function----
-qa_ride.dates$yro_best <- best_open.date(yr.opened = qa_ride.dates$yr_opened, 
-               opened = qa_ride.dates$Opened)
-qa_ride.dates$yrc_best <- best_open.date(yr.opened = qa_ride.dates$yr_closed, 
-                                         opened = qa_ride.dates$Closed)
+# if Opened and yr_opened don't match...
+dfqa$yro_best <- ifelse(mapply(identical, 
+                               x = as.numeric(dfqa$Opened), 
+                               y = as.numeric(dfqa$yr_opened)), 
+                        yes = as.numeric(dfqa$Opened), 
+                        #no  = as.numeric(dfqa$yr_opened))
+                        no  = "no match")
+dfqa$yrc_best <- ifelse(mapply(identical, 
+                               x = as.numeric(dfqa$Closed), 
+                               y = as.numeric(dfqa$yr_closed)), 
+                        yes = as.numeric(dfqa$Closed), 
+                        #no  = as.numeric(dfqa$yr_closed))
+                        no  = "no match")
+                       
 
+
+dfqa <- dfqa[,c("ride_url", "park_url", "yro_best", "yrc_best")]
+
+
+# left_join(qa_ride.dates, 
+#           dfqa) %>%
+#   group_by(yr_opened, Opened = substr(Opened, 1, 4), yro_best, 
+#            yr_closed, Closed = substr(Closed, 1, 4), yrc_best) %>%
+#   summarise(n = n()) %>%
+#   .[.$yrc_best == "no match" | 
+#       .$yro_best == "no match",] %>%
+#   .[complete.cases(.),]
+
+# qa_ride.dates <- left_join(qa_ride.dates, 
+#           dfqa) %>%
+#   .[!colnames(.) %in% c("Opened", "Closed", 
+#                         "yr_opened", "yr_closed")]
+
+qa_ride.dates %>%
+  # .[.$yrc_best == 0 & 
+  #     !is.na(.$yrc_best),] %>%
+  group_by(ride_status) %>%
+  summarise(n = n(), 
+            min_yo = min((yro_best)), 
+            max_yo = max((yro_best)),
+            min_yc = min((yrc_best)), 
+            max_yc = max((yrc_best)))
 
 qa_ride.dates$Name_f <- factor(qa_ride.dates$Name, 
                                levels = unique(qa_ride.dates$Name[order(qa_ride.dates$yro_best)]))
-
-View(qa_ride.dates)
 
 ggplot() + 
   geom_point(data = qa_ride.dates, 
@@ -204,6 +238,15 @@ ggplot() +
                aes(x = yro_best, xend =  yrc_best, 
                    y = Name_f, yend = Name_f)) +
   facet_grid(ride_status~., space = "free_y", scales = "free_y")
+
+  
+# # try based on best_open.date() function----
+# qa_ride.dates$yro_best <- best_open.date(yr.opened = qa_ride.dates$yr_opened, 
+#                opened = qa_ride.dates$Opened)
+# qa_ride.dates$yrc_best <- best_open.date(yr.opened = qa_ride.dates$yr_closed, 
+#                                          opened = qa_ride.dates$Closed)
+
+
 
 # TIMELINES----
 
