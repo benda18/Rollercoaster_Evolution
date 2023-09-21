@@ -9,6 +9,7 @@ library(xml2)
 library(igraph)
 library(data.table)
 library(janitor)
+library(readr)
 
 rm(list=ls());cat('\f');gc()
 
@@ -18,6 +19,59 @@ wd$data   <- "C:/Users/bende/Documents/R/play/rollercoaster_evolution/data"
 wd$R      <- "C:/Users/bende/Documents/R/play/rollercoaster_evolution/R"
 wd$output <- "C:/Users/bende/Documents/R/play/rollercoaster_evolution/output"
 wd$home   <- "C:/Users/bende/Documents/R/play/rollercoaster_evolution"
+
+# FUNS ----
+best_open.date <- function(yr.opened, opened){
+  require(lubridate)
+  v1 <- yr.opened
+  v2 <- opened
+  
+  # create df
+  temp.df <- data.frame(v1op       = v1, 
+                        v2op       = v2, 
+                        asnumbw_v1 = NA, 
+                        asnumbw_v2 = NA, 
+                        ymdyrbw_v1 = NA, 
+                        ymdyrbw_v2 = NA, 
+                        n_v1op     = NA, 
+                        n_v2op     = NA,
+                        v1op.yr    = NA, 
+                        v2op.yr    = NA) %>% 
+    as_tibble()
+  
+  # iterate
+  for(i in 1:nrow(temp.df)){
+    # convert 8-dig values that end in '0000' to '1111'
+    temp.df$v1op[i] <- temp.df$v1op[i] %>% gsub(pattern = "0000$", replacement = "1111", x = .)
+    temp.df$v2op[i] <- temp.df$v2op[i] %>% gsub(pattern = "0000$", replacement = "1111", x = .)
+    
+    # convert both to numeric, look for value between 1850 and 2029
+    temp.df$asnumbw_v1[i] <- data.table::between(as.numeric(temp.df$v1op[i]),1850,2030)
+    temp.df$asnumbw_v2[i] <- data.table::between(as.numeric(temp.df$v2op[i]),1850,2030)
+    
+    # ymd() %>% year() both, look for value between 1850 and 2029
+    temp.df$ymdyrbw_v1[i] <- data.table::between(year(ymd(temp.df$v1op[i])),1850,2030) %>% ifelse(is.na(.), F, .)
+    temp.df$ymdyrbw_v2[i] <- data.table::between(year(ymd(temp.df$v2op[i])),1850,2030) %>% ifelse(is.na(.), F, .)
+    
+    # generate year value for both v1 and v2
+    temp.df$v1op.yr[i] <- ifelse(temp.df$asnumbw_v1[i], as.numeric(temp.df$v1op[i]), year(ymd(temp.df$v1op[i])))
+    temp.df$v2op.yr[i] <- ifelse(temp.df$asnumbw_v2[i], as.numeric(temp.df$v2op[i]), year(ymd(temp.df$v2op[i])))
+    
+  }
+  
+  temp.df <- mutate(temp.df, 
+                    n_v1op = asnumbw_v1 + ymdyrbw_v1,
+                    n_v2op = asnumbw_v2 + ymdyrbw_v2)
+  
+  
+  temp.df$best <- NA
+  temp.df$best <- ifelse(temp.df$v1op.yr == temp.df$v2op.yr, temp.df$v1op.yr, temp.df$best)
+  temp.df$best <- ifelse(temp.df$v1op.yr > temp.df$v2op.yr, temp.df$v1op.yr, temp.df$best) # son of beast fails here
+  temp.df$best <- ifelse(temp.df$v1op.yr < temp.df$v2op.yr, temp.df$v2op.yr, temp.df$best)
+  
+  v.out <- temp.df$best
+  return(v.out)
+}
 
 # IMPORT DATA ----
 
@@ -75,24 +129,35 @@ cf_park_inventory %>%
 
 
 
-# QA ride dates
+# QA ride dates----
+
+a.park <- "Kings Island"
+
 qa_ride.dates <- full_join(cf_park_inventory[!colnames(cf_park_inventory) %in% "park_name"], 
           cw_cedarfair) %>%
-  .[!duplicated(.),]
+  .[!duplicated(.),] %>%
+  .[.$park_name == a.park,]
 
-qa_ride.dates$Opened_ymd <- qa_ride.dates$Opened %>% ymd
-qa_ride.dates$Closed_ymd <- qa_ride.dates$Closed %>% ymd
+qa_ride.dates$yro_best <- best_open.date(yr.opened = qa_ride.dates$yr_opened, 
+               opened = qa_ride.dates$Opened)
+qa_ride.dates$yrc_best <- best_open.date(yr.opened = qa_ride.dates$yr_closed, 
+                                         opened = qa_ride.dates$Closed)
 
-unique(qa_ride.dates$ride_status)
 
-qa_ride.dates %>%
-  group_by(ride_status, park_name) %>%
-  summarise(n_rides = n_distinct(ride_url)) %>%
-  as.data.table() %>%
-  dcast(., park_name ~ ride_status) %>% clean_names()
+qa_ride.dates$Name_f <- factor(qa_ride.dates$Name, 
+                               levels = unique(qa_ride.dates$Name[order(qa_ride.dates$yro_best)]))
 
-is.na(qa_ride.dates$Closed) & 
-  is.na(qa_ride.dates$yr_closed)
+View(qa_ride.dates)
+
+ggplot() + 
+  geom_point(data = qa_ride.dates, 
+             aes(x = yro_best, y = Name_f))+
+  geom_point(data = qa_ride.dates, 
+             aes(x = yrc_best, y = Name_f)) +
+  geom_segment(data = qa_ride.dates, 
+               aes(x = yro_best, xend =  yrc_best, 
+                   y = Name_f, yend = Name_f)) +
+  facet_grid(ride_status~., space = "free_y", scales = "free_y")
 
 # TIMELINES----
 
