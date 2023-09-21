@@ -29,3 +29,18 @@ park_inventory[park_inventory$Name == "Kiddie Coaster" & grepl("Dorney Park", pa
 # write data
 write_csv(park_inventory, 
           file = "park_inventory.csv")
+
+
+# ride_specs.csv tidying and fixes----
+setwd(wd$data)
+ride_specs <- read_csv("ride_specs.csv")
+
+
+ride_specs$length.ft <- gsub(" ft$", "", ride_specs$Length) %>%
+  as.numeric()
+ride_specs$height.ft <- gsub(" ft$", "", ride_specs$Height) %>%
+  as.numeric()
+ride_specs$speed.mph <- gsub(" mph$", "", ride_specs$Speed) %>%
+  as.numeric()
+
+write_csv(x = ride_specs, file = "ride_specs.csv")
