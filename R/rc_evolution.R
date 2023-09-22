@@ -488,9 +488,16 @@ park_inventory$park_name <- park_inventory$park_name %>%
 
 
 
- write_csv(park_inventory,
-           "park_inventory.csv")
+ # write_csv(park_inventory,
+ #           "park_inventory.csv")
 
+
+
+ride_specs <- read_csv("ride_specs.csv")
+
+ride_specs <- ride_specs[,c("ride_url","length.ft", "height.ft", "speed.mph")]
+
+#write_csv(ride_specs, "ride_specs.csv")
 
 # # roller coaster evolution
 # 
