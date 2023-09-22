@@ -10,6 +10,33 @@ rm(list=ls());cat('\f');gc()
 
 # FUNS ----
 # functions----
+clean_str <- function(v){
+  
+  out <- v %>%
+    gsub("Batman - The", "Batman_The", .) %>%
+    gsub("Superman - ", "Superman_", .) %>%
+    gsub("Mini - Mine|Mini-Mine", "mini_mine", .) %>%
+    gsub("-O-|-o-", "_O_", .) %>%
+    gsub(" - ", "-", .) %>%
+    gsub("Two-Face", "two_face", .) %>%
+    gsub("Twist-N-Shout", "Twist_N_Shout", .)%>%
+    gsub("X-Fli", "xfli", .) %>%
+    gsub("XL-200", "xl200", .) %>%
+    gsub("RC-48", "rc48", .) %>%
+    gsub("TL.* Coaster", "TL3_coaster", .) %>%
+    gsub("Sandy[[:punct:]]s ", "sandys", .) %>%
+    gsub("Dale[[:punct:]]s ", "dales", .) %>%
+    gsub("&", "and", .) %>%
+    gsub(" / ", "_", .) %>%
+    gsub(":|,|!|\\.|-|\'", "", .) %>%
+    gsub(pattern = " ", 
+         replacement = "_", 
+         x = .) %>%
+    tolower() %>%
+    gsub("^d.*_vu$", "deja_vu", .) 
+  return(out)
+  
+}
 build_the_year <- function(yr, df.rides = cf_rides){
   df.rides$yrc_best[is.na(df.rides$yrc_best) & 
                       df.rides$ride_status != "under_construction"] <- year(Sys.Date())
@@ -439,8 +466,30 @@ park_inventory %>% #[park_inventory$park_name == "Cedar Point",] %>%
 colnames(park_inventory)[1] <- "ride_name"
 park_inventory <- park_inventory %>% clean_names
 
-# write_csv(park_inventory,
-#           "park_inventory.csv")
+
+park_inventory$ride_name <- clean_str(park_inventory$ride_name)
+
+park_inventory$type <- tolower(park_inventory$type)
+park_inventory$design <- park_inventory$design %>% 
+  gsub(" ", "_", .) %>%
+  tolower()
+park_inventory$scale <- park_inventory$scale %>% tolower()
+park_inventory$ride_status <- park_inventory$ride_status %>% 
+  gsub("Roller Coasters", "", .) %>%
+  trimws() %>%
+  tolower() %>%
+  gsub(" ", "_", .) %>%
+  gsub("construction", "constr", .)
+
+park_inventory$park_name <- park_inventory$park_name %>% 
+  clean_str() %>%
+  gsub("\n", "", .) %>%
+  gsub("_andamp;_", "_and_", .)
+
+
+
+ write_csv(park_inventory,
+           "park_inventory.csv")
 
 
 # # roller coaster evolution
