@@ -77,7 +77,7 @@ wicked_twister,steel,inverted,extreme,cedar_point,defunct,https://rcdb.com/1571.
 cyclone,wood,sit_down,NA,cedar_point,defunct,https://rcdb.com/1580.htm,https://rcdb.com/4529.htm,19290000,19510000,19291111,19511111,1929,1951
 wild_mouse,steel,sit_down,thrill,cedar_point,defunct,https://rcdb.com/1781.htm,https://rcdb.com/4529.htm,19590530,19630000,19590530,19631111,1959,1963
 scamper,wood,sit_down,thrill,cedar_point,defunct,https://rcdb.com/1782.htm,https://rcdb.com/4529.htm,19620000,19690000,19621111,19691111,1962,1969
-super_coaster,steel,sit_down,kiddie,cedar_point,defunct,https://rcdb.com/1848.htm,https://rcdb.com/4529.htm,19530000,00000000,19531111,NA,1953,NA
+super_coaster,steel,sit_down,kiddie,cedar_point,defunct,https://rcdb.com/1848.htm,https://rcdb.com/4529.htm,19530000,00000000,19531111,NA,1953,1964
 high_frolics,wood,sit_down,NA,cedar_point,defunct,https://rcdb.com/1849.htm,https://rcdb.com/4529.htm,19180000,19400000,19181111,19401111,1918,1940
 leap_the_dips,wood,sit_down,NA,cedar_point,defunct,https://rcdb.com/1850.htm,https://rcdb.com/4529.htm,19120000,19350000,19121111,19351111,1912,1935
 racer,wood,sit_down,NA,cedar_point,defunct,https://rcdb.com/1851.htm,https://rcdb.com/4529.htm,19100000,19280000,19101111,19281111,1910,1928
@@ -482,7 +482,7 @@ steel_first,steel,sit_down,kiddie,dorney_park_and_wildwater_kingdom,defunct,http
 stinger,steel,inverted,extreme,dorney_park_and_wildwater_kingdom,defunct,https://rcdb.com/9849.htm,https://rcdb.com/4588.htm,20120428,20170000,20120428,20171111,2012,2017
 mini_coaster,steel,sit_down,kiddie,dorney_park_and_wildwater_kingdom,defunct,https://rcdb.com/11670.htm,https://rcdb.com/4588.htm,19570000,19850000,19571111,19851111,1957,1985
 great_scenic_railway,wood,sit_down,NA,dorney_park_and_wildwater_kingdom,defunct,https://rcdb.com/2862.htm,https://rcdb.com/4588.htm,19050527,19120000,19050527,19121111,1905,1912
-kiddie_coaster,steel,sit_down,kiddie,dorney_park_and_wildwater_kingdom,defunct,https://rcdb.com/3633.htm,https://rcdb.com/4588.htm,19520000,00000000,19521111,NA,1952,NA
+kiddie_coaster,steel,sit_down,kiddie,dorney_park_and_wildwater_kingdom,defunct,https://rcdb.com/3633.htm,https://rcdb.com/4588.htm,19520000,19801111,19521111,NA,1952,1980
 fire_in_the_hole,steel,sit_down,family,silver_dollar_city,under_constr,https://rcdb.com/21093.htm,https://rcdb.com/4579.htm,20240000,NA,20241111,NA,2024,NA
 thunderation,steel,sit_down,thrill,silver_dollar_city,operating,https://rcdb.com/220.htm,https://rcdb.com/4579.htm,19930410,NA,19930410,NA,1993,NA
 wildfire,steel,sit_down,extreme,silver_dollar_city,operating,https://rcdb.com/720.htm,https://rcdb.com/4579.htm,20010404,NA,20010404,NA,2001,NA
@@ -858,7 +858,7 @@ dragon_wagon,steel,sit_down,family,adventureland,defunct,https://rcdb.com/618.ht
 galaxi,steel,sit_down,thrill,adventureland,defunct,https://rcdb.com/620.htm,https://rcdb.com/4676.htm,19730000,19900903,19731111,19900903,1973,1990
 sooper_jet,steel,sit_down,kiddie,adventureland,defunct,https://rcdb.com/621.htm,https://rcdb.com/4676.htm,19820000,19950000,19821111,19951111,1982,1995
 toboggan,steel,sit_down,thrill,adventureland,defunct,https://rcdb.com/1588.htm,https://rcdb.com/4676.htm,19730000,19790000,19731111,19791111,1973,1979
-roller_coaster,steel,sit_down,family,adventureland,defunct,https://rcdb.com/1829.htm,https://rcdb.com/4676.htm,19621111,00000000,19621111,NA,1962,NA
+roller_coaster,steel,sit_down,family,adventureland,defunct,https://rcdb.com/1829.htm,https://rcdb.com/4676.htm,19631111,19801111,19621111,NA,1963,1980
 unknown,steel,sit_down,thrill,steel_pier,under_constr,https://rcdb.com/20199.htm,https://rcdb.com/4739.htm,NA,NA,NA,NA,NA,NA
 unknown,steel,sit_down,extreme,steel_pier,under_constr,https://rcdb.com/20503.htm,https://rcdb.com/4739.htm,NA,NA,NA,NA,NA,NA
 loco_motion,steel,sit_down,family,steel_pier,operating,https://rcdb.com/6723.htm,https://rcdb.com/4739.htm,NA,NA,NA,NA,NA,NA
@@ -1326,9 +1326,9 @@ jett_star,steel,sit_down,family,fun_land_of_fredericksburg,defunct,https://rcdb.
 miner_mike,steel,sit_down,kiddie,kids_n_action,operating,https://rcdb.com/1752.htm,https://rcdb.com/5909.htm,NA,NA,NA,NA,NA,NA
 wacky_worm,steel,sit_down,family,sharptown_firemens_carnival,operating,https://rcdb.com/19917.htm,https://rcdb.com/19916.htm,NA,NA,NA,NA,NA,NA
 tl3_coaster,steel,sit_down,family,adventurers_family_entertainment_center,operating,https://rcdb.com/3847.htm,https://rcdb.com/4679.htm,NA,NA,NA,NA,NA,NA
-tater_bug_terror,steel,sit_down,kiddie,adventurers_family_entertainment_center,defunct,https://rcdb.com/3877.htm,https://rcdb.com/4679.htm,NA,NA,NA,NA,NA,NA
-flash,steel,sit_down,NA,adventurers_family_entertainment_center,defunct,https://rcdb.com/412.htm,https://rcdb.com/4679.htm,NA,NA,NA,NA,NA,NA
-kiddie_coaster,steel,sit_down,kiddie,adventurers_family_entertainment_center,defunct,https://rcdb.com/671.htm,https://rcdb.com/4679.htm,NA,NA,NA,NA,NA,NA
+tater_bug_terror,steel,sit_down,kiddie,adventurers_family_entertainment_center,defunct,https://rcdb.com/3877.htm,https://rcdb.com/4679.htm,20021111,NA,NA,NA,2002,NA
+flash,steel,sit_down,NA,adventurers_family_entertainment_center,defunct,https://rcdb.com/412.htm,https://rcdb.com/4679.htm,19821111,NA,NA,NA,1982,NA
+kiddie_coaster,steel,sit_down,kiddie,adventurers_family_entertainment_center,defunct,https://rcdb.com/671.htm,https://rcdb.com/4679.htm,19661111,20021111,NA,NA,1966,2002
 jett_star,steel,sit_down,family,lark_ranch,operating,https://rcdb.com/18550.htm,https://rcdb.com/18549.htm,NA,NA,NA,NA,NA,NA
 tasmanian_tiger,steel,sit_down,kiddie,zootampa_at_lowry_park,operating,https://rcdb.com/4343.htm,https://rcdb.com/5693.htm,NA,NA,NA,NA,NA,NA
 unknown,steel,sit_down,kiddie,zootampa_at_lowry_park,defunct,https://rcdb.com/19127.htm,https://rcdb.com/5693.htm,NA,NA,NA,NA,NA,NA

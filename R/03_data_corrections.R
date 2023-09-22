@@ -280,8 +280,35 @@ get_ride_years <- function(park.url = "https://rcdb.com/5056.htm"){
   
   return(df.out)
 }
+clean_str <- function(v){
+  
+  out <- v %>%
+    gsub("Batman - The", "Batman_The", .) %>%
+    gsub("Superman - ", "Superman_", .) %>%
+    gsub("Mini - Mine|Mini-Mine", "mini_mine", .) %>%
+    gsub("-O-|-o-", "_O_", .) %>%
+    gsub(" - ", "-", .) %>%
+    gsub("Two-Face", "two_face", .) %>%
+    gsub("Twist-N-Shout", "Twist_N_Shout", .)%>%
+    gsub("X-Fli", "xfli", .) %>%
+    gsub("XL-200", "xl200", .) %>%
+    gsub("RC-48", "rc48", .) %>%
+    gsub("TL.* Coaster", "TL3_coaster", .) %>%
+    gsub("Sandy[[:punct:]]s ", "sandys", .) %>%
+    gsub("Dale[[:punct:]]s ", "dales", .) %>%
+    gsub("&", "and", .) %>%
+    gsub(" / ", "_", .) %>%
+    gsub(":|,|!|\\.|-|\'", "", .) %>%
+    gsub(pattern = " ", 
+         replacement = "_", 
+         x = .) %>%
+    tolower() %>%
+    gsub("^d.*_vu$", "deja_vu", .) 
+  return(out)
+  
+}
 
-get_ride_years()
+
 
 # DIRS ----
 wd        <- list()
@@ -300,43 +327,58 @@ park_inventory <- read_csv("park_inventory.csv")
 # change data
 
 
-park_inventory[park_inventory$Name == "Super Coaster" & park_inventory$park_name == "Cedar Point",]$Closed <- "19641111"
-park_inventory[park_inventory$Name == "Super Coaster" & park_inventory$park_name == "Cedar Point",]$yr_closed <- 1964
 
-park_inventory[park_inventory$Name == "Kiddie Coaster" & grepl("Dorney Park", park_inventory$park_name),]$Closed <- "19801111"
-park_inventory[park_inventory$Name == "Kiddie Coaster" & grepl("Dorney Park", park_inventory$park_name),]$yr_closed <- 1980
+park_inventory[park_inventory$ride_name == "super_coaster" & park_inventory$park_name == "cedar_point",]$closed <- "19641111"
+park_inventory[park_inventory$ride_name == "super_coaster" & park_inventory$park_name == "cedar_point",]$yrc_best <- 1964
 
-park_inventory[park_inventory$Name == "Roller Coaster" & grepl("Adventureland", park_inventory$park_name),]$Opened    <- "19631111"
-park_inventory[park_inventory$Name == "Roller Coaster" & grepl("Adventureland", park_inventory$park_name),]$yr_opened <- 1963
-park_inventory[park_inventory$Name == "Roller Coaster" & grepl("Adventureland", park_inventory$park_name),]$Closed    <- "19801111"
-park_inventory[park_inventory$Name == "Roller Coaster" & grepl("Adventureland", park_inventory$park_name),]$yr_closed <- 1980
+park_inventory[park_inventory$ride_name == clean_str("Kiddie Coaster") & 
+                 grepl(clean_str("Dorney Park"), park_inventory$park_name),]$closed <- "19801111"
+park_inventory[park_inventory$ride_name == clean_str("Kiddie Coaster") & 
+                 grepl(clean_str("Dorney Park"), park_inventory$park_name),]$yrc_best <- 1980
 
-park_inventory[park_inventory$Name == "Tater Bug Terror" & grepl("Adventurers Family", park_inventory$park_name),]$Opened <- "20021111"
-park_inventory[park_inventory$Name == "Tater Bug Terror" & grepl("Adventurers Family", park_inventory$park_name),]$yr_opened <- 2002
+park_inventory[park_inventory$ride_name == clean_str("Roller Coaster") & 
+                 grepl(clean_str("Adventureland"), park_inventory$park_name),]$opened    <- 19631111
+park_inventory[park_inventory$ride_name == clean_str("Roller Coaster") & 
+                 grepl(clean_str("Adventureland"), park_inventory$park_name),]$yro_best <- 1963
+park_inventory[park_inventory$ride_name == clean_str("Roller Coaster") & 
+                 grepl(clean_str("Adventureland"), park_inventory$park_name),]$closed    <- "19801111"
+park_inventory[park_inventory$ride_name == clean_str("Roller Coaster") & 
+                 grepl(clean_str("Adventureland"), park_inventory$park_name),]$yrc_best <- 1980
 
-park_inventory[park_inventory$Name == "Flash" & grepl("Adventurers Family", park_inventory$park_name),]$Opened <- "19821111"
-park_inventory[park_inventory$Name == "Flash" & grepl("Adventurers Family", park_inventory$park_name),]$yr_opened <- 1982
+park_inventory[park_inventory$ride_name == clean_str("Tater Bug Terror") & 
+                 grepl(clean_str("Adventurers Family"), park_inventory$park_name),]$opened <- 20021111
+park_inventory[park_inventory$ride_name == clean_str("Tater Bug Terror") & 
+                 grepl(clean_str("Adventurers Family"), park_inventory$park_name),]$yro_best <- 2002
 
-park_inventory[park_inventory$Name == "Kiddie Coaster" & grepl("Adventurers Family", park_inventory$park_name),]$Closed <- "20021111"
-park_inventory[park_inventory$Name == "Kiddie Coaster" & grepl("Adventurers Family", park_inventory$park_name),]$yr_closed <- 2002
-park_inventory[park_inventory$Name == "Kiddie Coaster" & grepl("Adventurers Family", park_inventory$park_name),]$Opened <- "19661111"
-park_inventory[park_inventory$Name == "Kiddie Coaster" & grepl("Adventurers Family", park_inventory$park_name),]$yr_opened <- 1966
+park_inventory[park_inventory$ride_name == clean_str("Flash") & 
+                 grepl(clean_str("Adventurers Family"), park_inventory$park_name),]$opened <- 19821111
+park_inventory[park_inventory$ride_name == clean_str("Flash") & 
+                 grepl(clean_str("Adventurers Family"), park_inventory$park_name),]$yro_best <- 1982
+
+park_inventory[park_inventory$ride_name == clean_str("Kiddie Coaster") & 
+                 grepl(clean_str("Adventurers Family"), park_inventory$park_name),]$closed <- "20021111"
+park_inventory[park_inventory$ride_name == clean_str("Kiddie Coaster") & 
+                 grepl(clean_str("Adventurers Family"), park_inventory$park_name),]$yrc_best <- 2002
+park_inventory[park_inventory$ride_name == clean_str("Kiddie Coaster") & 
+                 grepl(clean_str("Adventurers Family"), park_inventory$park_name),]$opened <- 19661111
+park_inventory[park_inventory$ride_name == clean_str("Kiddie Coaster") & 
+                 grepl(clean_str("Adventurers Family"), park_inventory$park_name),]$yro_best <- 1966
 
 # write data
-write_csv(park_inventory, 
-          file = "park_inventory.csv")
+# write_csv(park_inventory, 
+#           file = "park_inventory.csv")
 
 
-# ride_specs.csv tidying and fixes----
-setwd(wd$data)
-ride_specs <- read_csv("ride_specs.csv")
-
-
-ride_specs$length.ft <- gsub(" ft$", "", ride_specs$Length) %>%
-  as.numeric()
-ride_specs$height.ft <- gsub(" ft$", "", ride_specs$Height) %>%
-  as.numeric()
-ride_specs$speed.mph <- gsub(" mph$", "", ride_specs$Speed) %>%
-  as.numeric()
-
-write_csv(x = ride_specs, file = "ride_specs.csv")
+# # ride_specs.csv tidying and fixes----
+# setwd(wd$data)
+# ride_specs <- read_csv("ride_specs.csv")
+# 
+# 
+# ride_specs$length.ft <- gsub(" ft$", "", ride_specs$Length) %>%
+#   as.numeric()
+# ride_specs$height.ft <- gsub(" ft$", "", ride_specs$Height) %>%
+#   as.numeric()
+# ride_specs$speed.mph <- gsub(" mph$", "", ride_specs$Speed) %>%
+#   as.numeric()
+# 
+# write_csv(x = ride_specs, file = "ride_specs.csv")
