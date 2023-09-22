@@ -34,7 +34,7 @@ build_the_year2 <- function(yr1 = 1992,
   }
   bw.out <- ifelse(is.na(bw.out), F, bw.out)
   
-  df1$active_year <- yr1
+  df1$year_active <- yr1
   out <- df1[!colnames(df1) %in% c("yro_best", "yrc_best")] %>%
     .[bw.out,] 
  
@@ -118,15 +118,18 @@ ride_specs_url_years <- ride_specs_url_years[!(ride_specs_url_years$ride_status 
 # PREPPED DATA----
 # rollercoasters by-year
 rcby <- NULL
-for(i in min(range(c(ride_specs_url_years$yrc_best, 
-                     ride_specs_url_years$yro_best),
-                   na.rm = T)):max(range(c(ride_specs_url_years$yrc_best, 
-                                           ride_specs_url_years$yro_best), 
-                                         na.rm = T))){
+rcby2 <- NULL
+for(i in 1920:year(Sys.Date())){
   rcby <- rbind(rcby, 
                 build_the_year(yr = i, 
                                df.rides = ride_specs_url_years))
+  rcby2 <- rbind(rcby2, 
+                 build_the_year2(i, 
+                                 ride_specs_url_years))
 }
+rcby
+rcby2
+
 
 rcby <- left_join(rcby,
                   ride_specs_url_years[,c("ride_url", "height.ft", 
@@ -136,6 +139,13 @@ rcby <- left_join(rcby,
   left_join(., 
             ungroup(summarise(group_by(park_inventory,park_url, ride_url))))
 
+rcby2 <- rcby2 %>%
+  left_join(., 
+            ungroup(summarise(group_by(park_inventory,park_url, ride_url))))
+
+
+rcby
+rcby2
   
 rcby.bu <- rcby
 
@@ -162,8 +172,8 @@ ggplot() +
             linewidth = 1.2)+
   scale_y_continuous(limits = c(0,NA))+
   labs(title = "Max Height")+
-  scale_x_continuous(limits = c(1880,2030), 
-                     breaks = seq(1800,3000,by= 20))+
+  scale_x_continuous(limits = c(NA, 2030), 
+                     breaks = seq(0,3000,by= 10))+
   geom_vline(aes(xintercept = breakpts$bp_year), 
              linetype = 2232, color = "black")
 
@@ -174,8 +184,8 @@ ggplot() +
             linewidth = 1.2)+
   scale_y_continuous(limits = c(0,NA))+
   labs(title = "Max Length")+
-  scale_x_continuous(limits = c(1880,2030), 
-                     breaks = seq(1800,3000,by= 20))+
+  scale_x_continuous(limits = c(NA, 2030), 
+                     breaks = seq(0,3000,by= 10))+
   geom_vline(aes(xintercept = breakpts$bp_year), 
              linetype = 2232, color = "black")
 
@@ -186,8 +196,8 @@ ggplot() +
             linewidth = 1.2)+
   scale_y_continuous(limits = c(0,NA))+
   labs(title = "Max Speed")+
-  scale_x_continuous(limits = c(1880,2030), 
-                     breaks = seq(1800,3000,by= 20))+
+  scale_x_continuous(limits = c(NA, 2030), 
+                     breaks = seq(0,3000,by= 10))+
   geom_vline(aes(xintercept = breakpts$bp_year), 
              linetype = 2232, color = "black")
 
@@ -199,26 +209,84 @@ rcby
 jb_ridestuff <- park_inventory[,c("ride_name", 
                                   #"type",
                                   "design", "park_name", 
+                                  #scale,
                                   #"ride_status", 
                                   "ride_url", "park_url")] %>%
   group_by_all() %>%
   summarise()
 
-master <- left_join(rcby, jb_ridestuff)
+master <- left_join(rcby2, jb_ridestuff)
+# shiny output 4----
+# average length by year by design
+SHINY_avg.length_by.design_by.yr <-  master %>%
+  group_by(year = year_active, 
+           design) %>%
+  summarise(avg_length = mean(length.ft, na.rm = T)) 
+setwd(wd$output)
+write_csv(SHINY_avg.length_by.design_by.yr, 
+          "SHINY_avg.length_by.design_by.yr.csv")
+setwd(wd$data)
 
+  +ggplot(data = ., aes(x = year, y = avg_length, color = design)) + 
+  geom_line()
 
+# shiny output 3----
+# wood vs steel
+
+SHINY_wood.vs.steel <- master %>%
+  group_by(year =  year_active, 
+           type) %>%
+  summarise(n_rides = n_distinct(ride_url), 
+            n_parks = n_distinct(park_url)) 
+setwd(wd$output)
+write_csv(SHINY_wood.vs.steel, 
+          "SHINY_wood.vs.steel.csv")
+setwd(wd$data)
+# shiny output 2----
+# avg specs by year
+
+SHINY_ride.specs_by.year <- master %>%
+  group_by(year = year_active) %>%
+  summarise(n_parks = n_distinct(park_url), 
+            n_rides = n_distinct(ride_url), 
+            rides_w.height = sum(!is.na(height.ft)), 
+            rides_w.length = sum(!is.na(length.ft)), 
+            rides_w.speed  = sum(!is.na(speed.mph)), 
+            avg_height = mean(height.ft, na.rm = T), 
+            avg_length = mean(length.ft, na.rm = T), 
+            avg_speed = mean(speed.mph, na.rm = T), 
+            max_height = max(height.ft, na.rm = T), 
+            max_length = max(length.ft, na.rm = T), 
+            max_speed = max(speed.mph, na.rm = T), 
+            total_length = sum(length.ft, na.rm = T))
+setwd(wd$output)
+write_csv(SHINY_ride.specs_by.year,"SHINY_ride.specs_by.year.csv")
+setwd(wd$data)
+
+ggplot(data = SHINY_ride.specs_by.year, 
+       aes(x = year, y = avg_length)) +
+  geom_col(aes(fill = avg_length))
+
+# Shiny output 1----
 a.park <- "kings_island"
 
-master %>%
-  .[.$park_name == a.park,] %>%
+SHINY_ride.design_by.year_by.park <- master %>%
+  #.[.$park_name == a.park,] %>%
   group_by(year = year_active, 
            #ride_url, ride_name, 
            #type, 
            design,
            park_url, 
            park_name) %>%
-  summarise(n_rides = n_distinct(ride_url)) %>%
-  ggplot(data = ., 
+  summarise(n_rides = n_distinct(ride_url)) 
+
+# write to output
+setwd(wd$output)
+write_csv(x = SHINY_ride.design_by.year_by.park, 
+          file = "SHINY_ride.design_by.year_by.park.csv")
+setwd(wd$data)
+
+ggplot(data = SHINY_ride.design_by.year_by.park[SHINY_ride.design_by.year_by.park$park_name == a.park,], 
        aes(x = year, y = n_rides, fill = design)) + 
-  geom_area(color = "black", 
+  geom_col(color = "black", 
             position = "stack")

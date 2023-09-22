@@ -18,6 +18,7 @@ library(ggplot2)
 # library(tigris)
 # library(tidycensus)
 library(glue)
+library(devtools)
 
 
 # Define UI for application that draws a histogram
@@ -57,7 +58,6 @@ ui <- fluidPage(titlePanel("Proof of Concept Shiny Dashboard - Tim Bender, NCCEH
                 ), 
                 mainPanel(plotOutput(outputId = "basemap01"), 
                           tableOutput(outputId = "table01"))))
-
 # Define server logic required to draw a histogram
 server <- function(input, output) {
   # load data
@@ -80,7 +80,8 @@ server <- function(input, output) {
       scale_fill_discrete(name = "BoS Region")
   })
   output$table01 <- renderTable({
-    pretend.df[pretend.df$Region %in% input$checkGroup01,]
+    SHINY_avg.length_by.design_by.yr
+    #pretend.df[pretend.df$Region %in% input$checkGroup01,]
   })
   # You can access the values of the widget (as a vector)
   # with input$checkGroup01, e.g.
