@@ -1,0 +1,8 @@
+ride_url,exception_cat,exception_type
+https://rcdb.com/1834.htm,ride_exception,never_operated
+https://rcdb.com/4003.htm,ride_exception,never_operated
+https://rcdb.com/2379.htm,ride_exception,never_operated
+https://rcdb.com/675.htm,ride_exception,open_date_unknown
+https://rcdb.com/12735.htm,ride_exception,open_date_unknown
+https://rcdb.com/2379.htm,ride_exception,parts_donor
+https://rcdb.com/12735.htm,ride_exception,closed_date_unknown
