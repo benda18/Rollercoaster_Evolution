@@ -10,6 +10,25 @@ rm(list=ls());cat('\f');gc()
 
 # FUNS ----
 # functions----
+build_the_year <- function(yr, df.rides = cf_rides){
+  df.rides$yrc_best[is.na(df.rides$yrc_best) & 
+                      df.rides$ride_status != "under_construction"] <- year(Sys.Date())
+  df.rides <- df.rides[!df.rides$ride_status %in% c("under_construction", "sbno"),]
+  
+  which.in.yr <- NULL
+  for(i in 1:nrow(df.rides)){
+    if(between(x = yr,
+               lower = df.rides$yro_best[i], 
+               upper = df.rides$yrc_best[i])){
+      which.in.yr <- c(which.in.yr, 
+                       i)
+    }
+  }
+  
+  out.df <- data.frame(ride_url = df.rides$ride_url[which.in.yr], 
+                       year_active = yr)
+  return(out.df)
+}
 get_ride_years <- function(park.url){
   Sys.sleep(1.5)
   park.html <- read_html(park.url)
@@ -340,6 +359,8 @@ cw_cedarfair <- data.frame(operator_name = c("Cedar Fair"),
   as_tibble()
 
 
+
+
 # IMPORT DATA ----
 
 for(i in dat_files){
@@ -351,10 +372,22 @@ for(i in dat_files){
   rm(temp.varname)
 }
 
+cw_sixflags <-  park_inventory[park_inventory$park_name %in% 
+                                 #unique(grep("silverwood|lagoon$|silver dollar|eltich|piers$|hersheypark|universal studios|busch|seaworld|six flags|kennywood|dollywood|holiday world",
+                                 unique(grep("six flags",
+                                             park_inventory$park_name, 
+                                             ignore.case = T, value = T)),] %>%
+  group_by(operator_name = NA, park_url) %>%
+  summarise()
+
+
 
 # FILTER DATA TO CEDAR FAIR----
-cf_park_inventory <- park_inventory[park_inventory$park_url %in% cw_cedarfair$park_url,] 
-cf_ride_specs     <- ride_specs[ride_specs$ride_url %in% cf_park_inventory$ride_url,] 
+cf_park_inventory <- park_inventory[park_inventory$park_url %in%
+                                      c(cw_cedarfair$park_url, 
+                                       cw_sixflags$park_url),] 
+cf_ride_specs     <- ride_specs[ride_specs$ride_url %in% 
+                                  c(cf_park_inventory$ride_url),] 
 
 # ride_years----
 cf_years     <- fun_tidy.years(park.inventory = cf_park_inventory)
@@ -418,12 +451,189 @@ cf_rides <- full_join(cf_park_inventory, cf_ride_specs) %>%
 rm(park_inventory, ride_specs, selected_parks, 
    cf_park_inventory, cf_ride_specs)
 
+# assign active years to every ride----
+all.years <- c(cf_rides$yro_best, 
+               cf_rides$yrc_best) %>%
+  range(., na.rm = T)
+
+all.years <- min(all.years):year(Sys.Date())
+
+cf_active_ride_years <- NULL
+for(i in all.years){
+  cf_active_ride_years <- rbind(cf_active_ride_years,
+                                build_the_year(yr = i, 
+                                               df.rides = cf_rides))
+}
+
 # ALL DATA----
-cw_cedarfair
+
 cf_parks
 cf_rides
 cf_years
+cf_active_ride_years
+
+prh <- full_join(cf_rides[,c("ride_name", "ride_url", "park_url", 
+                                        "length_ft", "height_ft", "speed_mph")], 
+          cf_parks) %>%
+  left_join(., 
+            cf_active_ride_years) %>%
+  .[.$year_active >= 1960,]
+
+# assign park_operator
+cw_park.ops <- data.frame(park_name = unique(prh$park_name), 
+                          park_operator = "cedar_fair") %>% as_tibble %>%
+  .[!is.na(.$park_name),]
+
+cw_park.ops$park_operator[grepl(pattern = "six_flags", 
+                           x = cw_park.ops$park_name, 
+                           ignore.case = T)] <- "six_flags"
+
+prh <- prh[!(is.na(prh$ride_url) & 
+      is.na(prh$park_url)),]
+
+prh <- left_join(prh, 
+                 cw_park.ops)
+
+write_csv(prh, file = "cf_6f_parkridehistory.csv")
 
 
+park_ride_hist <- prh %>%
+  group_by(park_name, year_active) %>%
+  summarise(n_rides = n_distinct(ride_url), 
+            max_length = max(length_ft, na.rm = T)) %>%
+  as.data.table() %>%
+  dcast(., 
+        park_name ~ year_active, 
+        fun.aggregate = sum, 
+        value.var = "n_rides", fill = 0, 
+        drop = F) %>%
+  melt(., 
+       id.vars = "park_name", 
+       value.name = "n_rides", variable.name = "year") %>%
+  as.data.frame() %>%
+  as_tibble() %>%
+  mutate(., year = as.numeric(as.character(year))) %>%
+  .[!is.na(.$year),] 
+
+ggplot() + 
+  geom_area(data = park_ride_hist, 
+           aes(x = year, y = n_rides, 
+               fill = park_name), 
+           position = "fill", color = "black")+
+  scale_x_continuous(breaks = seq(0,10000,by=10))+
+  scale_y_continuous(labels = scales::percent)+
+  labs(title = "Share of Rides by Park Over Time")
+
+# outputs----
+
+prh %>%
+  group_by(park_name, year_active) %>%
+  summarise(n_rides = n_distinct(ride_url), 
+            max_length = max(length_ft, na.rm = T), 
+            max_speed = max(speed_mph, na.rm = T),
+            max_height = max(height_ft, na.rm = T)) %>%
+  as.data.table() %>%
+  dcast(., 
+        park_name ~ year_active, 
+        fun.aggregate = sum, 
+        value.var = "max_height", fill = 0, 
+        drop = F) %>%
+  melt(., 
+       id.vars = "park_name", 
+       value.name = "max_height", variable.name = "year") %>%
+  as.data.frame() %>%
+  as_tibble() %>%
+  mutate(., year = as.numeric(as.character(year))) %>%
+  .[!is.na(.$year),] %>%
+  ggplot(data = ., 
+         aes(x = year, y = max_height)) + 
+  geom_line(aes(color = park_name))+
+  geom_smooth()+
+  scale_x_continuous(breaks = seq(0,10000,by=10))+
+  scale_y_continuous(labels = scales::comma)+
+  labs(title = "Max Ride Height by Park Over Time")
+
+prh %>%
+  group_by(park_name, year_active) %>%
+  summarise(n_rides = n_distinct(ride_url), 
+            max_length = max(length_ft, na.rm = T), 
+            max_speed = max(speed_mph, na.rm = T),
+            max_height = max(height_ft, na.rm = T)) %>%
+  as.data.table() %>%
+  dcast(., 
+        park_name ~ year_active, 
+        fun.aggregate = sum, 
+        value.var = "max_speed", fill = 0, 
+        drop = F) %>%
+  melt(., 
+       id.vars = "park_name", 
+       value.name = "max_speed", variable.name = "year") %>%
+  as.data.frame() %>%
+  as_tibble() %>%
+  mutate(., year = as.numeric(as.character(year))) %>%
+  .[!is.na(.$year),] %>%
+  ggplot(data = ., 
+         aes(x = year, y = max_speed)) + 
+  geom_line(aes(color = park_name))+
+  geom_smooth()+
+  scale_x_continuous(breaks = seq(0,10000,by=10))+
+  scale_y_continuous(labels = scales::comma)+
+  labs(title = "Max Ride Speed by Park Over Time")
+
+prh %>%
+  group_by(park_name, year_active) %>%
+  summarise(n_rides = n_distinct(ride_url), 
+            max_length = max(length_ft, na.rm = T), 
+            max_speed = max(speed_mph, na.rm = T),
+            max_height = max(height_ft, na.rm = T)) %>%
+  as.data.table() %>%
+  dcast(., 
+        park_name ~ year_active, 
+        fun.aggregate = sum, 
+        value.var = "max_length", fill = 0, 
+        drop = F) %>%
+  melt(., 
+       id.vars = "park_name", 
+       value.name = "max_length", variable.name = "year") %>%
+  as.data.frame() %>%
+  as_tibble() %>%
+  mutate(., year = as.numeric(as.character(year))) %>%
+  .[!is.na(.$year),] %>%
+  ggplot(data = ., 
+         aes(x = year, y = max_length)) + 
+  geom_line(aes(color = park_name))+
+  geom_smooth()+
+  scale_x_continuous(breaks = seq(0,10000,by=10))+
+  scale_y_continuous(labels = scales::comma)+
+  labs(title = "Max Length by Park Over Time")
+
+prh %>%
+  group_by(park_name, year_active) %>%
+  summarise(n_rides = n_distinct(ride_url), 
+            max_length = max(length_ft, na.rm = T), 
+            t_length = sum(length_ft, na.rm = T),
+            max_speed = max(speed_mph, na.rm = T),
+            max_height = max(height_ft, na.rm = T)) %>%
+  as.data.table() %>%
+  dcast(., 
+        park_name ~ year_active, 
+        fun.aggregate = sum, 
+        value.var = "t_length", fill = 0, 
+        drop = F) %>%
+  melt(., 
+       id.vars = "park_name", 
+       value.name = "t_length", variable.name = "year") %>%
+  as.data.frame() %>%
+  as_tibble() %>%
+  mutate(., year = as.numeric(as.character(year))) %>%
+  .[!is.na(.$year),] %>%
+  ggplot(data = ., 
+         aes(x = year, y = t_length)) + 
+  geom_line(aes(color = park_name))+
+  geom_smooth()+
+  scale_x_continuous(breaks = seq(0,10000,by=10))+
+  scale_y_continuous(labels = scales::comma)+
+  labs(title = "Total Length by Park Over Time")
 
 
+prh
