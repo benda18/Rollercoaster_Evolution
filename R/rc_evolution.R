@@ -435,6 +435,9 @@ park_inventory %>% #[park_inventory$park_name == "Cedar Point",] %>%
             range_yo = range(yro_best,na.rm = T), 
             range_yc = max(yrc_best,na.rm = T))
 
+# clean names
+colnames(park_inventory)[1] <- "ride_name"
+park_inventory <- park_inventory %>% clean_names
 
 # write_csv(park_inventory,
 #           "park_inventory.csv")
