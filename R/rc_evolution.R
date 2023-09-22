@@ -37,6 +37,7 @@ clean_str <- function(v){
   return(out)
   
 }
+
 build_the_year <- function(yr, df.rides = cf_rides){
   df.rides$yrc_best[is.na(df.rides$yrc_best) & 
                       df.rides$ride_status != "under_construction"] <- year(Sys.Date())
