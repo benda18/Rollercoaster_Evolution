@@ -22,37 +22,57 @@ library(devtools)
 
 source("C:/Users/bende/Documents/R/play/rollercoaster_evolution/shiny/rollercoasters/module.R")
 
-# Define UI for application that draws a histogram
-ui <- fluidPage(titlePanel("title"),
-                div("<div>"),
-                mainPanel("mainPanel", 
-                          #tableOutput(outputId = "table01"), 
-                          plotOutput(outputId = "plot01")
+# Define UI for application that draws a histogram 
+ui <- fluidPage(headerPanel(""),
+                titlePanel(""), 
+                
+                sidebarPanel(h4(HTML(r"(<u>Plot Parks Together or Separate</u>)")), 
+                             checkboxInput("checkbox_f", 
+                                           label = ("Separately (up to 4 parks)"), 
+                                           value = F),
+                             # ui.R Radio2 Buttons
+                             radioButtons("radio2", 
+                                          label = h4(HTML(r"(<u>Outline Parks:</u>)")), 
+                                          choices = list("Don't color" = "no color", 
+                                                         "All the same color" = "same color", 
+                                                         "Each with unique color" = "different colors"), 
+                                          selected = "no color"),
+                             #ui  slider
+                             sliderInput("slider_ts", 
+                                         label = h4(HTML(r"(<u>Adjust Text Size</u>)")), 
+                                         min = 10, 
+                                         max = 30, 
+                                         value = 18),
+                             # ui.R RADIO BUTTIONS
+                             radioButtons("radio", 
+                                          label = h4(HTML(r"(<u>Rides as a Number or Percentage</u>)")),
+                                          choices = list("Number of Rides" = "stack", 
+                                                         "Percent of Rides" = "fill"), 
+                                          selected = "stack"), 
+                             # ui.R CHECKBOX GROUP----
+                             checkboxGroupInput("park_name01", 
+                                                label = h2(HTML(r"(<u>Select Parks</u>)")), 
+                                                choices = list("Kings Island" = "kings_island", 
+                                                               "Cedar Point" = "cedar_point", 
+                                                               "Carowinds" = "carowinds", 
+                                                               "Kings Dominion" = "kings_dominion"),
+                                                selected = "cedar_point")),
+                mainPanel("", 
+                          fluidRow(
+                            plotOutput(outputId = "plot01"))),
+                
+                fluidRow(tableOutput(outputId = "table04")
+                          #tableOutput(outputId = "table01"),
+                          
                           #tableOutput(outputId = "table02"), 
                           #tableOutput(outputId = "table03"),
-                          #tableOutput(outputId = "table04")
+                          
                           ),
-                #ui  slider----
-                sliderInput("slider_ts", label = h3("Slider"), min = 10, 
-                            max = 30, value = 18),
                 
-                # ui.R RADIO BUTTIONS
-                radioButtons("radio", label = h3("Radio buttons"),
-                             choices = list("Total Rides" = "stack", 
-                                            "Percent of Rides" = "fill"), 
-                             selected = "fill"),
+                # hr(),
+                # fluidRow(column(3, verbatimTextOutput("valueFacet"))),
                 
-                hr(),
-                fluidRow(column(3, verbatimTextOutput("valueR"))),
                 
-                # ui.R CHECKBOX GROUP----
-                checkboxGroupInput("park_name01", 
-                                   label = h3("Checkbox group"), 
-                                   choices = list("Kings Island" = "kings_island", 
-                                                  "Cedar Point" = "cedar_point", 
-                                                  "Carowinds" = "carowinds", 
-                                                  "Kings Dominion" = "kings_dominion"),
-                                   selected = "cedar_point"),
                 
                 # # sidebar----
                 # sidebarLayout("sidebarLayout",
@@ -67,9 +87,17 @@ ui <- fluidPage(titlePanel("title"),
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-  # slider for plot text size----
+  # checkbox for facet_grid/facet_wrap----
+  output$valueFacet <- renderPrint({ 
+    input$checkbox_f 
+    })
+  # slider for plot text size
   output$valueS <- renderPrint({
     input$slider_ts
+  })
+  # radio button for coloring parks in plot
+  output$valueR2 <- renderPrint({
+    input$radio2
   })
   # server.R RADIO BUTTON TO SELECT PLOT LAYOUT
   output$valueR <- renderPrint({ 
@@ -91,21 +119,54 @@ server <- function(input, output) {
     
   })
   output$plot01 <- renderPlot({
-    SHINY_ride.design_by.year_by.park[SHINY_ride.design_by.year_by.park$park_name %in% 
-                                        input$park_name01,] %>%
-      ggplot(data = ., 
+    # SHINY_ride.design_by.year_by.park[SHINY_ride.design_by.year_by.park$park_name %in% 
+    #                                     input$park_name01,] %>%
+      the.plot.01 <- ggplot(data = SHINY_ride.design_by.year_by.park[SHINY_ride.design_by.year_by.park$park_name %in% input$park_name01,], 
              aes(x = year, y = n_rides, 
                  fill = design)) + 
-      geom_col(position = input$radio)+
+      #geom_col(position = input$radio) +
       #theme(text = element_text(size = 25))+
       theme(text = element_text(size = input$slider_ts))+
-      scale_y_continuous(labels = ifelse(input$radio == "fill", 
-                                   scales::percent, 
-                                   scales::comma))
+      scale_y_continuous(name = ifelse(input$radio == "fill", "Percent-share of Rides", "Number of Rides"), 
+                         labels = ifelse(input$radio == "fill", 
+                                   scales::percent, scales::comma))+
+      scale_fill_discrete(name = "Ride Design")+
+        scale_color_discrete(name = "Park Name")
+      
+      # add facets here----
+     
+      if(input$checkbox_f & 
+         length(input$park_name01) > 1 & 
+         length(input$park_name01) <= 4){
+        the.plot.01 <- the.plot.01 + 
+          facet_grid(park_name~.)
+      } 
+      
+      if(input$radio2 == "same color") {
+        the.plot.01 <- the.plot.01 +
+          geom_col(position = input$radio, 
+                   color = "white") 
+      }
+      
+      if(input$radio2 == "different colors") {
+        the.plot.01 <- the.plot.01 +
+          geom_col(position = input$radio, 
+                   aes(color = park_name)) 
+      }
+      
+      if(input$radio2 == "no color"){
+        the.plot.01 <- the.plot.01 +
+          geom_col(position = input$radio)
+      }
+      
+      
+      
+    print(the.plot.01)
     
-    
-    
-  })
+  }, 
+  # control plot size----
+  height = 600, width = 800)
+  
   output$table03 <- renderTable({
     SHINY_avg.length_by.design_by.yr
   })
