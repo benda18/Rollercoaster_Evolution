@@ -20,6 +20,11 @@ rm(list=ls());cat('\f');gc()
 #   .[.$park_name == "kings_island",] %>%
 #   .[!.$ride_status == "under_constr",]
 
+
+
+
+
+
 build_the_year2 <- function(yr1 = 1992, 
                             df1 = pi){
   require(data.table)
