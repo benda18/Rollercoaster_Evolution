@@ -7,7 +7,7 @@
 #    http://shiny.rstudio.com/
 
 
-# My notes are located here: https://github.com/benda18/shiny_dash_BoS#shiny-resources
+  # My notes are located here: https://github.com/benda18/shiny_dash_BoS#shiny-resources
 # my proof of concept dash from ncceh: https://github.com/benda18/shiny_dash_BoS/tree/main/proof_of_concept_app
 
 library(dplyr)
@@ -26,47 +26,85 @@ source("C:/Users/bende/Documents/R/play/rollercoaster_evolution/shiny/rollercoas
 ui <- fluidPage(titlePanel("title"),
                 div("<div>"),
                 mainPanel("mainPanel", 
-                          tableOutput(outputId = "table01"), 
-                          tableOutput(outputId = "table02"), 
-                          tableOutput(outputId = "table03"),
-                          tableOutput(outputId = "table04"))
-                # sidebar----
+                          #tableOutput(outputId = "table01"), 
+                          plotOutput(outputId = "plot01")
+                          #tableOutput(outputId = "table02"), 
+                          #tableOutput(outputId = "table03"),
+                          #tableOutput(outputId = "table04")
+                          ),
+                #ui  slider----
+                sliderInput("slider_ts", label = h3("Slider"), min = 10, 
+                            max = 30, value = 18),
+                
+                # ui.R RADIO BUTTIONS
+                radioButtons("radio", label = h3("Radio buttons"),
+                             choices = list("Total Rides" = "stack", 
+                                            "Percent of Rides" = "fill"), 
+                             selected = "fill"),
+                
+                hr(),
+                fluidRow(column(3, verbatimTextOutput("valueR"))),
+                
+                # ui.R CHECKBOX GROUP----
+                checkboxGroupInput("park_name01", 
+                                   label = h3("Checkbox group"), 
+                                   choices = list("Kings Island" = "kings_island", 
+                                                  "Cedar Point" = "cedar_point", 
+                                                  "Carowinds" = "carowinds", 
+                                                  "Kings Dominion" = "kings_dominion"),
+                                   selected = "cedar_point"),
+                
+                # # sidebar----
                 # sidebarLayout("sidebarLayout",
-                #               sidebarPanel("<sidebar panel>"), 
-                #               mainPanel("mainpanel"
-                #                         #plotOutput(outputId = "basemap01"), 
-                #                         #tableOutput(outputId = "table01")
-                #               )
+                #               sidebarPanel("<sidebar panel>"),
+                #               
+                #               # mainPanel("mainpanel"
+                #               #           #plotOutput(outputId = "basemap01"),
+                #               #           #tableOutput(outputId = "table01")
+                #               # )
                 # )
 )
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-  # load data
-  # pretend.df <- read_csv("https://raw.githubusercontent.com/timbender-ncceh/shiny_dash_BoS/main/proof_of_concept_app/summary_agegroups_by_region.csv")
-  # devtools::source_url(url = "https://raw.githubusercontent.com/timbender-ncceh/shiny_dash_BoS/main/modules/MODULE_mapping.R?raw=TRUE")
-  
-  # other stuff
-  # output$basemap01 <- renderPlot({
-  #   basemap+
-  #     geom_sf(data = bos_regions[bos_regions$Region %in% input$checkGroup01,], # filter regions here 
-  #             color = "white",
-  #             aes(fill = Region_f))+
-  #     geom_sf(data = nc_bound, 
-  #             color = "grey", 
-  #             fill = NA) +
-  #     geom_sf(data = bos_counties[bos_counties$Region %in% input$checkGroup01,],  # filter regions here
-  #             fill = NA, color = "black") +
-  #     coord_sf(xlim = range(bbox.nc[c("xmin", "xmax")]), 
-  #              ylim = range(bbox.nc[c("ymin", "ymax")]))+
-  #     scale_fill_discrete(name = "BoS Region")
-  # })
-  output$table01 <- renderTable({
-    SHINY_avg.length_by.design_by.yr
-    #pretend.df[pretend.df$Region %in% input$checkGroup01,]
+  # slider for plot text size----
+  output$valueS <- renderPrint({
+    input$slider_ts
   })
-  output$table02 <- renderTable({
-    SHINY_ride.design_by.year_by.park
+  # server.R RADIO BUTTON TO SELECT PLOT LAYOUT
+  output$valueR <- renderPrint({ 
+    input$radio 
+    })
+  
+  # Render tables----
+  output$table01 <- renderTable({
+    SHINY_avg.length_by.design_by.yr %>%
+      data.table::as.data.table() %>%
+      dcast(., 
+            year ~ design, 
+            fun.aggregate = sum, 
+            value.var = "avg_length", 
+            fill = 0) %>%
+      as.data.frame() %>%
+      mutate(., 
+             year = as.integer(year))
+    
+  })
+  output$plot01 <- renderPlot({
+    SHINY_ride.design_by.year_by.park[SHINY_ride.design_by.year_by.park$park_name %in% 
+                                        input$park_name01,] %>%
+      ggplot(data = ., 
+             aes(x = year, y = n_rides, 
+                 fill = design)) + 
+      geom_col(position = input$radio)+
+      #theme(text = element_text(size = 25))+
+      theme(text = element_text(size = input$slider_ts))+
+      scale_y_continuous(labels = ifelse(input$radio == "fill", 
+                                   scales::percent, 
+                                   scales::comma))
+    
+    
+    
   })
   output$table03 <- renderTable({
     SHINY_avg.length_by.design_by.yr
@@ -74,10 +112,13 @@ server <- function(input, output) {
   output$table04 <- renderTable({
     SHINY_ride.specs_by.year
   })
-  # You can access the values of the widget (as a vector)
-  # with input$checkGroup01, e.g.
-  output$value01 <- renderPrint({ 
-    input$checkGroup01 
+  
+  
+  # CHECKBOX TO SELECT THEMEPARK----
+  output$checkbox01 <- renderPrint({ 
+    # this creates a variable vector of park_names that you can use to filter
+    # the plot data before rendering
+    input$park_name01  
   })
 }
 

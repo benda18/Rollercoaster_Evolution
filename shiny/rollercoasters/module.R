@@ -19,7 +19,7 @@ wd$shiny  <- "C:/Users/bende/Documents/R/play/rollercoaster_evolution/shiny/roll
 
 setwd(wd$home)
  
-
+setwd(wd$output)
 
 # load SHINY_xxx.csv data----
 setwd(wd$output)
