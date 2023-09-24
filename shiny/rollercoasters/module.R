@@ -185,6 +185,18 @@ SHINY_avg.length_by.design_by.yr
 SHINY_ride.specs_by.year
 SHINY_avg.length_by.design_by.yr
 
+# create design_f in SHINY_ride.design_by.year_by.park
+# SHINY_ride.design_by.year_by.park$design_f <- SHINY_ride.design_by.year_by.park$design %>% 
+#   as.factor()
+
+SHINY_ride.design_by.year_by.park$design_f <- factor(SHINY_ride.design_by.year_by.park$design, 
+                                                     levels = rev(unique(SHINY_ride.design_by.year_by.park$design[order(SHINY_ride.design_by.year_by.park$year)])))
+
+# SHINY_ride.design_by.year_by.park$design_f <- relevel(SHINY_ride.design_by.year_by.park$design_f, 
+#         ref = "sit_down")
+
+
+
 # park trackage by material 
 # top year by design
 

@@ -30,15 +30,7 @@ ui <- fluidPage(headerPanel(""),
                                            label = ("Separately (up to 16 parks)"), 
                                            value = F
                              ),
-                             # # ui.R Radio2 Buttons
-                             # radioButtons("radio2", 
-                             #              label = h4(HTML(r"(<u>Outline Parks:</u>)")), 
-                             #              choices = list("Don't color" = "no color", 
-                             #                             "All the same color" = "same color", 
-                             #                             "Each with unique color" = "different colors"), 
-                             #              selected = "no color"
-                             #              ),
-                             # #ui  slider
+                             # #ui  slider (hold for future use)
                              # sliderInput("slider_ts", 
                              #             label = h4(HTML(r"(<u>Adjust Text Size</u>)")), 
                              #             min = 10, 
@@ -51,12 +43,6 @@ ui <- fluidPage(headerPanel(""),
                                                          "Percent of Rides" = "fill"), 
                                           selected = "stack"
                              ), 
-                             # # ui.R CHECKBOX GROUP----
-                             # checkboxGroupInput(inputId = "park_name01", 
-                             #                    label = h2(HTML(r"(<u>Select Parks</u>)")), 
-                             #                    choices = park.names.list,
-                             #                    selected = c("kings_island")
-                             #                    ),
                              # Multiple selectInput----
                              selectInput(inputId  = "park_name01", #"Columns",
                                          label    = h2(HTML(r"(<u>Select Parks</u>)")), #"Columns",
@@ -76,27 +62,12 @@ ui <- fluidPage(headerPanel(""),
                             plotOutput(outputId = "plot02", 
                                        height = plot.height)),
                 ),
-                
+                # Future Table placement VVV
                 fluidRow(#tableOutput(outputId = "table04")
                   #tableOutput(outputId = "table01"),
                   #tableOutput(outputId = "table02"), 
                   #tableOutput(outputId = "table03"),
                 ),
-                
-                # hr(),
-                # fluidRow(column(3, verbatimTextOutput("valueFacet"))),
-                
-                
-                
-                # # sidebar----
-                # sidebarLayout("sidebarLayout",
-                #               sidebarPanel("<sidebar panel>"),
-                #               
-                #               # mainPanel("mainpanel"
-                #               #           #plotOutput(outputId = "basemap01"),
-                #               #           #tableOutput(outputId = "table01")
-                #               # )
-                # )
 )
 
 # Define server logic required to draw a histogram
@@ -105,13 +76,9 @@ server <- function(input, output) {
   output$valueFacet <- renderPrint({ 
     input$checkbox_f 
   })
-  # # slider for plot text size
+  # # slider for plot text size (hold for future use)
   # output$valueS <- renderPrint({
   #   input$slider_ts
-  # })
-  # # radio button for coloring parks in plot
-  # output$valueR2 <- renderPrint({
-  #   input$radio2
   # })
   # server.R RADIO BUTTON TO SELECT PLOT LAYOUT
   output$valueR <- renderPrint({ 
@@ -138,7 +105,7 @@ server <- function(input, output) {
       left_join(., ref.park.names[,c("park_name", "Park_Name.facet")]) %>%
       ggplot(data = ., 
              aes(x = year, y = n_rides, 
-                 fill = design)) + 
+                 fill = design_f)) + 
       geom_col(position = input$radio) +
       #theme(text = element_text(size = 25))+
       theme(text = element_text(size = text.size), #input$slider_ts), 
@@ -167,25 +134,6 @@ server <- function(input, output) {
       the.plot.01 <- the.plot.01 + 
         facet_wrap(Park_Name.facet~.)
     }
-    
-    # if(input$radio2 == "same color") {
-    #   the.plot.01 <- the.plot.01 +
-    #     geom_col(position = input$radio, 
-    #              color = "white") 
-    # }
-    # 
-    # if(input$radio2 == "different colors") {
-    #   the.plot.01 <- the.plot.01 +
-    #     geom_col(position = input$radio, 
-    #              aes(color = park_name)) 
-    # }
-    # 
-    # if(input$radio2 == "no color"){
-    #   the.plot.01 <- the.plot.01 +
-    #     geom_col(position = input$radio)
-    # }
-    
-    
     
     print(the.plot.01)
     
