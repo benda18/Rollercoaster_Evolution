@@ -52,14 +52,22 @@ ui <- fluidPage(headerPanel(""),
                              # ui.R CHECKBOX GROUP----
                              checkboxGroupInput("park_name01", 
                                                 label = h2(HTML(r"(<u>Select Parks</u>)")), 
-                                                choices = list("Kings Island" = "kings_island", 
-                                                               "Cedar Point" = "cedar_point", 
-                                                               "Carowinds" = "carowinds", 
-                                                               "Kings Dominion" = "kings_dominion"),
+                                                # choices = list("Kings Island" = "kings_island", 
+                                                #                "Cedar Point" = "cedar_point", 
+                                                #                "Carowinds" = "carowinds", 
+                                                #                "Kings Dominion" = "kings_dominion", 
+                                                #                "Dollywood" = "dollywood"),
+                                                choices = park.names.list,
                                                 selected = "cedar_point")),
                 mainPanel("", 
                           fluidRow(
-                            plotOutput(outputId = "plot01"))),
+                            plotOutput(outputId = "plot01", 
+                                       height = plot.height)
+                            ), 
+                          fluidRow(
+                            plotOutput(outputId = "plot02", 
+                                       height = plot.height)),
+                          ),
                 
                 fluidRow(tableOutput(outputId = "table04")
                           #tableOutput(outputId = "table01"),
@@ -126,7 +134,10 @@ server <- function(input, output) {
                  fill = design)) + 
       #geom_col(position = input$radio) +
       #theme(text = element_text(size = 25))+
-      theme(text = element_text(size = input$slider_ts))+
+      theme(text = element_text(size = input$slider_ts), 
+            legend.position = "bottom", 
+            legend.direction = "horizontal", 
+            legend.box = "vertical")+
       scale_y_continuous(name = ifelse(input$radio == "fill", "Percent-share of Rides", "Number of Rides"), 
                          labels = ifelse(input$radio == "fill", 
                                    scales::percent, scales::comma))+
@@ -165,7 +176,16 @@ server <- function(input, output) {
     
   }, 
   # control plot size----
-  height = 600, width = 800)
+  height = plot.height, 
+  width = plot.width)
+  
+  output$plot02 <- renderPlot({
+  ggplot() + 
+      theme_dark()+
+      labs(title = "output$plot02")
+    }, 
+  height = plot.height, 
+  width = plot.width)
   
   output$table03 <- renderTable({
     SHINY_avg.length_by.design_by.yr

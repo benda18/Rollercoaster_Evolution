@@ -9,6 +9,10 @@ rm(list=ls());cat('\f');gc()
 
 # FUNS ----
 
+# Vars----
+plot.height <- 750
+plot.width  <- 1100
+
 # DIRS ----
 wd        <- list()
 wd$data   <- "C:/Users/bende/Documents/R/play/rollercoaster_evolution/data"
@@ -104,3 +108,44 @@ substr(x = ref.park.names$park_name, 1, 6) %>%
   sort()
 
 grep("^nick", x = ref.park.names$park_name, ignore.case = T, value = T)
+
+rm(park_operator.parital)
+
+
+ref.park.names$park_operator <- ref.park.names$park_operator %>%
+  gsub(" ", "_", .) %>%
+  tolower()
+
+# make Operator_Name
+ref.park.names$Operator_Name <- ref.park.names$park_operator 
+
+ref.park.names$Operator_Name <- ref.park.names$Operator_Name %>%
+  gsub("_", " ", .) 
+
+for(i in 1:nrow(ref.park.names)){
+  temp.name <- ref.park.names$Operator_Name[i] %>%
+    strsplit(., " ") %>%
+    unlist()
+  temp.words <- temp.name %>%
+    strsplit(., "")
+  
+  for(i2 in 1:length(temp.words)){
+    temp.words[[i2]][1] <- toupper(temp.words[[i2]][1])
+  }
+  
+  ref.park.names$Operator_Name[i] <- lapply(temp.words, paste, sep = "", collapse = "") %>%
+    unlist() %>%
+    paste(., sep = " ", collapse = " ")
+  rm(temp.name,temp.words)
+  
+}
+rm(i,i2)
+
+ref.park.names  
+
+
+# make list of park names
+park.names.list <- as.list(ref.park.names$park_name)
+names(park.names.list) <- ref.park.names$Park_Name
+
+park.names.list
