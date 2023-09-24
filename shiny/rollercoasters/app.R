@@ -37,12 +37,12 @@ ui <- fluidPage(headerPanel(""),
                                                          "All the same color" = "same color", 
                                                          "Each with unique color" = "different colors"), 
                                           selected = "no color"),
-                             #ui  slider
-                             sliderInput("slider_ts", 
-                                         label = h4(HTML(r"(<u>Adjust Text Size</u>)")), 
-                                         min = 10, 
-                                         max = 30, 
-                                         value = 18),
+                             # #ui  slider
+                             # sliderInput("slider_ts", 
+                             #             label = h4(HTML(r"(<u>Adjust Text Size</u>)")), 
+                             #             min = 10, 
+                             #             max = 30, 
+                             #             value = 18),
                              # ui.R RADIO BUTTIONS
                              radioButtons("radio", 
                                           label = h4(HTML(r"(<u>Rides as a Number or Percentage</u>)")),
@@ -52,13 +52,8 @@ ui <- fluidPage(headerPanel(""),
                              # ui.R CHECKBOX GROUP----
                              checkboxGroupInput("park_name01", 
                                                 label = h2(HTML(r"(<u>Select Parks</u>)")), 
-                                                # choices = list("Kings Island" = "kings_island", 
-                                                #                "Cedar Point" = "cedar_point", 
-                                                #                "Carowinds" = "carowinds", 
-                                                #                "Kings Dominion" = "kings_dominion", 
-                                                #                "Dollywood" = "dollywood"),
                                                 choices = park.names.list,
-                                                selected = "cedar_point")),
+                                                selected = c("kings_island"))),
                 mainPanel("", 
                           fluidRow(
                             plotOutput(outputId = "plot01", 
@@ -99,10 +94,10 @@ server <- function(input, output) {
   output$valueFacet <- renderPrint({ 
     input$checkbox_f 
     })
-  # slider for plot text size
-  output$valueS <- renderPrint({
-    input$slider_ts
-  })
+  # # slider for plot text size
+  # output$valueS <- renderPrint({
+  #   input$slider_ts
+  # })
   # radio button for coloring parks in plot
   output$valueR2 <- renderPrint({
     input$radio2
@@ -132,12 +127,14 @@ server <- function(input, output) {
       the.plot.01 <- ggplot(data = SHINY_ride.design_by.year_by.park[SHINY_ride.design_by.year_by.park$park_name %in% input$park_name01,], 
              aes(x = year, y = n_rides, 
                  fill = design)) + 
-      #geom_col(position = input$radio) +
+      geom_col(position = input$radio) +
       #theme(text = element_text(size = 25))+
-      theme(text = element_text(size = input$slider_ts), 
+      theme(text = element_text(size = text.size), #input$slider_ts), 
             legend.position = "bottom", 
             legend.direction = "horizontal", 
-            legend.box = "vertical")+
+            legend.box = "vertical", 
+            #panel.border = element_rect(color = "blue"),
+            plot.background = element_rect(color = "black"))+
       scale_y_continuous(name = ifelse(input$radio == "fill", "Percent-share of Rides", "Number of Rides"), 
                          labels = ifelse(input$radio == "fill", 
                                    scales::percent, scales::comma))+
@@ -153,22 +150,22 @@ server <- function(input, output) {
           facet_grid(park_name~.)
       } 
       
-      if(input$radio2 == "same color") {
-        the.plot.01 <- the.plot.01 +
-          geom_col(position = input$radio, 
-                   color = "white") 
-      }
-      
-      if(input$radio2 == "different colors") {
-        the.plot.01 <- the.plot.01 +
-          geom_col(position = input$radio, 
-                   aes(color = park_name)) 
-      }
-      
-      if(input$radio2 == "no color"){
-        the.plot.01 <- the.plot.01 +
-          geom_col(position = input$radio)
-      }
+      # if(input$radio2 == "same color") {
+      #   the.plot.01 <- the.plot.01 +
+      #     geom_col(position = input$radio, 
+      #              color = "white") 
+      # }
+      # 
+      # if(input$radio2 == "different colors") {
+      #   the.plot.01 <- the.plot.01 +
+      #     geom_col(position = input$radio, 
+      #              aes(color = park_name)) 
+      # }
+      # 
+      # if(input$radio2 == "no color"){
+      #   the.plot.01 <- the.plot.01 +
+      #     geom_col(position = input$radio)
+      # }
       
       
       
@@ -182,6 +179,8 @@ server <- function(input, output) {
   output$plot02 <- renderPlot({
   ggplot() + 
       theme_dark()+
+      theme(text = element_text(size = text.size),
+            plot.background = element_rect(color = "black"))+
       labs(title = "output$plot02")
     }, 
   height = plot.height, 

@@ -12,6 +12,7 @@ rm(list=ls());cat('\f');gc()
 # Vars----
 plot.height <- 750
 plot.width  <- 1100
+text.size   <- 18
 
 # DIRS ----
 wd        <- list()
@@ -149,3 +150,5 @@ park.names.list <- as.list(ref.park.names$park_name)
 names(park.names.list) <- ref.park.names$Park_Name
 
 park.names.list
+
+park.names.list$all <- c("cedar_fair", "kings_island")
