@@ -25,18 +25,19 @@ source("C:/Users/bende/Documents/R/play/rollercoaster_evolution/shiny/rollercoas
 # Define UI for application that draws a histogram 
 ui <- fluidPage(headerPanel(""),
                 titlePanel(""), 
-                
                 sidebarPanel(h4(HTML(r"(<u>Plot Parks Together or Separate</u>)")), 
                              checkboxInput("checkbox_f", 
                                            label = ("Separately (up to 4 parks)"), 
-                                           value = F),
-                             # ui.R Radio2 Buttons
-                             radioButtons("radio2", 
-                                          label = h4(HTML(r"(<u>Outline Parks:</u>)")), 
-                                          choices = list("Don't color" = "no color", 
-                                                         "All the same color" = "same color", 
-                                                         "Each with unique color" = "different colors"), 
-                                          selected = "no color"),
+                                           value = F
+                                           ),
+                             # # ui.R Radio2 Buttons
+                             # radioButtons("radio2", 
+                             #              label = h4(HTML(r"(<u>Outline Parks:</u>)")), 
+                             #              choices = list("Don't color" = "no color", 
+                             #                             "All the same color" = "same color", 
+                             #                             "Each with unique color" = "different colors"), 
+                             #              selected = "no color"
+                             #              ),
                              # #ui  slider
                              # sliderInput("slider_ts", 
                              #             label = h4(HTML(r"(<u>Adjust Text Size</u>)")), 
@@ -48,12 +49,23 @@ ui <- fluidPage(headerPanel(""),
                                           label = h4(HTML(r"(<u>Rides as a Number or Percentage</u>)")),
                                           choices = list("Number of Rides" = "stack", 
                                                          "Percent of Rides" = "fill"), 
-                                          selected = "stack"), 
-                             # ui.R CHECKBOX GROUP----
-                             checkboxGroupInput("park_name01", 
-                                                label = h2(HTML(r"(<u>Select Parks</u>)")), 
-                                                choices = park.names.list,
-                                                selected = c("kings_island"))),
+                                          selected = "stack"
+                                          ), 
+                             # # ui.R CHECKBOX GROUP----
+                             # checkboxGroupInput(inputId = "park_name01", 
+                             #                    label = h2(HTML(r"(<u>Select Parks</u>)")), 
+                             #                    choices = park.names.list,
+                             #                    selected = c("kings_island")
+                             #                    ),
+                             # Multiple selectInput----
+                             selectInput(inputId  = "park_name01", #"Columns",
+                                         label    = h2(HTML(r"(<u>Select Parks</u>)")), #"Columns",
+                                         choices  = park.names.list, #names(mtcars), 
+                                         selected = c("kings_island"),
+                                         multiple = TRUE)
+                             ),
+                
+                # mainPanel----
                 mainPanel("", 
                           fluidRow(
                             plotOutput(outputId = "plot01", 
@@ -98,10 +110,10 @@ server <- function(input, output) {
   # output$valueS <- renderPrint({
   #   input$slider_ts
   # })
-  # radio button for coloring parks in plot
-  output$valueR2 <- renderPrint({
-    input$radio2
-  })
+  # # radio button for coloring parks in plot
+  # output$valueR2 <- renderPrint({
+  #   input$radio2
+  # })
   # server.R RADIO BUTTON TO SELECT PLOT LAYOUT
   output$valueR <- renderPrint({ 
     input$radio 
