@@ -106,6 +106,9 @@ server <- function(input, output) {
       ggplot(data = ., 
              aes(x = year, y = n_rides, 
                  fill = design_f)) + 
+      labs(title = "Rides Ride-Design by Park by Year", 
+           subtitle = "Selected Parks in the United States, 1920-Present", 
+           caption = "Source: rcdb.com")+
       geom_col(position = input$radio) +
       #theme(text = element_text(size = 25))+
       theme(text = element_text(size = text.size), #input$slider_ts), 
