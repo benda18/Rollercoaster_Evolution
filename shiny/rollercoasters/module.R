@@ -150,5 +150,3 @@ park.names.list <- as.list(ref.park.names$park_name)
 names(park.names.list) <- ref.park.names$Park_Name
 
 park.names.list
-
-park.names.list$all <- c("cedar_fair", "kings_island")
