@@ -145,11 +145,50 @@ rm(i,i2)
 ref.park.names  
 
 
+
+# add Operator_Name in parentheses to park_name for ease of selecting 
+ref.park.names$Operator_Name %>% unique()
+
+ref.park.names$Park_Name <- paste(ref.park.names$Park_Name, 
+      " (",
+      ref.park.names$Operator_Name,
+      ")", 
+      sep = "") %>%
+   gsub(" \\(Other\\)$", "", .) %>%
+  gsub(" \\(Universal Studios\\)$", "", .) %>%
+  gsub(" \\(Seaworld\\)$", "", .) %>%
+  gsub(" \\(Legoland\\)$", "", .) %>%
+  gsub(" \\(Fun Spot\\)$", "", .) %>%
+  gsub(" \\(Nickelodeon\\)$", "", .)%>%
+  gsub(" \\(Busch Gardens\\)$", "", .) %>%
+  gsub(" \\(Six Flags\\)$", "", .)
+
+ref.park.names$Park_Name.facet <- ref.park.names$Park_Name %>% 
+#"Dorney Park and Wildwater Kingdom (Cedar Fair)" %>%
+strwrap(x = ., 
+        width = 22, 
+        prefix = "", 
+        initial = "", 
+        simplify = F) %>%
+  lapply(., paste, sep = "\n", collapse = "\n") %>%
+  unlist() %>% trimws
+
+ref.park.names$Park_Name.facet <- gsub(" \\(Cedar\nFair\\)$", "\n(Cedar Fair)", 
+     ref.park.names$Park_Name.facet)
+
 # make list of park names
 park.names.list <- as.list(ref.park.names$park_name)
 names(park.names.list) <- ref.park.names$Park_Name
 
-park.names.list
+# secondary plot ideas----
+SHINY_avg.length_by.design_by.yr
+SHINY_ride.specs_by.year
+SHINY_avg.length_by.design_by.yr
 
-# convert to data.frame
+# park trackage by material 
+# top year by design
+
+# ride x year_constructed x height
+
+# ride_lifespans x park as segment
 
