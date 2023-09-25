@@ -10,9 +10,11 @@ rm(list=ls());cat('\f');gc()
 # FUNS ----
 
 # Vars----
-plot.height <- 750
-plot.width  <- 1100
-text.size   <- 18
+var_size.factor <- 1.7
+
+plot.height <- floor(750/var_size.factor)
+plot.width  <- floor(1100/var_size.factor)
+text.size   <- 16 #18
 
 # DIRS ----
 wd        <- list()
@@ -184,6 +186,7 @@ names(park.names.list) <- ref.park.names$Park_Name
 SHINY_avg.length_by.design_by.yr
 SHINY_ride.specs_by.year
 SHINY_avg.length_by.design_by.yr
+SHINY_wood.vs.steel
 
 # create design_f in SHINY_ride.design_by.year_by.park
 # SHINY_ride.design_by.year_by.park$design_f <- SHINY_ride.design_by.year_by.park$design %>% 
@@ -204,3 +207,94 @@ SHINY_ride.design_by.year_by.park$design_f <- factor(SHINY_ride.design_by.year_b
 
 # ride_lifespans x park as segment
 
+setwd(wd$data)
+park_inventory <- read_csv("park_inventory.csv")
+setwd(wd$shiny)
+
+SHINY_park_inventory <- park_inventory
+rm(park_inventory)
+
+# add end_year for rides that are still open
+SHINY_park_inventory$yrc_best[is.na(SHINY_park_inventory$yrc_best) & 
+                                SHINY_park_inventory$ride_status %in% 
+                                c("operating", "sbno")] <- year(Sys.Date())
+
+# factorize----
+# ride_url_f
+SHINY_park_inventory$ride_url_f <- factor(SHINY_park_inventory$ride_url, 
+                                          levels = unique(SHINY_park_inventory$ride_url[order(SHINY_park_inventory$yro_best, 
+                                                                                              decreasing = T)]))
+SHINY_park_inventory$design_f <- factor(SHINY_park_inventory$design, 
+                                        levels = unique(SHINY_park_inventory$design[order(SHINY_park_inventory$yro_best, 
+                                                                                            decreasing = T)]))
+SHINY_park_inventory$scale_f <- factor(SHINY_park_inventory$scale, 
+                                       levels = c(NA, "kiddie", "family", "thrill", "extreme"))
+
+SHINY_park_inventory$type_f <- factor(SHINY_park_inventory$type, 
+                                      levels = c("wood", "steel"))
+# remove rides under construction----
+SHINY_park_inventory <- SHINY_park_inventory[!SHINY_park_inventory$ride_status == "under_constr",]
+
+# identify parks with 1 ride_name with 2+ ride_urls & at least 1 currently
+# operating
+
+# SHINY_park_inventory %>%
+#   group_by(park_name, 
+#            ride_name) %>%
+#   summarise(n_rurls = n_distinct(ride_url), 
+#             n_oper = sum(ride_status == "operating")) %>%
+#   .[.$n_rurls > 1 & 
+#       .$n_oper > 0 & 
+#       !.$ride_name %in% c("wild_mouse", "kiddie_coaster"),]
+
+# SHINY_park_inventory %>%
+#   group_by(ride_name) %>%
+#   summarise(n_rurls = n_distinct(ride_url), 
+#             n_oper = sum(ride_status == "operating")) %>% 
+#   .[order(.$n_rurls, decreasing = T),]
+
+SHINY_park_inventory %>%
+  .[.$park_name %in% c("cedar_point"),] %>%
+  group_by(park_url, park_name, ride_url, ride_url_f,
+           ride_name, ride_status,
+           type, type_f,
+           design,design_f,
+           scale, scale_f,
+           yro_best, yrc_best) %>%
+  summarise() %>%
+  ungroup() %>%
+  ggplot(data = .) + 
+  geom_segment(aes(y = ride_url_f, yend = ride_url_f, 
+                   x = yro_best, xend = yrc_best))+
+  geom_point(aes(x = yro_best, y = ride_url_f))+
+  scale_y_discrete(breaks = SHINY_park_inventory[SHINY_park_inventory$park_name %in% 
+                                                   "cedar_point",]$ride_url_f,
+                   labels = SHINY_park_inventory[SHINY_park_inventory$park_name %in% 
+                                                   "cedar_point",]$ride_name)
+
+# geom_segment showing range of height of rides installed in a given year
+# add ride specs
+setwd(wd$data)
+SHINY_ride_specs <-read_csv("ride_specs.csv")
+setwd(wd$shiny)
+
+SHINY_park_inventory %>%
+  .[.$park_name %in% c("kings_island"),] %>%
+  inner_join(., 
+            SHINY_ride_specs[!is.na(SHINY_ride_specs$height.ft),
+                             c("ride_url", "height.ft")]) %>%
+  #.[complete.cases(.),] %>%
+  .[.$yro_best >= 1960,] %>%
+  group_by(yro_best) %>%
+  summarise(max_ht = max(height.ft, na.rm = T), 
+            #min_ht = min(height.ft, na.rm = T), 
+            n = n_distinct(ride_url)) %>%
+  ggplot(data = .) +
+  geom_col(aes(x = yro_best, y = max_ht, 
+               fill = n))+
+  # geom_segment(aes(x = yro_best, xend = yro_best, 
+  #                  y = min_ht, yend = max_ht, 
+  #                  color = n),
+  #              linewidth =3)+
+  scale_fill_viridis_c(option = "C")
+  
