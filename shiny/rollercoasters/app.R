@@ -49,7 +49,9 @@ ui <- fluidPage(headerPanel(""),
                                          label    = h2(HTML(r"(<u>Select Parks</u>)")), #"Columns",
                                          choices  = park.names.list, #names(mtcars), 
                                          #selected = c("kings_island"),
-                                         selected = ref.park.names$park_name[ref.park.names$park_operator == "cedar_fair"],
+                                         #selected = ref.park.names$park_name[ref.park.names$park_operator == "cedar_fair"],
+                                         selected = ref.park.names$park_name[grepl(pattern = "^kings_|^carowinds", 
+                                                                                   x = ref.park.names$park_name)],
                                          multiple = TRUE)
                 ),
                 
@@ -147,8 +149,6 @@ server <- function(input, output) {
   height = plot.height, 
   width = plot.width)
   
-
-  
   output$plot02 <- renderPlot({
     ungroup(summarise(group_by(SHINY_park_inventory[SHINY_park_inventory$park_name %in% 
                                                       input$park_name01,], 
@@ -159,18 +159,25 @@ server <- function(input, output) {
                                scale, scale_f,
                                yro_best, yrc_best))) %>%
       ggplot(data = ., 
-             aes(color = scale_f)) + 
+             aes(color = type_f)) + 
       geom_segment(aes(y = ride_url_f, yend = ride_url_f, 
                        x = yro_best, xend = yrc_best))+
       geom_point(aes(x = yro_best, y = ride_url_f))+
-      scale_y_discrete(breaks = SHINY_park_inventory[SHINY_park_inventory$park_name %in% 
+      geom_point(aes(x = yrc_best, y = ride_url_f))+
+      scale_y_discrete(name = "Ride Name", 
+                       breaks = SHINY_park_inventory[SHINY_park_inventory$park_name %in% 
                                                        input$park_name01,]$ride_url_f,
                        labels = SHINY_park_inventory[SHINY_park_inventory$park_name %in% 
                                                        input$park_name01,]$ride_name)+
-         theme(text = element_text(size = text.size),
-               plot.background = element_rect(color = "black"))+
-      labs(title = "Park Rides by Years Opened-Closed")+
-      facet_wrap(~park_name, scales = "free_y")
+      theme(text = element_text(size = text.size),
+            legend.position = "bottom",
+            legend.direction = "horizontal",
+            legend.box = "vertical",
+            plot.background = element_rect(color = "black"))+
+      labs(title = "Park Rides by Years Opened-Closed by Build Material")+
+      facet_wrap(~park_name, scales = "free_y")+
+      scale_color_discrete(name = "Build Material")+
+      scale_x_continuous(name = "Year")
     # ggplot() + 
     #   theme_dark()+
     #   theme(text = element_text(size = text.size),
