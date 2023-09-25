@@ -14,6 +14,7 @@ library(dplyr)
 library(readr)
 library(shiny)
 library(data.table)
+library(glue)
 library(ggplot2)
 # library(tigris)
 # library(tidycensus)
@@ -107,7 +108,8 @@ server <- function(input, output) {
              aes(x = year, y = n_rides, 
                  fill = design_f)) + 
       labs(title = "Ride-Design by Park by Year", 
-           subtitle = "Selected Parks in the United States, 1920-Present", 
+           subtitle = glue("Selected Parks in the United States, {min(SHINY_ride.design_by.year_by.park[SHINY_ride.design_by.year_by.park$park_name %in% 
+                                                       input$park_name01,]$year)}-Present"), 
            caption = "Source: rcdb.com")+
       geom_col(position = input$radio) +
       #theme(text = element_text(size = 25))+
@@ -145,17 +147,17 @@ server <- function(input, output) {
   height = plot.height, 
   width = plot.width)
   
+
+  
   output$plot02 <- renderPlot({
-    SHINY_park_inventory %>%
-      .[.$park_name %in% input$park_name01,] %>%
-      group_by(park_url, park_name, ride_url, ride_url_f,
-               ride_name, ride_status,
-               type, type_f,
-               design,design_f,
-               scale, scale_f,
-               yro_best, yrc_best) %>%
-      summarise() %>%
-      ungroup() %>%
+    ungroup(summarise(group_by(SHINY_park_inventory[SHINY_park_inventory$park_name %in% 
+                                                      input$park_name01,], 
+                               park_url, park_name, ride_url, ride_url_f,
+                               ride_name, ride_status,
+                               type, type_f,
+                               design,design_f,
+                               scale, scale_f,
+                               yro_best, yrc_best))) %>%
       ggplot(data = ., 
              aes(color = scale_f)) + 
       geom_segment(aes(y = ride_url_f, yend = ride_url_f, 

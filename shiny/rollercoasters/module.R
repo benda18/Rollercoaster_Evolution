@@ -231,24 +231,29 @@ SHINY_park_inventory <- SHINY_park_inventory[!SHINY_park_inventory$ride_status =
 
 
 
-# plot2----
-SHINY_park_inventory %>%
-  #.[.$park_name == a.park,] %>%
-  group_by(park_url, park_name, ride_url, ride_url_f,
-           ride_name, ride_status,
-           type, type_f,
-           design,design_f,
-           scale, scale_f,
-           yro_best, yrc_best) %>%
-  summarise() %>%
-  ungroup() %>%
-  ggplot(data = ., 
-         aes(color = scale_f)) + 
-  geom_segment(aes(y = ride_url_f, yend = ride_url_f, 
-                   x = yro_best, xend = yrc_best))+
-  geom_point(aes(x = yro_best, y = ride_url_f))+
-  scale_y_discrete(breaks = SHINY_park_inventory$ride_url,#[SHINY_park_inventory$park_name %in% a.park],
-                   labels = SHINY_park_inventory$ride_name)#[SHINY_park_inventory$park_name %in% a.park,]$ride_name)
+# # plot2----
+# SHINY_park_inventory %>%
+#   #.[.$park_name == a.park,] %>%
+#   group_by(park_url, park_name, ride_url, ride_url_f,
+#            ride_name, ride_status,
+#            type, type_f,
+#            design,design_f,
+#            scale, scale_f,
+#            yro_best, yrc_best) %>%
+#   summarise() %>%
+#   ungroup() %>%
+#   ggplot(data = ., 
+#          aes(color = scale_f)) + 
+#   geom_segment(aes(y = ride_url_f, yend = ride_url_f, 
+#                    x = yro_best, xend = yrc_best))+
+#   geom_point(aes(x = yro_best, y = ride_url_f))+
+#   scale_y_discrete(breaks = SHINY_park_inventory$ride_url,#[SHINY_park_inventory$park_name %in% a.park],
+#                    labels = SHINY_park_inventory$ride_name)#[SHINY_park_inventory$park_name %in% a.park,]$ride_name)
+# 
+
+
+
+
 
 # geom_segment showing range of height of rides installed in a given year
 # add ride specs
