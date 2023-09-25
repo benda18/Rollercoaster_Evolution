@@ -106,7 +106,7 @@ server <- function(input, output) {
       ggplot(data = ., 
              aes(x = year, y = n_rides, 
                  fill = design_f)) + 
-      labs(title = "Rides Ride-Design by Park by Year", 
+      labs(title = "Ride-Design by Park by Year", 
            subtitle = "Selected Parks in the United States, 1920-Present", 
            caption = "Source: rcdb.com")+
       geom_col(position = input$radio) +
@@ -146,11 +146,34 @@ server <- function(input, output) {
   width = plot.width)
   
   output$plot02 <- renderPlot({
-    ggplot() + 
-      theme_dark()+
-      theme(text = element_text(size = text.size),
-            plot.background = element_rect(color = "black"))+
-      labs(title = "output$plot02")
+    SHINY_park_inventory %>%
+      .[.$park_name %in% input$park_name01,] %>%
+      group_by(park_url, park_name, ride_url, ride_url_f,
+               ride_name, ride_status,
+               type, type_f,
+               design,design_f,
+               scale, scale_f,
+               yro_best, yrc_best) %>%
+      summarise() %>%
+      ungroup() %>%
+      ggplot(data = ., 
+             aes(color = scale_f)) + 
+      geom_segment(aes(y = ride_url_f, yend = ride_url_f, 
+                       x = yro_best, xend = yrc_best))+
+      geom_point(aes(x = yro_best, y = ride_url_f))+
+      scale_y_discrete(breaks = SHINY_park_inventory[SHINY_park_inventory$park_name %in% 
+                                                       input$park_name01,]$ride_url_f,
+                       labels = SHINY_park_inventory[SHINY_park_inventory$park_name %in% 
+                                                       input$park_name01,]$ride_name)+
+         theme(text = element_text(size = text.size),
+               plot.background = element_rect(color = "black"))+
+      labs(title = "Park Rides by Years Opened-Closed")+
+      facet_wrap(~park_name, scales = "free_y")
+    # ggplot() + 
+    #   theme_dark()+
+    #   theme(text = element_text(size = text.size),
+    #         plot.background = element_rect(color = "black"))+
+    #   labs(title = "output$plot02")
   }, 
   height = plot.height, 
   width = plot.width)

@@ -13,7 +13,7 @@ rm(list=ls());cat('\f');gc()
 var_size.factor <- 1.7
 
 plot.height <- floor(750/var_size.factor)
-plot.width  <- floor(1100/var_size.factor)
+plot.width  <- floor(1100/1)
 text.size   <- 16 #18
 
 # DIRS ----
@@ -106,11 +106,11 @@ ref.park.names$park_operator[grepl("^Fun Spot ", x = ref.park.names$Park_Name)] 
 ref.park.names$park_operator[grepl("^Universal ", x = ref.park.names$Park_Name)] <- "Universal Studios"
 ref.park.names$park_operator[grepl("Seaworld", x = ref.park.names$Park_Name)] <- "SeaWorld"
 
-substr(x = ref.park.names$park_name, 1, 6) %>%
-  table() %>% 
-  sort()
+# substr(x = ref.park.names$park_name, 1, 6) %>%
+#   table() %>% 
+#   sort()
 
-grep("^nick", x = ref.park.names$park_name, ignore.case = T, value = T)
+# grep("^nick", x = ref.park.names$park_name, ignore.case = T, value = T)
 
 rm(park_operator.parital)
 
@@ -121,7 +121,6 @@ ref.park.names$park_operator <- ref.park.names$park_operator %>%
 
 # make Operator_Name
 ref.park.names$Operator_Name <- ref.park.names$park_operator 
-
 ref.park.names$Operator_Name <- ref.park.names$Operator_Name %>%
   gsub("_", " ", .) 
 
@@ -143,10 +142,6 @@ for(i in 1:nrow(ref.park.names)){
   
 }
 rm(i,i2)
-
-ref.park.names  
-
-
 
 # add Operator_Name in parentheses to park_name for ease of selecting 
 ref.park.names$Operator_Name %>% unique()
@@ -208,11 +203,10 @@ SHINY_ride.design_by.year_by.park$design_f <- factor(SHINY_ride.design_by.year_b
 # ride_lifespans x park as segment
 
 setwd(wd$data)
-park_inventory <- read_csv("park_inventory.csv")
+SHINY_park_inventory <- read_csv("park_inventory.csv")
 setwd(wd$shiny)
 
-SHINY_park_inventory <- park_inventory
-rm(park_inventory)
+ 
 
 # add end_year for rides that are still open
 SHINY_park_inventory$yrc_best[is.na(SHINY_park_inventory$yrc_best) & 
@@ -235,26 +229,11 @@ SHINY_park_inventory$type_f <- factor(SHINY_park_inventory$type,
 # remove rides under construction----
 SHINY_park_inventory <- SHINY_park_inventory[!SHINY_park_inventory$ride_status == "under_constr",]
 
-# identify parks with 1 ride_name with 2+ ride_urls & at least 1 currently
-# operating
 
-# SHINY_park_inventory %>%
-#   group_by(park_name, 
-#            ride_name) %>%
-#   summarise(n_rurls = n_distinct(ride_url), 
-#             n_oper = sum(ride_status == "operating")) %>%
-#   .[.$n_rurls > 1 & 
-#       .$n_oper > 0 & 
-#       !.$ride_name %in% c("wild_mouse", "kiddie_coaster"),]
 
-# SHINY_park_inventory %>%
-#   group_by(ride_name) %>%
-#   summarise(n_rurls = n_distinct(ride_url), 
-#             n_oper = sum(ride_status == "operating")) %>% 
-#   .[order(.$n_rurls, decreasing = T),]
-
+# plot2----
 SHINY_park_inventory %>%
-  .[.$park_name %in% c("cedar_point"),] %>%
+  #.[.$park_name == a.park,] %>%
   group_by(park_url, park_name, ride_url, ride_url_f,
            ride_name, ride_status,
            type, type_f,
@@ -263,14 +242,13 @@ SHINY_park_inventory %>%
            yro_best, yrc_best) %>%
   summarise() %>%
   ungroup() %>%
-  ggplot(data = .) + 
+  ggplot(data = ., 
+         aes(color = scale_f)) + 
   geom_segment(aes(y = ride_url_f, yend = ride_url_f, 
                    x = yro_best, xend = yrc_best))+
   geom_point(aes(x = yro_best, y = ride_url_f))+
-  scale_y_discrete(breaks = SHINY_park_inventory[SHINY_park_inventory$park_name %in% 
-                                                   "cedar_point",]$ride_url_f,
-                   labels = SHINY_park_inventory[SHINY_park_inventory$park_name %in% 
-                                                   "cedar_point",]$ride_name)
+  scale_y_discrete(breaks = SHINY_park_inventory$ride_url,#[SHINY_park_inventory$park_name %in% a.park],
+                   labels = SHINY_park_inventory$ride_name)#[SHINY_park_inventory$park_name %in% a.park,]$ride_name)
 
 # geom_segment showing range of height of rides installed in a given year
 # add ride specs
