@@ -150,7 +150,7 @@ server <- function(input, output) {
   width = plot.width)
   
   output$plot02 <- renderPlot({
-    ungroup(summarise(group_by(SHINY_park_inventory[SHINY_park_inventory$park_name %in% 
+    the.plot.02 <- ungroup(summarise(group_by(SHINY_park_inventory[SHINY_park_inventory$park_name %in% 
                                                       input$park_name01,], 
                                park_url, park_name, ride_url, ride_url_f,
                                ride_name, ride_status,
@@ -158,6 +158,8 @@ server <- function(input, output) {
                                design,design_f,
                                scale, scale_f,
                                yro_best, yrc_best))) %>%
+      left_join(., 
+                ref.park.names[,c("park_name", "Park_Name.facet", "Park_Name")]) %>%
       ggplot(data = ., 
              aes(color = type_f)) + 
       geom_segment(aes(y = ride_url_f, yend = ride_url_f, 
@@ -175,14 +177,24 @@ server <- function(input, output) {
             legend.box = "vertical",
             plot.background = element_rect(color = "black"))+
       labs(title = "Park Rides by Years Opened-Closed by Build Material")+
-      facet_wrap(~park_name, scales = "free_y")+
+      facet_wrap(~Park_Name.facet, scales = "free_y")+
       scale_color_discrete(name = "Build Material")+
       scale_x_continuous(name = "Year")
-    # ggplot() + 
-    #   theme_dark()+
-    #   theme(text = element_text(size = text.size),
-    #         plot.background = element_rect(color = "black"))+
-    #   labs(title = "output$plot02")
+    
+    if(length(input$park_name01) <= 3){
+      print(the.plot.02)
+    }else{
+      print(ggplot() + 
+              labs(title = "\n    <Too Many Parks Selected>\n    (Choose 3 or Fewer)")+
+              theme_minimal()+
+              theme(text = element_text(size = text.size, color = "red"),
+                    legend.position = "bottom",
+                    legend.direction = "horizontal",
+                    legend.box = "vertical",
+                    plot.background = element_rect(color = "black")))
+    }
+    
+    
   }, 
   height = plot.height, 
   width = plot.width)
