@@ -254,8 +254,8 @@ SHINY.ride_specs <- read_csv("ride_specs.csv")
 setwd(wd$shiny)
 
 yearly.specs <- ungroup(summarise(group_by(SHINY_park_inventory[SHINY_park_inventory$park_name %in% 
-                                                c(#"kings_island"#, 
-                                                  #"carowinds"#, 
+                                                c("kings_island",#, 
+                                                  "carowinds",#, 
                                                   "kings_dominion"#,
                                                   #"cedar_point"
                                                   ),], 
@@ -287,12 +287,15 @@ for(i in min(c(yearly.specs$yro_best,
 yearly.specs <- full_join(yearly.specs, yearly.specs2)
 rm(yearly.specs2)
 
-yearly.specs$age.yrs <- yearly.specs$year_active - yearly.specs$yro_best
+#yearly.specs$age.yrs <- yearly.specs$year_active - yearly.specs$yro_best
 
+# TODO use this as plot2;
+# when just 1 park selected show ride_names, 
+# when 2 or more show park_names
 yearly.specs %>%
   as.data.table() %>%
   melt(., 
-       measure.vars = c("length.ft", "height.ft", "speed.mph", "age.yrs")) %>%
+       measure.vars = c("length.ft", "height.ft", "speed.mph")) %>%
   as.data.frame() %>%
   as_tibble() %>%
   group_by(year_active, variable) %>%
@@ -515,3 +518,16 @@ SHINY_ride_heights %>%
   theme(legend.position = "bottom", 
         legend.direction = "vertical")+
   scale_size_area()
+
+
+ggplot() + 
+  geom_col(data = SHINY_ride_heights[SHINY_ride_heights$park_name %in%
+                                       c("carowinds"),], 
+           aes(y = ride_name, x = ride_height), 
+           position = "dodge")+
+  facet_grid(park_name~., scales = "free_y", space = "free_y")
+
+table(SHINY_ride_heights$ride_height)
+
+SHINY_ride_heights$ride_height_f
+View(SHINY_ride_heights)
