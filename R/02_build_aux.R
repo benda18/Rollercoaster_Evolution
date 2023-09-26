@@ -41,9 +41,9 @@ cf_ride_exp <- data.frame(park_name = c("kings_island",
                                        "https://www.miadventure.com/rides-experiences", 
                                        "https://www.worldsoffun.com/rides-experiences", 
                                        "https://www.cagreatamerica.com/rides-experiences", 
-                                       NA, 
-                                       NA, 
-                                       NA)) %>%
+                                       "https://www.knotts.com/rides-experiences", 
+                                       "https://www.valleyfair.com/rides-experiences", 
+                                       "https://www.dorneypark.com/rides-experiences")) %>%
   as_tibble()
 
 # read_csv("cf_6f_parkridehistory.csv")$park_name %>% unique() %>%
@@ -69,21 +69,19 @@ rm(park_inventory)
 # assign ride height----
 cf_ride_exp$ride_height <- NA
 
-cf_ride_exp[cf_ride_exp$park_name == "knotts_berry_farm",]
-
-
 # 36 inch----
 cf_ride_exp[cf_ride_exp$ride_name %in% 
-              c("lucys_crabbie_cabbies"),]$ride_height <- 36
+              c("lucys_crabbie_cabbies",
+                "great_pumpkin_coaster", 
+                "the_great_pumpkin_coaster"),]$ride_height <- 36
 
 # 40 inch----
-cf_ride_exp[cf_ride_exp$ride_name %in% 
-              c("great_pumpkin_coaster", 
-                "the_great_pumpkin_coaster"),]$ride_height <- 40
+# cf_ride_exp[cf_ride_exp$ride_name %in% 
+#               c(""),]$ride_height <- 40
 
 # 42 inch----
-cf_ride_exp[cf_ride_exp$ride_name %in% 
-              c("cosmic_coaster"),]$ride_height <- 42
+# cf_ride_exp[cf_ride_exp$ride_name %in% 
+#               c(""),]$ride_height <- 42
 
 # 44 inch----
 cf_ride_exp[cf_ride_exp$ride_name %in% 
@@ -99,9 +97,10 @@ cf_ride_exp[cf_ride_exp$ride_name %in%
 # 48 inch----
 cf_ride_exp[cf_ride_exp$ride_name %in% 
               c("anaconda",
+                "corkscrew", "excalibur", "high_roller",  "renegade", "wild_thing",
                 "demon", "gold_striker", "psycho_mouse", "railblazer", "grizzly", "the_grizzly",
                 "boomerang", "mamba", "prowler", "spinning_dragons", "timber_wolf", "zambezi_zinger",
-                "corkscrew", "mad_mouse", "shivering_timbers", "wolverine_wildcat",
+                "corkscrew", "shivering_timbers", "wolverine_wildcat",
                 "backlot_stunt_coaster", 
                 "grizzly", 
                 "racer_75", 
@@ -124,19 +123,23 @@ cf_ride_exp[cf_ride_exp$ride_name %in%
                 "iron_dragon", 
                 "magnum_xl-200", 
                 "magnum_xl_200", 
+                "steel_force",
+               # "thunderhawk",
                 "magnum_xl200", 
                 "ghostrider",
                 "hangtime",
                 "jaguar",
                 "pony_express",
                 "sierra_sidewinder",
-                "milennium_force", 
+                "millennium_force", 
                 "wild_mouse"),]$ride_height <- 48
 
 # 52 inch----
 cf_ride_exp[cf_ride_exp$ride_name %in% 
               c("banshee", 
-                "thunderhawk",
+                "possessed",
+                "steel_venom",
+                #"thunderhawk",
                 "copperhead_strike", 
                 "gatekeeper", 
                 "maverick", 
@@ -146,6 +149,7 @@ cf_ride_exp[cf_ride_exp$ride_name %in%
 #54 inch----
 cf_ride_exp[cf_ride_exp$ride_name %in% 
               c("apple_zapple", 
+                "hydra_the_revenge", "talon",
                 "coast_rider",
                 "flight_deck",
                 "silver_bullet",
@@ -169,6 +173,29 @@ cf_ride_exp[cf_ride_exp$ride_name %in%
 woodstock.xp <- c(ki = 40, kd = 46, car = 46, cp = 36, ma = 36, cga = 40)
 wildernessrun.xp <- c(car = 40, cp = 36)
 
+
+
+cf_ride_exp[cf_ride_exp$ride_name == "thunderhawk" & 
+              cf_ride_exp$park_name == "dorney_park_and_wildwater_kingdom",]$ride_height <- 48
+cf_ride_exp[cf_ride_exp$ride_name == "thunderhawk" & 
+              cf_ride_exp$park_name == "michigans_adventure",]$ride_height <- 52 # max = 78
+
+
+cf_ride_exp[cf_ride_exp$ride_name == "mad_mouse" & 
+              cf_ride_exp$park_name == "michigans_adventure",]$ride_height <- 44
+cf_ride_exp[cf_ride_exp$ride_name == "mad_mouse" & 
+              cf_ride_exp$park_name == "valleyfair",]$ride_height <- 44
+
+cf_ride_exp[cf_ride_exp$ride_name == "cosmic_coaster" & 
+              cf_ride_exp$park_name == "valleyfair",]$ride_height <- 36
+cf_ride_exp[cf_ride_exp$ride_name == "cosmic_coaster" & 
+              cf_ride_exp$park_name == "worlds_of_fun",]$ride_height <- 42
+
+
+cf_ride_exp[cf_ride_exp$ride_name == "wild_mouse" & 
+              cf_ride_exp$park_name == "dorney_park_and_wildwater_kingdom",]$ride_height <- 44
+cf_ride_exp[cf_ride_exp$ride_name == "woodstock_express" & 
+              cf_ride_exp$park_name == "dorney_park_and_wildwater_kingdom",]$ride_height <- 36
 cf_ride_exp[cf_ride_exp$ride_name == "woodstock_express" & 
               cf_ride_exp$park_name == "kings_island",]$ride_height <- 40
 cf_ride_exp[cf_ride_exp$ride_name == "woodstock_express" & 
@@ -178,15 +205,26 @@ cf_ride_exp[cf_ride_exp$ride_name == "woodstock_express" &
 cf_ride_exp[cf_ride_exp$ride_name == "woodstock_express" & 
               cf_ride_exp$park_name == "cedar_point",]$ride_height <- 36
 cf_ride_exp[cf_ride_exp$ride_name == "woodstock_express" & 
-              cf_ride_exp$park_name == "michigan_adventure",]$ride_height <- 36
+              cf_ride_exp$park_name == "michigans_adventure",]$ride_height <- 36
 cf_ride_exp[cf_ride_exp$ride_name == "woodstock_express" & 
               cf_ride_exp$park_name == "californias_great_america",]$ride_height <- 40
-
 cf_ride_exp[cf_ride_exp$ride_name == "wilderness_run" & 
               cf_ride_exp$park_name == "carowinds",]$ride_height <- 40
 cf_ride_exp[cf_ride_exp$ride_name == "wilderness_run" & 
               cf_ride_exp$park_name == "cedar_point",]$ride_height <- 36
 
+
+cf_ride_exp[is.na(cf_ride_exp$ride_height),]
+
+dup.ride.names <- cf_ride_exp %>%
+  group_by(ride_name) %>%
+  summarise(n_park = n_distinct(park_name)) %>%
+  .[.$n_park > 1,] %>%
+  .$ride_name
+
+cf_ride_exp[cf_ride_exp$ride_name %in% dup.ride.names,] %>%
+  group_by(ride_name, park_name, ride_height) %>%
+  summarise() %>% as.data.frame()
 
 
 # save to file
