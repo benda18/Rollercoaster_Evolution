@@ -324,6 +324,12 @@ setwd(wd$data)
 # load data
 park_inventory <- read_csv("park_inventory.csv")
 
+
+
+# missing data----
+
+stop("xcelerator_the_ride  missing from knotts berry farm")
+
 # change data
 
 
