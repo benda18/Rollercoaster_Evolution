@@ -253,8 +253,6 @@ setwd(wd$data)
 SHINY.ride_specs <- read_csv("ride_specs.csv")
 setwd(wd$shiny)
 
-
-
 yearly.specs <- ungroup(summarise(group_by(SHINY_park_inventory[SHINY_park_inventory$park_name %in% 
                                                 c(#"kings_island"#, 
                                                   #"carowinds"#, 
@@ -369,29 +367,151 @@ yearly.specs %>%
 
 
 
-# geom_segment showing range of height of rides installed in a given year
-# add ride specs
-setwd(wd$data)
-SHINY_ride_specs <-read_csv("ride_specs.csv")
-setwd(wd$shiny)
+# # geom_segment showing range of height of rides installed in a given year
+# # add ride specs
+# setwd(wd$data)
+# SHINY_ride_specs <-read_csv("ride_specs.csv")
+# setwd(wd$shiny)
+# 
+# SHINY_park_inventory %>%
+#   .[.$park_name %in% c("kings_island"),] %>%
+#   inner_join(., 
+#             SHINY_ride_specs[!is.na(SHINY_ride_specs$height.ft),
+#                              c("ride_url", "height.ft")]) %>%
+#   #.[complete.cases(.),] %>%
+#   .[.$yro_best >= 1960,] %>%
+#   group_by(yro_best) %>%
+#   summarise(max_ht = max(height.ft, na.rm = T), 
+#             #min_ht = min(height.ft, na.rm = T), 
+#             n = n_distinct(ride_url)) %>%
+#   ggplot(data = .) +
+#   geom_col(aes(x = yro_best, y = max_ht, 
+#                fill = n))+
+#   # geom_segment(aes(x = yro_best, xend = yro_best, 
+#   #                  y = min_ht, yend = max_ht, 
+#   #                  color = n),
+#   #              linewidth =3)+
+#   scale_fill_viridis_c(option = "C")
+#   
 
-SHINY_park_inventory %>%
-  .[.$park_name %in% c("kings_island"),] %>%
-  inner_join(., 
-            SHINY_ride_specs[!is.na(SHINY_ride_specs$height.ft),
-                             c("ride_url", "height.ft")]) %>%
-  #.[complete.cases(.),] %>%
-  .[.$yro_best >= 1960,] %>%
-  group_by(yro_best) %>%
-  summarise(max_ht = max(height.ft, na.rm = T), 
-            #min_ht = min(height.ft, na.rm = T), 
-            n = n_distinct(ride_url)) %>%
-  ggplot(data = .) +
-  geom_col(aes(x = yro_best, y = max_ht, 
-               fill = n))+
-  # geom_segment(aes(x = yro_best, xend = yro_best, 
-  #                  y = min_ht, yend = max_ht, 
-  #                  color = n),
-  #              linewidth =3)+
-  scale_fill_viridis_c(option = "C")
+
+
+# PARK RIDE HEIGHT PLOT EXPLORATION----
+SHINY_ride_heights$ride_height_f <- factor(SHINY_ride_heights$ride_height)
+
+
+
+temp <- as.data.table(SHINY_ride_heights) %>%
+  dcast(., 
+        park_name ~ ride_height_f, 
+        value.var = "ride_height", fun.aggregate = length, 
+        fill = 0) %>%
+  melt(., 
+       id.vars = "park_name", 
+       value.name = "count", 
+       variable.name = "height") %>%
+  as.data.frame()
+
+# for heights 35:72 what % of rides can you ride at each park? 
+
+master_ride_height <- NULL
+for(i_park in unique(SHINY_ride_heights$park_name)){
+  for(i_height in seq(36,54,by=2)){
+    # how many total rides at park? 
+    temp.total_park_rides <- SHINY_ride_heights[SHINY_ride_heights$park_name == i_park,]$ride_url %>%
+      unique() %>%
+      length()
+    # how many rides can be ridden at height i_height? 
+    temp.ride_park_rides  <- sum(SHINY_ride_heights[SHINY_ride_heights$park_name == i_park,]$ride_height <= i_height)
+    
+    master_ride_height <- rbind(master_ride_height, 
+                                data.frame(park_name = i_park, 
+                                           rider_height = i_height, 
+                                           t_park_rides = temp.total_park_rides, 
+                                           n_rideable = temp.ride_park_rides))
+    
+  }
+}
+
+master_ride_height <- master_ride_height %>%
+  mutate(., 
+         pct_rideable = n_rideable / t_park_rides)
+
+optimal_park_by.n_rides <- master_ride_height %>%
+  as_tibble() %>%
+  group_by(rider_height_f = factor(rider_height)) %>%
+  slice_max(., 
+            #order_by = n_rideable, 
+            order_by = n_rideable,
+            n = 1)
+optimal_park_by.pct_rides <- master_ride_height %>%
+  as_tibble() %>%
+  group_by(rider_height_f = factor(rider_height)) %>%
+  slice_max(., 
+            order_by = pct_rideable, 
+            #order_by = pct_rideable,
+            n = 1)
+
+ggplot(data = optimal_park_by.pct_rides[optimal_park_by.pct_rides$rider_height < 54,], 
+       aes(x = rider_height_f, y = pct_rideable)) + 
   
+  geom_col(aes(fill = park_name), position = "dodge", 
+           color = "black")+
+  theme(legend.position = "bottom", 
+        legend.direction = "vertical")+
+  scale_y_continuous(name = "Percent of Rides", 
+                     labels = scales::percent, 
+                     breaks = seq(0,1,by=0.1), 
+                     minor_breaks = seq(0,1,by=0.05))+
+  scale_x_discrete(name = "Rider Height (inches)")+
+  labs(title = "Optimal Park by Rider Height", 
+       subtitle = "Percentage of Rides that can be ridden by riders ranging in height from 36 to 54 inches")
+
+ggplot(data = optimal_park_by.n_rides[optimal_park_by.n_rides$rider_height < 54,], 
+       aes(x = rider_height_f, y = n_rideable)) + 
+  
+  geom_col(aes(fill = park_name), position = "dodge", 
+           color = "black")+
+  theme(legend.position = "bottom", 
+        legend.direction = "vertical")+
+  scale_y_continuous(name = "Number of Rides", 
+                     labels = scales::comma, 
+                     breaks = seq(0,100,by=5), 
+                     minor_breaks = seq(0,100,by=1))+
+  scale_x_discrete(name = "Rider Height (inches)")+
+  labs(title = "Optimal Park by Rider Height", 
+       subtitle = "Number of Rides that can be ridden by riders ranging in height from 36 to 54 inches")
+
+
+SHINY_ride_heights %>%
+  group_by(park_name, ride_height, ride_height_f) %>%
+  summarise(n_rides = n_distinct(ride_url)) %>%
+  ggplot(data = ., 
+         aes(y = park_name, x = n_rides, fill = ride_height)) + 
+  geom_col(position = "fill", color = "white")+
+  theme(legend.position = "bottom", 
+        legend.direction = "horizontal")+
+  scale_fill_viridis_c(name = "Rider Height (inches)", 
+                       breaks = seq(36,54,by=6), 
+                       option = "D")
+
+SHINY_ride_heights %>%
+  # group_by(park_name) %>%
+  # summarise(avg_ht = mean(ride_height), 
+  #           sd_ht = sd(ride_height)) %>%
+  ggplot(data = ., 
+         aes(x = park_name, y = ride_height, group = park_name)) + 
+  geom_violin(scale = "width", draw_quantiles = 0.5)+
+  #geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))+
+  scale_y_continuous(breaks = seq(0,100,by=2))
+
+SHINY_ride_heights %>%
+  group_by(park_name, ride_height) %>%
+  summarise(n_rides = n_distinct(ride_url)) %>%
+  ggplot(data = ., 
+         aes(y = park_name, size = n_rides, x = ride_height)) + 
+  geom_point()+
+  theme(legend.position = "bottom", 
+        legend.direction = "vertical")+
+  scale_size_area()
