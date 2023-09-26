@@ -64,8 +64,14 @@ build_the_year <- function(yr, df.rides){
     }
   }
   
-  out.df <- data.frame(ride_url = df.rides$ride_url[which.in.yr], 
-                       year_active = yr)
+  if(!is.null(which.in.yr)){
+    out.df <- data.frame(ride_url = df.rides$ride_url[which.in.yr], 
+                         year_active = yr)
+  }else{
+    out.df <- data.frame(ride_url  = NA, 
+                         year_active = yr)
+  }
+  
   return(out.df)
 }
 
@@ -124,10 +130,11 @@ ride_specs_url_years <- ride_specs_url_years[!(ride_specs_url_years$ride_status 
 # rollercoasters by-year
 rcby <- NULL
 rcby2 <- NULL
-for(i in 1920:year(Sys.Date())){
+for(i in 1890:year(Sys.Date())){
   rcby <- rbind(rcby, 
                 build_the_year(yr = i, 
-                               df.rides = ride_specs_url_years))
+                               df.rides = ride_specs_url_years)) %>%
+    .[!is.na(.$ride_url),]
   rcby2 <- rbind(rcby2, 
                  build_the_year2(i, 
                                  ride_specs_url_years))
@@ -232,7 +239,8 @@ write_csv(SHINY_avg.length_by.design_by.yr,
           "SHINY_avg.length_by.design_by.yr.csv")
 setwd(wd$data)
 
-  +ggplot(data = ., aes(x = year, y = avg_length, color = design)) + 
+  ggplot(data = SHINY_avg.length_by.design_by.yr, 
+         aes(x = year, y = avg_length, color = design)) + 
   geom_line()
 
 # shiny output 3----
@@ -291,7 +299,8 @@ write_csv(x = SHINY_ride.design_by.year_by.park,
           file = "SHINY_ride.design_by.year_by.park.csv")
 setwd(wd$data)
 
-ggplot(data = SHINY_ride.design_by.year_by.park[SHINY_ride.design_by.year_by.park$park_name == a.park,], 
+ggplot(data = SHINY_ride.design_by.year_by.park[SHINY_ride.design_by.year_by.park$park_name == 
+                                                  a.park,], 
        aes(x = year, y = n_rides, fill = design)) + 
   geom_col(color = "black", 
             position = "stack")

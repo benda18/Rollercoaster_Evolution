@@ -8,11 +8,32 @@ library(lubridate)
 rm(list=ls());cat('\f');gc()
 
 # FUNS ----
-
+build_the_year2 <- function(yr1 = 1992, 
+                            df1 = pi){
+  require(data.table)
+  require(dplyr)
+  bw.out <- NULL
+  for(i in 1:nrow(df1)){
+    bw.out <- c(bw.out, 
+                data.table::between(x     = yr1, 
+                                    lower = df1$yro_best[i],
+                                    upper = df1$yrc_best[i], 
+                                    NAbounds = NA))
+  }
+  bw.out <- ifelse(is.na(bw.out), F, bw.out)
+  
+  df1$year_active <- yr1
+  out <- df1[!colnames(df1) %in% c("yro_best", "yrc_best")] %>%
+    .[bw.out,] 
+  
+  return(out)
+}
 # Vars----
-plot.height <- 750
-plot.width  <- 1100
-text.size   <- 18
+var_size.factor <- 1.7
+
+plot.height <- floor(750/var_size.factor)
+plot.width  <- floor(1100/1)
+text.size   <- 16 #18
 
 # DIRS ----
 wd        <- list()
@@ -104,11 +125,11 @@ ref.park.names$park_operator[grepl("^Fun Spot ", x = ref.park.names$Park_Name)] 
 ref.park.names$park_operator[grepl("^Universal ", x = ref.park.names$Park_Name)] <- "Universal Studios"
 ref.park.names$park_operator[grepl("Seaworld", x = ref.park.names$Park_Name)] <- "SeaWorld"
 
-substr(x = ref.park.names$park_name, 1, 6) %>%
-  table() %>% 
-  sort()
+# substr(x = ref.park.names$park_name, 1, 6) %>%
+#   table() %>% 
+#   sort()
 
-grep("^nick", x = ref.park.names$park_name, ignore.case = T, value = T)
+# grep("^nick", x = ref.park.names$park_name, ignore.case = T, value = T)
 
 rm(park_operator.parital)
 
@@ -119,7 +140,6 @@ ref.park.names$park_operator <- ref.park.names$park_operator %>%
 
 # make Operator_Name
 ref.park.names$Operator_Name <- ref.park.names$park_operator 
-
 ref.park.names$Operator_Name <- ref.park.names$Operator_Name %>%
   gsub("_", " ", .) 
 
@@ -141,10 +161,6 @@ for(i in 1:nrow(ref.park.names)){
   
 }
 rm(i,i2)
-
-ref.park.names  
-
-
 
 # add Operator_Name in parentheses to park_name for ease of selecting 
 ref.park.names$Operator_Name %>% unique()
@@ -184,6 +200,7 @@ names(park.names.list) <- ref.park.names$Park_Name
 SHINY_avg.length_by.design_by.yr
 SHINY_ride.specs_by.year
 SHINY_avg.length_by.design_by.yr
+SHINY_wood.vs.steel
 
 # create design_f in SHINY_ride.design_by.year_by.park
 # SHINY_ride.design_by.year_by.park$design_f <- SHINY_ride.design_by.year_by.park$design %>% 
@@ -204,3 +221,177 @@ SHINY_ride.design_by.year_by.park$design_f <- factor(SHINY_ride.design_by.year_b
 
 # ride_lifespans x park as segment
 
+setwd(wd$data)
+SHINY_park_inventory <- read_csv("park_inventory.csv")
+setwd(wd$shiny)
+
+ 
+
+# add end_year for rides that are still open
+SHINY_park_inventory$yrc_best[is.na(SHINY_park_inventory$yrc_best) & 
+                                SHINY_park_inventory$ride_status %in% 
+                                c("operating", "sbno")] <- year(Sys.Date())
+
+# factorize----
+# ride_url_f
+SHINY_park_inventory$ride_url_f <- factor(SHINY_park_inventory$ride_url, 
+                                          levels = unique(SHINY_park_inventory$ride_url[order(SHINY_park_inventory$yro_best, 
+                                                                                              decreasing = T)]))
+SHINY_park_inventory$design_f <- factor(SHINY_park_inventory$design, 
+                                        levels = unique(SHINY_park_inventory$design[order(SHINY_park_inventory$yro_best, 
+                                                                                            decreasing = T)]))
+SHINY_park_inventory$scale_f <- factor(SHINY_park_inventory$scale, 
+                                       levels = c(NA, "kiddie", "family", "thrill", "extreme"))
+
+SHINY_park_inventory$type_f <- factor(SHINY_park_inventory$type, 
+                                      levels = c("wood", "steel"))
+# remove rides under construction----
+SHINY_park_inventory <- SHINY_park_inventory[!SHINY_park_inventory$ride_status == "under_constr",]
+
+# plot03----
+setwd(wd$data)
+SHINY.ride_specs <- read_csv("ride_specs.csv")
+setwd(wd$shiny)
+
+
+
+yearly.specs <- ungroup(summarise(group_by(SHINY_park_inventory[SHINY_park_inventory$park_name %in% 
+                                                c(#"kings_island"#, 
+                                                  #"carowinds"#, 
+                                                  "kings_dominion"#,
+                                                  #"cedar_point"
+                                                  ),], 
+                           #input$park_name01,], 
+                           park_url, park_name, ride_url, ride_url_f,
+                           ride_name, ride_status,
+                           type, type_f,
+                           design,design_f,
+                           scale, scale_f,
+                           yro_best, yrc_best))) %>%
+  left_join(., 
+            ref.park.names[,c("park_name", "Park_Name.facet", "Park_Name")]) %>%
+  left_join(., 
+            SHINY.ride_specs) %>%
+  .[!colnames(.) %in% c("park_url", "ride_url", "type", "design", "scale", 
+                        "park_name")] 
+
+yearly.specs2 <- NULL  
+for(i in min(c(yearly.specs$yro_best, 
+      yearly.specs$yrc_best), 
+    na.rm = T):max(c(yearly.specs$yro_best, 
+                     yearly.specs$yrc_best), 
+                   na.rm = T)){
+  yearly.specs2 <- rbind(yearly.specs2, 
+                         build_the_year2(yr1 = i, 
+                  df1 = yearly.specs))
+}
+
+yearly.specs <- full_join(yearly.specs, yearly.specs2)
+rm(yearly.specs2)
+
+yearly.specs$age.yrs <- yearly.specs$year_active - yearly.specs$yro_best
+
+yearly.specs %>%
+  as.data.table() %>%
+  melt(., 
+       measure.vars = c("length.ft", "height.ft", "speed.mph", "age.yrs")) %>%
+  as.data.frame() %>%
+  as_tibble() %>%
+  group_by(year_active, variable) %>%
+  slice_max(order_by = value, n = 1) %>%
+  ggplot(data = ., 
+         aes(x = year_active, y = value)) +
+  #geom_col(aes(fill = Park_Name), position = "dodge")+
+  geom_col(aes(fill = ride_name), position = "dodge")+
+  facet_grid(variable~., scales = "free_y")+
+  scale_y_continuous(name = NULL)+
+  theme(text = element_text(size = text.size),
+        legend.position = "bottom",
+        legend.direction = "horizontal",
+        legend.box = "vertical",
+        plot.background = element_rect(color = "black"))+
+  labs(title = "Tallest, Longest & Fastest Park by Year")+
+  #facet_wrap(~Park_Name.facet, scales = "free_y")+
+  scale_fill_discrete(name = "Park Name")+
+  scale_x_continuous(name = "Year")
+
+
+# ggplot(data = yearly.specs, 
+#        aes(x = year_active, 
+#            y = height.ft)) + 
+#   geom_boxplot(aes(group = year_active))+
+#   geom_smooth(aes(color = type_f))
+
+# ggplot(data = yearly.specs, 
+#          aes(color = type_f)) + 
+#   geom_segment(aes(y = ride_url_f, yend = ride_url_f, 
+#                    x = yro_best, xend = yrc_best))+
+#   geom_point(aes(x = yro_best, y = ride_url_f))+
+#   geom_point(aes(x = yrc_best, y = ride_url_f))+
+#   scale_y_discrete(name = "Ride Name", 
+#                    breaks = SHINY_park_inventory[SHINY_park_inventory$park_name %in% 
+#                                                   # input$park_name01,]$ride_url_f,
+#                                                    c("kings_island", "carowinds"),]$ride_url_f,
+#                    labels = SHINY_park_inventory[SHINY_park_inventory$park_name %in% 
+#                                                    #input$park_name01,]$ride_name)+
+#                                                    c("kings_island", "carowinds"),]$ride_name)+
+#   theme(text = element_text(size = text.size),
+#         legend.position = "bottom",
+#         legend.direction = "horizontal",
+#         legend.box = "vertical",
+#         plot.background = element_rect(color = "black"))+
+#   labs(title = "Park Rides by Years Opened-Closed by Build Material")+
+#   facet_wrap(~Park_Name.facet, scales = "free_y")+
+#   scale_color_discrete(name = "Build Material")+
+#   scale_x_continuous(name = "Year")
+
+# # plot2----
+# SHINY_park_inventory %>%
+#   #.[.$park_name == a.park,] %>%
+#   group_by(park_url, park_name, ride_url, ride_url_f,
+#            ride_name, ride_status,
+#            type, type_f,
+#            design,design_f,
+#            scale, scale_f,
+#            yro_best, yrc_best) %>%
+#   summarise() %>%
+#   ungroup() %>%
+#   ggplot(data = ., 
+#          aes(color = scale_f)) + 
+#   geom_segment(aes(y = ride_url_f, yend = ride_url_f, 
+#                    x = yro_best, xend = yrc_best))+
+#   geom_point(aes(x = yro_best, y = ride_url_f))+
+#   scale_y_discrete(breaks = SHINY_park_inventory$ride_url,#[SHINY_park_inventory$park_name %in% a.park],
+#                    labels = SHINY_park_inventory$ride_name)#[SHINY_park_inventory$park_name %in% a.park,]$ride_name)
+# 
+
+
+
+
+
+# geom_segment showing range of height of rides installed in a given year
+# add ride specs
+setwd(wd$data)
+SHINY_ride_specs <-read_csv("ride_specs.csv")
+setwd(wd$shiny)
+
+SHINY_park_inventory %>%
+  .[.$park_name %in% c("kings_island"),] %>%
+  inner_join(., 
+            SHINY_ride_specs[!is.na(SHINY_ride_specs$height.ft),
+                             c("ride_url", "height.ft")]) %>%
+  #.[complete.cases(.),] %>%
+  .[.$yro_best >= 1960,] %>%
+  group_by(yro_best) %>%
+  summarise(max_ht = max(height.ft, na.rm = T), 
+            #min_ht = min(height.ft, na.rm = T), 
+            n = n_distinct(ride_url)) %>%
+  ggplot(data = .) +
+  geom_col(aes(x = yro_best, y = max_ht, 
+               fill = n))+
+  # geom_segment(aes(x = yro_best, xend = yro_best, 
+  #                  y = min_ht, yend = max_ht, 
+  #                  color = n),
+  #              linewidth =3)+
+  scale_fill_viridis_c(option = "C")
+  

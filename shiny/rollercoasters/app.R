@@ -14,6 +14,7 @@ library(dplyr)
 library(readr)
 library(shiny)
 library(data.table)
+library(glue)
 library(ggplot2)
 # library(tigris)
 # library(tidycensus)
@@ -48,7 +49,9 @@ ui <- fluidPage(headerPanel(""),
                                          label    = h2(HTML(r"(<u>Select Parks</u>)")), #"Columns",
                                          choices  = park.names.list, #names(mtcars), 
                                          #selected = c("kings_island"),
-                                         selected = ref.park.names$park_name[ref.park.names$park_operator == "cedar_fair"],
+                                         #selected = ref.park.names$park_name[ref.park.names$park_operator == "cedar_fair"],
+                                         selected = ref.park.names$park_name[grepl(pattern = "^kings_|^carowinds", 
+                                                                                   x = ref.park.names$park_name)],
                                          multiple = TRUE)
                 ),
                 
@@ -106,8 +109,9 @@ server <- function(input, output) {
       ggplot(data = ., 
              aes(x = year, y = n_rides, 
                  fill = design_f)) + 
-      labs(title = "Rides Ride-Design by Park by Year", 
-           subtitle = "Selected Parks in the United States, 1920-Present", 
+      labs(title = "Ride-Design by Park by Year", 
+           subtitle = glue("Selected Parks in the United States, {min(SHINY_ride.design_by.year_by.park[SHINY_ride.design_by.year_by.park$park_name %in% 
+                                                       input$park_name01,]$year)}-Present"), 
            caption = "Source: rcdb.com")+
       geom_col(position = input$radio) +
       #theme(text = element_text(size = 25))+
@@ -146,11 +150,51 @@ server <- function(input, output) {
   width = plot.width)
   
   output$plot02 <- renderPlot({
-    ggplot() + 
-      theme_dark()+
+    the.plot.02 <- ungroup(summarise(group_by(SHINY_park_inventory[SHINY_park_inventory$park_name %in% 
+                                                      input$park_name01,], 
+                               park_url, park_name, ride_url, ride_url_f,
+                               ride_name, ride_status,
+                               type, type_f,
+                               design,design_f,
+                               scale, scale_f,
+                               yro_best, yrc_best))) %>%
+      left_join(., 
+                ref.park.names[,c("park_name", "Park_Name.facet", "Park_Name")]) %>%
+      ggplot(data = ., 
+             aes(color = type_f)) + 
+      geom_segment(aes(y = ride_url_f, yend = ride_url_f, 
+                       x = yro_best, xend = yrc_best))+
+      geom_point(aes(x = yro_best, y = ride_url_f))+
+      geom_point(aes(x = yrc_best, y = ride_url_f))+
+      scale_y_discrete(name = "Ride Name", 
+                       breaks = SHINY_park_inventory[SHINY_park_inventory$park_name %in% 
+                                                       input$park_name01,]$ride_url_f,
+                       labels = SHINY_park_inventory[SHINY_park_inventory$park_name %in% 
+                                                       input$park_name01,]$ride_name)+
       theme(text = element_text(size = text.size),
+            legend.position = "bottom",
+            legend.direction = "horizontal",
+            legend.box = "vertical",
             plot.background = element_rect(color = "black"))+
-      labs(title = "output$plot02")
+      labs(title = "Park Rides by Years Opened-Closed by Build Material")+
+      facet_wrap(~Park_Name.facet, scales = "free_y")+
+      scale_color_discrete(name = "Build Material")+
+      scale_x_continuous(name = "Year")
+    
+    if(length(input$park_name01) <= 3){
+      print(the.plot.02)
+    }else{
+      print(ggplot() + 
+              labs(title = "\n    <Too Many Parks Selected>\n    (Choose 3 or Fewer)")+
+              theme_minimal()+
+              theme(text = element_text(size = text.size, color = "red"),
+                    legend.position = "bottom",
+                    legend.direction = "horizontal",
+                    legend.box = "vertical",
+                    plot.background = element_rect(color = "black")))
+    }
+    
+    
   }, 
   height = plot.height, 
   width = plot.width)
