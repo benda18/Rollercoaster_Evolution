@@ -214,6 +214,8 @@ cf_ride_exp[cf_ride_exp$ride_name == "wilderness_run" &
               cf_ride_exp$park_name == "cedar_point",]$ride_height <- 36
 
 
+cf_ride_exp$ride_height[cf_ride_exp$ride_name %in% c("woodstock_express")] <- 36
+
 cf_ride_exp[is.na(cf_ride_exp$ride_height),]
 
 dup.ride.names <- cf_ride_exp %>%

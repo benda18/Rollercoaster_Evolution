@@ -316,87 +316,65 @@ yearly.specs %>%
   scale_fill_discrete(name = "Park Name")+
   scale_x_continuous(name = "Year")
 
+yearly.specs2 <- yearly.specs %>%
+  as.data.table() %>%
+  melt(., 
+       measure.vars = c("length.ft", "height.ft", "speed.mph")) %>%
+  as.data.frame() %>%
+  as_tibble() %>%
+  group_by(year_active, variable) %>%
+  slice_max(order_by = value, n = 1) %>%
+  group_by(ride_url_f, 
+           ride_name, 
+           Park_Name, 
+           Park_Name.facet, 
+           variable) %>%
+  summarise(XMIN = min(year_active), 
+            XMAX = max(year_active), 
+            YMIN = 0, 
+            YMAX = max(value))
 
-# ggplot(data = yearly.specs, 
-#        aes(x = year_active, 
-#            y = height.ft)) + 
-#   geom_boxplot(aes(group = year_active))+
-#   geom_smooth(aes(color = type_f))
 
-# ggplot(data = yearly.specs, 
-#          aes(color = type_f)) + 
-#   geom_segment(aes(y = ride_url_f, yend = ride_url_f, 
-#                    x = yro_best, xend = yrc_best))+
-#   geom_point(aes(x = yro_best, y = ride_url_f))+
-#   geom_point(aes(x = yrc_best, y = ride_url_f))+
-#   scale_y_discrete(name = "Ride Name", 
-#                    breaks = SHINY_park_inventory[SHINY_park_inventory$park_name %in% 
-#                                                   # input$park_name01,]$ride_url_f,
-#                                                    c("kings_island", "carowinds"),]$ride_url_f,
-#                    labels = SHINY_park_inventory[SHINY_park_inventory$park_name %in% 
-#                                                    #input$park_name01,]$ride_name)+
-#                                                    c("kings_island", "carowinds"),]$ride_name)+
-#   theme(text = element_text(size = text.size),
-#         legend.position = "bottom",
-#         legend.direction = "horizontal",
-#         legend.box = "vertical",
-#         plot.background = element_rect(color = "black"))+
-#   labs(title = "Park Rides by Years Opened-Closed by Build Material")+
-#   facet_wrap(~Park_Name.facet, scales = "free_y")+
-#   scale_color_discrete(name = "Build Material")+
-#   scale_x_continuous(name = "Year")
-
-# # plot2----
-# SHINY_park_inventory %>%
-#   #.[.$park_name == a.park,] %>%
-#   group_by(park_url, park_name, ride_url, ride_url_f,
-#            ride_name, ride_status,
-#            type, type_f,
-#            design,design_f,
-#            scale, scale_f,
-#            yro_best, yrc_best) %>%
-#   summarise() %>%
-#   ungroup() %>%
-#   ggplot(data = ., 
-#          aes(color = scale_f)) + 
-#   geom_segment(aes(y = ride_url_f, yend = ride_url_f, 
-#                    x = yro_best, xend = yrc_best))+
-#   geom_point(aes(x = yro_best, y = ride_url_f))+
-#   scale_y_discrete(breaks = SHINY_park_inventory$ride_url,#[SHINY_park_inventory$park_name %in% a.park],
-#                    labels = SHINY_park_inventory$ride_name)#[SHINY_park_inventory$park_name %in% a.park,]$ride_name)
-# 
+yearly.specs3 <- NULL
+for(i in 1:nrow(yearly.specs2)){
+  yearly.specs3 <- rbind(yearly.specs3, 
+                         data.frame(shape_id        = i, 
+                                    ride_url_f      = yearly.specs2$ride_url_f[i],
+                                    ride_name       = yearly.specs2$ride_name[i], 
+                                    Park_Name       = yearly.specs2$Park_Name[i],
+                                    Park_Name.facet = yearly.specs2$Park_Name.facet[i],
+                                    variable        = yearly.specs2$variable[i], 
+                                    x1 = c(yearly.specs2$XMIN[i], 
+                                           yearly.specs2$XMIN[i], 
+                                           yearly.specs2$XMAX[i]+1, 
+                                           yearly.specs2$XMAX[i]+1, 
+                                           yearly.specs2$XMIN[i]),
+                                    y1 = c(yearly.specs2$YMIN[i], 
+                                           yearly.specs2$YMAX[i], 
+                                           yearly.specs2$YMAX[i], 
+                                           yearly.specs2$YMIN[i], 
+                                           yearly.specs2$YMIN[i])) ) %>% as_tibble()
+}
+yearly.specs3
 
 
 
 
-
-# # geom_segment showing range of height of rides installed in a given year
-# # add ride specs
-# setwd(wd$data)
-# SHINY_ride_specs <-read_csv("ride_specs.csv")
-# setwd(wd$shiny)
-# 
-# SHINY_park_inventory %>%
-#   .[.$park_name %in% c("kings_island"),] %>%
-#   inner_join(., 
-#             SHINY_ride_specs[!is.na(SHINY_ride_specs$height.ft),
-#                              c("ride_url", "height.ft")]) %>%
-#   #.[complete.cases(.),] %>%
-#   .[.$yro_best >= 1960,] %>%
-#   group_by(yro_best) %>%
-#   summarise(max_ht = max(height.ft, na.rm = T), 
-#             #min_ht = min(height.ft, na.rm = T), 
-#             n = n_distinct(ride_url)) %>%
-#   ggplot(data = .) +
-#   geom_col(aes(x = yro_best, y = max_ht, 
-#                fill = n))+
-#   # geom_segment(aes(x = yro_best, xend = yro_best, 
-#   #                  y = min_ht, yend = max_ht, 
-#   #                  color = n),
-#   #              linewidth =3)+
-#   scale_fill_viridis_c(option = "C")
-#   
-
+ggplot(data = yearly.specs3) + 
+  geom_polygon(aes(x = x1, y = y1, 
+                   group = shape_id, 
+                   #fill = ride_name)) +
+                   fill = Park_Name)) +
+  facet_grid(variable~., scales = "free_y") +
+  scale_y_continuous(name = NULL)+
+  theme(text = element_text(size = text.size),
+        legend.position = "bottom",
+        legend.direction = "horizontal",
+        legend.box = "vertical",
+        plot.background = element_rect(color = "black"))+
+  labs(title = "Tallest, Longest & Fastest Park by Year")+
+  scale_fill_discrete(name = "Park Name")+
+  scale_x_continuous(name = "Year")
 
 
 # PARK RIDE HEIGHT PLOT EXPLORATION----
@@ -498,34 +476,42 @@ SHINY_ride_heights %>%
                        breaks = seq(36,54,by=6), 
                        option = "D")
 
-SHINY_ride_heights %>%
-  # group_by(park_name) %>%
-  # summarise(avg_ht = mean(ride_height), 
-  #           sd_ht = sd(ride_height)) %>%
-  ggplot(data = ., 
-         aes(x = park_name, y = ride_height, group = park_name)) + 
-  geom_violin(scale = "width", draw_quantiles = 0.5)+
-  #geom_boxplot() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))+
-  scale_y_continuous(breaks = seq(0,100,by=2))
+# SHINY_ride_heights %>%
+#   # group_by(park_name) %>%
+#   # summarise(avg_ht = mean(ride_height), 
+#   #           sd_ht = sd(ride_height)) %>%
+#   ggplot(data = ., 
+#          aes(x = park_name, y = ride_height, group = park_name)) + 
+#   geom_violin(scale = "width", draw_quantiles = 0.5)+
+#   #geom_boxplot() +
+#   theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))+
+#   scale_y_continuous(breaks = seq(0,100,by=2))
 
-SHINY_ride_heights %>%
-  group_by(park_name, ride_height) %>%
-  summarise(n_rides = n_distinct(ride_url)) %>%
-  ggplot(data = ., 
-         aes(y = park_name, size = n_rides, x = ride_height)) + 
-  geom_point()+
-  theme(legend.position = "bottom", 
-        legend.direction = "vertical")+
-  scale_size_area()
+# SHINY_ride_heights %>%
+#   group_by(park_name, ride_height) %>%
+#   summarise(n_rides = n_distinct(ride_url)) %>%
+#   ggplot(data = ., 
+#          aes(y = park_name, size = n_rides, x = ride_height)) + 
+#   geom_point()+
+#   theme(legend.position = "bottom", 
+#         legend.direction = "vertical")+
+#   scale_size_area()
 
+SHINY_ride_heights2 <- SHINY_ride_heights[SHINY_ride_heights$park_name %in%
+                                            c("kings_dominion", 
+                                              "kings_island"),]
 
+SHINY_ride_heights2$ride_name_f <- factor(SHINY_ride_heights2$ride_name, 
+                                          levels = unique(SHINY_ride_heights2$ride_name[order(SHINY_ride_heights2$park_name)]))
 ggplot() + 
-  geom_col(data = SHINY_ride_heights[SHINY_ride_heights$park_name %in%
-                                       c("carowinds"),], 
-           aes(y = ride_name, x = ride_height), 
+  geom_col(data = SHINY_ride_heights2, 
+           aes(y = ride_name_f, 
+               x = ride_height, 
+               fill = park_name), 
            position = "dodge")+
-  facet_grid(park_name~., scales = "free_y", space = "free_y")
+  facet_grid(ride_height_f~., 
+             scales = "free_y", 
+             space = "free_y")
 
 table(SHINY_ride_heights$ride_height)
 
