@@ -31,12 +31,7 @@ ui <- fluidPage(headerPanel(""),
                                            label = ("Separately (up to 16 parks)"), 
                                            value = F
                              ),
-                             # #ui  slider (hold for future use)
-                             # sliderInput("slider_ts", 
-                             #             label = h4(HTML(r"(<u>Adjust Text Size</u>)")), 
-                             #             min = 10, 
-                             #             max = 30, 
-                             #             value = 18),
+                            
                              # ui.R RADIO BUTTIONS
                              radioButtons("radio", 
                                           label = h4(HTML(r"(<u>Rides as a Number or Percentage</u>)")),
@@ -62,8 +57,12 @@ ui <- fluidPage(headerPanel(""),
                                        height = plot.height)
                           ), 
                           fluidRow(
-                            plotOutput(outputId = "plot02", 
-                                       height = plot.height)),
+                            column(6,plotOutput(outputId = "plot02", 
+                                                height = plot.height, 
+                                                width = "50%")), 
+                            column(6, plotOutput(outputId = "plot03", 
+                                               height = plot.height, 
+                                               width = "50%")))
                 ),
                 # Future Table placement VVV
                 fluidRow(#tableOutput(outputId = "table04")
@@ -181,11 +180,11 @@ server <- function(input, output) {
       scale_color_discrete(name = "Build Material")+
       scale_x_continuous(name = "Year")
     
-    if(length(input$park_name01) <= 3){
+    if(length(input$park_name01) == 1){
       print(the.plot.02)
     }else{
       print(ggplot() + 
-              labs(title = "\n    <Too Many Parks Selected>\n    (Choose 3 or Fewer)")+
+              labs(title = "\n    <Too Many Parks Selected>\n    (Plots just 1)")+
               theme_minimal()+
               theme(text = element_text(size = text.size, color = "red"),
                     legend.position = "bottom",
@@ -197,7 +196,34 @@ server <- function(input, output) {
     
   }, 
   height = plot.height, 
-  width = plot.width)
+  width = plot.width/2)
+  
+  output$plot03 <- renderPlot({
+    the.plot.02 <- ggplot() +
+      theme_minimal()+
+      theme(text = element_text(size = text.size, color = "red"),
+            legend.position = "bottom",
+            legend.direction = "horizontal",
+            legend.box = "vertical",
+            plot.background = element_rect(color = "black"))
+    
+    if(length(input$park_name01) == 1){
+      print(the.plot.02)
+    }else{
+      print(ggplot() + 
+              labs(title = "\n    <Too Many Parks Selected>\n    (Plots just 1)")+
+              theme_minimal()+
+              theme(text = element_text(size = text.size, color = "red"),
+                    legend.position = "bottom",
+                    legend.direction = "horizontal",
+                    legend.box = "vertical",
+                    plot.background = element_rect(color = "black")))
+    }
+    
+    
+  }, 
+  height = plot.height, 
+  width = plot.width/2)
   
   output$table03 <- renderTable({
     SHINY_avg.length_by.design_by.yr
@@ -220,3 +246,4 @@ server <- function(input, output) {
 
 # Run the application 
 shinyApp(ui = ui, server = server)
+

@@ -516,4 +516,4 @@ ggplot() +
 table(SHINY_ride_heights$ride_height)
 
 SHINY_ride_heights$ride_height_f
-View(SHINY_ride_heights)
+
