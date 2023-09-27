@@ -253,13 +253,7 @@ setwd(wd$data)
 SHINY.ride_specs <- read_csv("ride_specs.csv")
 setwd(wd$shiny)
 
-yearly.specs <- ungroup(summarise(group_by(SHINY_park_inventory[SHINY_park_inventory$park_name %in% 
-                                                c("kings_island",#, 
-                                                  "carowinds",#, 
-                                                  "kings_dominion"#,
-                                                  #"cedar_point"
-                                                  ),], 
-                           #input$park_name01,], 
+yearly.specs <- ungroup(summarise(group_by(SHINY_park_inventory, 
                            park_url, park_name, ride_url, ride_url_f,
                            ride_name, ride_status,
                            type, type_f,

@@ -199,26 +199,45 @@ server <- function(input, output) {
   width = plot.width/2)
   
   output$plot03 <- renderPlot({
-    the.plot.02 <- ggplot() +
-      theme_minimal()+
-      theme(text = element_text(size = text.size, color = "red"),
+    
+    the.plot.03 <- yearly.specs %>%
+      .[.$Park_Name %in% input$park_name01,] %>%
+      as.data.table() %>%
+      melt(., 
+           measure.vars = c("length.ft", "height.ft", "speed.mph")) %>%
+      as.data.frame() %>%
+      as_tibble() %>%
+      group_by(year_active, variable) %>%
+      slice_max(order_by = value, n = 1) %>%
+      ggplot(data = ., 
+             aes(x = year_active, y = value)) +
+      #geom_col(aes(fill = Park_Name), position = "dodge")+
+      geom_col(aes(fill = ride_name), position = "dodge")+
+      facet_grid(variable~., scales = "free_y")+
+      scale_y_continuous(name = NULL)+
+      theme(text = element_text(size = text.size),
             legend.position = "bottom",
             legend.direction = "horizontal",
             legend.box = "vertical",
-            plot.background = element_rect(color = "black"))
+            plot.background = element_rect(color = "black"))+
+      labs(title = "Tallest, Longest & Fastest Park by Year")+
+      #facet_wrap(~Park_Name.facet, scales = "free_y")+
+      scale_fill_discrete(name = "Park Name")+
+      scale_x_continuous(name = "Year")
     
-    if(length(input$park_name01) == 1){
-      print(the.plot.02)
-    }else{
-      print(ggplot() + 
-              labs(title = "\n    <Too Many Parks Selected>\n    (Plots just 1)")+
-              theme_minimal()+
-              theme(text = element_text(size = text.size, color = "red"),
-                    legend.position = "bottom",
-                    legend.direction = "horizontal",
-                    legend.box = "vertical",
-                    plot.background = element_rect(color = "black")))
-    }
+    print(the.plot.03)
+    # if(length(input$park_name01) <=5){
+    #   print(the.plot.03)
+    # }else{
+    #   print(ggplot() + 
+    #           labs(title = "\n    <Too Many Parks Selected>\n    (Plots just 1)")+
+    #           theme_minimal()+
+    #           theme(text = element_text(size = text.size, color = "red"),
+    #                 legend.position = "bottom",
+    #                 legend.direction = "horizontal",
+    #                 legend.box = "vertical",
+    #                 plot.background = element_rect(color = "black")))
+    # }
     
     
   }, 
