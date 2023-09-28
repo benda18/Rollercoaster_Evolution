@@ -248,12 +248,7 @@ shiny_rh$ride_height_f <- factor(shiny_rh$ride_height)
 shiny_rh$ride_height_o <- shiny_rh$ride_height_f %>%
   as.ordered()
 
-
-shiny_rh$ride_height_f 
-shiny_rh$ride_height_o
-
-# what else do you want to know about the rides when choosing what park to go
-# to?  family vs extreme rides? wood vs steel, everything?
+# import other necessary data
 setwd(wd$data)
 files_wd.data <- paste(getwd(),list.files(),sep = "/")
 setwd(wd$output)
@@ -264,10 +259,7 @@ setwd(wd$R)
 park_inventory <- read_csv(file = files_wd.data[grepl("park_inventory", files_wd.data)])
 
 # join
-shiny_rh <- left_join(shiny_rh,park_inventory[,c("ride_url", "type", "design", "scale")]) #%>%
-  #left_join(., 
-  #          ride_specs) %>%
-  #.[!duplicated(.),]
+shiny_rh <- left_join(shiny_rh,park_inventory[,c("ride_url", "type", "design", "scale")]) 
 
 
 shiny_rh$ride_url_f <- factor(shiny_rh$ride_url, 
@@ -276,20 +268,6 @@ shiny_rh$ride_url_f <- factor(shiny_rh$ride_url,
 
 # plot
 (a.park <- sample(unique(shiny_rh$park_name), size = 2))
-# shiny_rh[shiny_rh$park_name %in% a.park,] %>%
-#   group_by(park_name, 
-#            ride_height_o) %>%
-#   summarise(n_rides = n_distinct(ride_url)) %>%
-#   ggplot(data = ., 
-#          aes(y = n_rides, 
-#              
-#              x = ride_height_o)) +
-#   geom_col_pattern(position = "dodge", 
-#                    aes(pattern_density = park_name,
-#                        fill = park_name))+
-#   #facet_grid(~park_name)+
-#   scale_x_discrete(breaks = levels(shiny_rh$ride_height_o), 
-#                    limits = levels(shiny_rh$ride_height_o))
 
 
 shiny_rh %>%
