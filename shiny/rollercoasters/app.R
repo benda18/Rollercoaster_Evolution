@@ -26,7 +26,18 @@ source("C:/Users/bende/Documents/R/play/rollercoaster_evolution/shiny/rollercoas
 # Define UI for application that draws a histogram 
 ui <- fluidPage(headerPanel(""),
                 titlePanel(""), 
-                sidebarPanel(h4(HTML(r"(<u>Plot Parks Together or Separate</u>)")), 
+                #verticalLayout(sidebarPanel(shiny::wellPanel("foo")),
+                sidebarPanel(h3(HTML(r"(<b><u>Selection Filters</u></b>)")),
+                  # Multiple selectInput----
+                             selectInput(inputId  = "park_name01", #"Columns",
+                                         label    = h4(HTML(r"(<u>Select Parks</u>)")), #"Columns",
+                                         choices  = park.names.list, #names(mtcars), 
+                                         #selected = c("kings_island"),
+                                         #selected = ref.park.names$park_name[ref.park.names$park_operator == "cedar_fair"],
+                                         selected = ref.park.names$park_name[grepl(pattern = "^kings_|^carowinds", 
+                                                                                   x = ref.park.names$park_name)],
+                                         multiple = TRUE), 
+                             h4(HTML(r"(<u>Plot Parks Together or Separate</u>)")), 
                              checkboxInput("checkbox_f", 
                                            label = ("Separately (up to 16 parks)"), 
                                            value = F
@@ -39,16 +50,17 @@ ui <- fluidPage(headerPanel(""),
                                                          "Percent of Rides" = "fill"), 
                                           selected = "stack"
                              ), 
-                             # Multiple selectInput----
-                             selectInput(inputId  = "park_name01", #"Columns",
-                                         label    = h2(HTML(r"(<u>Select Parks</u>)")), #"Columns",
-                                         choices  = park.names.list, #names(mtcars), 
-                                         #selected = c("kings_island"),
-                                         #selected = ref.park.names$park_name[ref.park.names$park_operator == "cedar_fair"],
-                                         selected = ref.park.names$park_name[grepl(pattern = "^kings_|^carowinds", 
-                                                                                   x = ref.park.names$park_name)],
-                                         multiple = TRUE)
+                  h3(HTML(r"(<b><u>Definitions</u></b><br><h4>RIDE DESIGN</h4><br>)")),
+                  wellPanel(HTML(r"(<a title="Jeremy Thompson from United States of America, CC BY 2.0 &lt;https://creativecommons.org/licenses/by/2.0&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:GateKeeper_020_(9547680779).jpg"><img width="90" alt="GateKeeper 020 (9547680779)\" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/GateKeeper_020_%289547680779%29.jpg/90px-GateKeeper_020_%289547680779%29.jpg"></a>)")),
+                  wellPanel(h4(HTML(r"(* wing:)"))), 
+                  wellPanel(h4(HTML(r"(* flying: <br>)"))),
+                  wellPanel(h4(HTML(r"(* sit-down: <br>)"))),
+                  wellPanel(h4(HTML(r"(* suspended: <br>)"))),
+                  wellPanel(h4(HTML(r"(* inverted: <br>)"))),
+                  wellPanel(h4(HTML(r"(* stand-up: <br>)"))),
+                  wellPanel(h4(HTML(r"(* bobsled: )")))
                 ),
+                
                 
                 # mainPanel----
                 mainPanel("", 
