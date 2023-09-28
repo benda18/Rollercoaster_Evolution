@@ -118,6 +118,7 @@ server <- function(input, output) {
             legend.position = "bottom", 
             legend.direction = "horizontal", 
             legend.box = "vertical", 
+            axis.text.x = element_text(angle = 45, hjust =1, vjust = 1),
             #panel.border = element_rect(color = "blue"),
             plot.background = element_rect(color = "black"))+
       scale_y_continuous(name = ifelse(input$radio == "fill", "Percent-share of Rides", "Number of Rides"), 
@@ -226,6 +227,9 @@ server <- function(input, output) {
       theme(text = element_text(size = text.size),
             legend.position = "right",
             legend.direction = "vertical",
+            axis.text.x = element_text(angle = 45, 
+                                       hjust = 1, 
+                                       vjust = 1),
             #legend.box = "vertical",
             plot.background = element_rect(color = "black"))+
       #facet_wrap(~Park_Name.facet, scales = "free_y")+
