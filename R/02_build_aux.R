@@ -6,8 +6,9 @@ library(rvest)
 library(xml2)
 library(glue)
 library(lubridate)
-#library(ggplot2)
+library(ggplot2)
 library(readr)
+library(ggpattern)
 
 
 rm(list=ls());cat('\f');gc()
@@ -229,8 +230,64 @@ cf_ride_exp[cf_ride_exp$ride_name %in% dup.ride.names,] %>%
   summarise() %>% as.data.frame()
 
 
-# save to file
+# save to file ----
 setwd(wd$output)
 write_csv(cf_ride_exp, 
           "SHINY_ride_heights.csv")
 setwd(wd$R)
+
+
+# how to plot ----
+setwd(wd$output)
+shiny_rh <- read_csv("SHINY_ride_heights.csv")
+setwd(wd$R)
+
+
+# ride_height as factor
+shiny_rh$ride_height_f <- factor(shiny_rh$ride_height)
+shiny_rh$ride_height_o <- shiny_rh$ride_height_f %>%
+  as.ordered()
+
+
+shiny_rh$ride_height_f 
+shiny_rh$ride_height_o
+
+# what else do you want to know about the rides when choosing what park to go
+# to?  family vs extreme rides? wood vs steel, everything?
+setwd(wd$data)
+files_wd.data <- paste(getwd(),list.files(),sep = "/")
+setwd(wd$output)
+files_wd.output <- paste(getwd(),list.files(),sep = "/")
+setwd(wd$R)
+
+ride_specs <- read_csv(file = files_wd.data[grepl("ride_specs", files_wd.data)])
+park_inventory <- read_csv(file = files_wd.data[grepl("park_inventory", files_wd.data)])
+
+# join
+shiny_rh <- left_join(shiny_rh,park_inventory[,c("ride_url", "type", "design", "scale")]) %>%
+  left_join(., 
+            ride_specs) %>%
+  .[!duplicated(.),]
+
+shiny_rh$ride_url_f <- factor(shiny_rh$ride_url, 
+                              levels = unique(shiny_rh$ride_url[order(shiny_rh$ride_height,
+                                                                      decreasing = F)]))
+park_inventory %>%
+  .[.$ride_status == "operating",] %>%
+  group_by(type, design) %>%
+  summarise()
+
+# plot
+(a.park <- sample(unique(shiny_rh$park_name), size = 2))
+
+ggplot(data = shiny_rh[shiny_rh$park_name %in% a.park,]) +
+  geom_col_pattern(aes(y = ride_url_f, 
+                       x = ride_height, 
+                       fill = scale, 
+                       pattern_density = type  )) +
+  scale_pattern_manual(values = c("stripe", "weave"))+
+  facet_grid(park_name~., scales = "free_y")+ #, space = "free_y")+
+  scale_x_continuous() +
+  scale_y_discrete(breaks = shiny_rh[shiny_rh$park_name %in% a.park,]$ride_url_f, 
+                   labels = shiny_rh[shiny_rh$park_name %in% a.park,]$ride_name)
+
