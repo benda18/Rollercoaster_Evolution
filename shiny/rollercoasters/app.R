@@ -57,7 +57,7 @@ ui <- fluidPage(headerPanel(""),
                                        height = plot.height)
                           ), 
                           fluidRow(
-                            column(6,plotOutput(outputId = "plot02", 
+                            column(6,plotOutput(outputId = "plot02b", #"plot02", 
                                                 height = plot.height, 
                                                 width = "50%")), 
                             column(6, plotOutput(outputId = "plot03", 
@@ -115,8 +115,8 @@ server <- function(input, output) {
       geom_col(position = input$radio) +
       #theme(text = element_text(size = 25))+
       theme(text = element_text(size = text.size), #input$slider_ts), 
-            legend.position = "bottom", 
-            legend.direction = "horizontal", 
+            legend.position = "right", 
+            legend.direction = "vertical", 
             legend.box = "vertical", 
             axis.text.x = element_text(angle = 45, hjust =1, vjust = 1),
             #panel.border = element_rect(color = "blue"),
@@ -148,6 +148,71 @@ server <- function(input, output) {
   # control plot size----
   height = plot.height, 
   width = plot.width)
+  
+  
+  output$plot02b <- renderPlot({
+    setwd(wd$output)
+    shiny_rh <- read_csv("SHINY_ride_heights.csv")
+    setwd(wd$shiny)
+    
+    shiny_rh <- left_join(shiny_rh,
+              ref.park.names[,c("park_name", "Park_Name", "Park_Name.facet")])
+    
+    # ride_height as factor
+    shiny_rh$ride_height_f <- factor(shiny_rh$ride_height)
+    shiny_rh$ride_height_o <- shiny_rh$ride_height_f %>%
+      as.ordered()
+    
+    # import other necessary data
+    setwd(wd$data)
+    files_wd.data <- paste(getwd(),list.files(),sep = "/")
+    setwd(wd$output)
+    files_wd.output <- paste(getwd(),list.files(),sep = "/")
+    setwd(wd$shiny)
+    
+    #ride_specs <- read_csv(file = files_wd.data[grepl("ride_specs", files_wd.data)])
+    park_inventory <- read_csv(file = files_wd.data[grepl("park_inventory", files_wd.data)])
+    
+    # join
+    shiny_rh <- left_join(shiny_rh,park_inventory[,c("ride_url", "type", "design", "scale")]) 
+    
+    shiny_rh$ride_url_f <- factor(shiny_rh$ride_url, 
+                                  levels = unique(shiny_rh$ride_url[order(shiny_rh$ride_height,
+                                                                          decreasing = F)]))
+    
+    the.plot.02b <- shiny_rh %>%
+      .[.$park_name %in% input$park_name01,] %>%
+      group_by(park_name, ride_height_o) %>%
+      summarise(n_rides = n_distinct(ride_url)) %>%
+      ggplot(data = .) +
+      geom_col(aes(y = park_name, 
+                   x = n_rides,
+                   fill = ride_height_o), 
+               position = "stack") +
+      #facet_wrap(park_name~., scales = "free_y")+ #, space = "free_y")+
+      scale_x_continuous(name = "Number of Rides", 
+                         breaks = seq(0,100,by=1))+
+      scale_y_discrete(name = "Park Name", 
+                       breaks = shiny_rh[shiny_rh$park_name %in% 
+                                                       input$park_name01,]$park_name,
+                       labels = shiny_rh[shiny_rh$park_name %in% 
+                                                       input$park_name01,]$Park_Name) +
+      scale_fill_ordinal(name = "Minimum Rider\nHeight (inches)", 
+                         direction = 1)+
+      #scale_fill_continuous()+
+      theme(legend.position = "right",
+            legend.direction = "vertical",
+            legend.box = "vertical",
+            #text = element_text(size = text.size),
+            plot.background = element_rect(color = "black", fill = NULL))
+    
+    
+    # print
+    print(the.plot.02b)
+    
+  }, 
+  height = plot.height, 
+  width = plot.width/2)
   
   output$plot02 <- renderPlot({
     the.plot.02 <- ungroup(summarise(group_by(SHINY_park_inventory[SHINY_park_inventory$park_name %in% 

@@ -12,7 +12,8 @@ library(readr)
 
 rm(list=ls());cat('\f');gc()
 
-
+ride.url <- "https://rcdb.com/4053.htm" # thunderhawk
+ride.url <- "https://rcdb.com/15124.htm" # woodstock express
 # FUNS ----
 ride_info <- function(ride.url){
   ride.html <- try(read_html(ride.url))

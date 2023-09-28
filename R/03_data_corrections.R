@@ -323,15 +323,20 @@ setwd(wd$data)
 
 # load data
 park_inventory <- read_csv("park_inventory.csv")
-
+ride_specs     <- read_csv("ride_specs.csv")
 
 
 # missing data----
 
-stop("xcelerator_the_ride  missing from knotts berry farm")
+warning("xcelerator_the_ride  missing from knotts berry farm")
 
 # change data
 
+
+
+ride_specs[ride_specs$ride_url %in%
+             park_inventory$ride_url[park_inventory$park_name == "michigans_adventure" & 
+                                       park_inventory$ride_name == "woodstock_express"],]
 
 
 park_inventory[park_inventory$ride_name == "super_coaster" & park_inventory$park_name == "cedar_point",]$closed <- "19641111"

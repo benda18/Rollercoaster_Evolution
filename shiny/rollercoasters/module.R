@@ -4,6 +4,7 @@ library(janitor)
 library(readr)
 library(ggplot2)
 library(lubridate)
+library(data.table)
 
 rm(list=ls());cat('\f');gc()
 
@@ -373,8 +374,6 @@ ggplot(data = yearly.specs3) +
 
 # PARK RIDE HEIGHT PLOT EXPLORATION----
 SHINY_ride_heights$ride_height_f <- factor(SHINY_ride_heights$ride_height)
-
-
 
 temp <- as.data.table(SHINY_ride_heights) %>%
   dcast(., 
