@@ -125,7 +125,7 @@ cf_ride_exp[cf_ride_exp$ride_name %in%
                 "magnum_xl-200", 
                 "magnum_xl_200", 
                 "steel_force",
-               # "thunderhawk",
+                # "thunderhawk",
                 "magnum_xl200", 
                 "ghostrider",
                 "hangtime",
@@ -260,34 +260,57 @@ setwd(wd$output)
 files_wd.output <- paste(getwd(),list.files(),sep = "/")
 setwd(wd$R)
 
-ride_specs <- read_csv(file = files_wd.data[grepl("ride_specs", files_wd.data)])
+#ride_specs <- read_csv(file = files_wd.data[grepl("ride_specs", files_wd.data)])
 park_inventory <- read_csv(file = files_wd.data[grepl("park_inventory", files_wd.data)])
 
 # join
-shiny_rh <- left_join(shiny_rh,park_inventory[,c("ride_url", "type", "design", "scale")]) %>%
-  left_join(., 
-            ride_specs) %>%
-  .[!duplicated(.),]
+shiny_rh <- left_join(shiny_rh,park_inventory[,c("ride_url", "type", "design", "scale")]) #%>%
+  #left_join(., 
+  #          ride_specs) %>%
+  #.[!duplicated(.),]
+
 
 shiny_rh$ride_url_f <- factor(shiny_rh$ride_url, 
                               levels = unique(shiny_rh$ride_url[order(shiny_rh$ride_height,
                                                                       decreasing = F)]))
-park_inventory %>%
-  .[.$ride_status == "operating",] %>%
-  group_by(type, design) %>%
-  summarise()
 
 # plot
 (a.park <- sample(unique(shiny_rh$park_name), size = 2))
+# shiny_rh[shiny_rh$park_name %in% a.park,] %>%
+#   group_by(park_name, 
+#            ride_height_o) %>%
+#   summarise(n_rides = n_distinct(ride_url)) %>%
+#   ggplot(data = ., 
+#          aes(y = n_rides, 
+#              
+#              x = ride_height_o)) +
+#   geom_col_pattern(position = "dodge", 
+#                    aes(pattern_density = park_name,
+#                        fill = park_name))+
+#   #facet_grid(~park_name)+
+#   scale_x_discrete(breaks = levels(shiny_rh$ride_height_o), 
+#                    limits = levels(shiny_rh$ride_height_o))
 
-ggplot(data = shiny_rh[shiny_rh$park_name %in% a.park,]) +
-  geom_col_pattern(aes(y = ride_url_f, 
-                       x = ride_height, 
-                       fill = scale, 
-                       pattern_density = type  )) +
-  scale_pattern_manual(values = c("stripe", "weave"))+
-  facet_grid(park_name~., scales = "free_y")+ #, space = "free_y")+
-  scale_x_continuous() +
-  scale_y_discrete(breaks = shiny_rh[shiny_rh$park_name %in% a.park,]$ride_url_f, 
-                   labels = shiny_rh[shiny_rh$park_name %in% a.park,]$ride_name)
+
+shiny_rh %>%
+  .[.$park_name %in% a.park,] %>%
+  group_by(park_name, ride_height_o) %>%
+  summarise(n_rides = n_distinct(ride_url)) %>%
+  ggplot(data = .) +
+  geom_col(aes(y = park_name, 
+               x = n_rides,
+               fill = ride_height_o), 
+           position = "stack") +
+  #facet_wrap(park_name~., scales = "free_y")+ #, space = "free_y")+
+  scale_x_continuous(name = "Number of Rides", 
+                     breaks = seq(0,100,by=1)) +
+  scale_y_discrete(name = "Park")+
+  scale_fill_ordinal(name = "Minimum Rider\nHeight (inches)", 
+                     direction = 1)+
+  #scale_fill_continuous()+
+  theme(legend.position = "right",
+        legend.direction = "vertical",
+        legend.box = "vertical",
+        #text = element_text(size = text.size),
+        plot.background = element_rect(color = "black", fill = NULL))
 
