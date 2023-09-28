@@ -31,12 +31,7 @@ ui <- fluidPage(headerPanel(""),
                                            label = ("Separately (up to 16 parks)"), 
                                            value = F
                              ),
-                             # #ui  slider (hold for future use)
-                             # sliderInput("slider_ts", 
-                             #             label = h4(HTML(r"(<u>Adjust Text Size</u>)")), 
-                             #             min = 10, 
-                             #             max = 30, 
-                             #             value = 18),
+                            
                              # ui.R RADIO BUTTIONS
                              radioButtons("radio", 
                                           label = h4(HTML(r"(<u>Rides as a Number or Percentage</u>)")),
@@ -62,8 +57,12 @@ ui <- fluidPage(headerPanel(""),
                                        height = plot.height)
                           ), 
                           fluidRow(
-                            plotOutput(outputId = "plot02", 
-                                       height = plot.height)),
+                            column(6,plotOutput(outputId = "plot02", 
+                                                height = plot.height, 
+                                                width = "50%")), 
+                            column(6, plotOutput(outputId = "plot03", 
+                                               height = plot.height, 
+                                               width = "50%")))
                 ),
                 # Future Table placement VVV
                 fluidRow(#tableOutput(outputId = "table04")
@@ -119,6 +118,7 @@ server <- function(input, output) {
             legend.position = "bottom", 
             legend.direction = "horizontal", 
             legend.box = "vertical", 
+            axis.text.x = element_text(angle = 45, hjust =1, vjust = 1),
             #panel.border = element_rect(color = "blue"),
             plot.background = element_rect(color = "black"))+
       scale_y_continuous(name = ifelse(input$radio == "fill", "Percent-share of Rides", "Number of Rides"), 
@@ -181,11 +181,11 @@ server <- function(input, output) {
       scale_color_discrete(name = "Build Material")+
       scale_x_continuous(name = "Year")
     
-    if(length(input$park_name01) <= 3){
+    if(length(input$park_name01) == 1){
       print(the.plot.02)
     }else{
       print(ggplot() + 
-              labs(title = "\n    <Too Many Parks Selected>\n    (Choose 3 or Fewer)")+
+              labs(title = "\n    <Too Many Parks Selected>\n    (Plots just 1)")+
               theme_minimal()+
               theme(text = element_text(size = text.size, color = "red"),
                     legend.position = "bottom",
@@ -197,7 +197,76 @@ server <- function(input, output) {
     
   }, 
   height = plot.height, 
-  width = plot.width)
+  width = plot.width/2)
+  
+
+  
+  output$plot03 <- renderPlot({
+    
+    the.plot.03 <- yearly.specs %>%
+      left_join(., 
+                ungroup(summarise(group_by(SHINY_park_inventory, ride_url, park_name))), 
+                by = c("ride_url_f" = "ride_url")) %>%
+      .[.$park_name %in% input$park_name01,] %>%
+      #.[.$park_name %in% c("kings_island", "carowinds"),] %>%
+      .[!duplicated(.),] %>%
+      as.data.table() %>%
+      melt(., 
+           measure.vars = c("length.ft", "height.ft", "speed.mph")) %>%
+      as.data.frame() %>%
+      as_tibble() %>%
+      group_by(year_active, variable) %>%
+      slice_max(order_by = value, n = 1) %>% 
+      ggplot(data = ., 
+             aes(x = year_active, y = value)) +
+      #geom_col(aes(fill = Park_Name), position = "dodge")+
+      #geom_col(aes(fill = ride_name), position = "dodge")+
+      facet_grid(variable~., scales = "free_y")+
+      scale_y_continuous(name = NULL, 
+                         labels = scales::comma)+
+      theme(text = element_text(size = text.size),
+            legend.position = "right",
+            legend.direction = "vertical",
+            axis.text.x = element_text(angle = 45, 
+                                       hjust = 1, 
+                                       vjust = 1),
+            #legend.box = "vertical",
+            plot.background = element_rect(color = "black"))+
+      #facet_wrap(~Park_Name.facet, scales = "free_y")+
+      scale_fill_discrete(name = "Park Name")+
+      scale_x_continuous(name = "Year")
+      
+      if(length(input$park_name01) > 1){
+        # by_park
+        the.plot.03 <- the.plot.03 +
+          geom_col(aes(fill = park_name), position = "dodge")+
+          labs(title = "Tallest, Longest & Fastest Park by Year")
+          
+      }else{
+        # by_ride
+        the.plot.03 <- the.plot.03 +
+          geom_col(aes(fill = ride_name), position = "dodge")+
+          labs(title = "Tallest, Longest & Fastest Ride by Year")
+      }
+    
+    print(the.plot.03)
+    # if(length(input$park_name01) <=5){
+    #   print(the.plot.03)
+    # }else{
+    #   print(ggplot() + 
+    #           labs(title = "\n    <Too Many Parks Selected>\n    (Plots just 1)")+
+    #           theme_minimal()+
+    #           theme(text = element_text(size = text.size, color = "red"),
+    #                 legend.position = "bottom",
+    #                 legend.direction = "horizontal",
+    #                 legend.box = "vertical",
+    #                 plot.background = element_rect(color = "black")))
+    # }
+    
+    
+  }, 
+  height = plot.height, 
+  width = plot.width/2)
   
   output$table03 <- renderTable({
     SHINY_avg.length_by.design_by.yr
@@ -220,3 +289,4 @@ server <- function(input, output) {
 
 # Run the application 
 shinyApp(ui = ui, server = server)
+
