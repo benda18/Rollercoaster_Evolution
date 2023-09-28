@@ -284,191 +284,191 @@ rm(yearly.specs2)
 
 #yearly.specs$age.yrs <- yearly.specs$year_active - yearly.specs$yro_best
 
-# TODO use this as plot2;
-# when just 1 park selected show ride_names, 
-# when 2 or more show park_names
-yearly.specs %>%
-  as.data.table() %>%
-  melt(., 
-       measure.vars = c("length.ft", "height.ft", "speed.mph")) %>%
-  as.data.frame() %>%
-  as_tibble() %>%
-  group_by(year_active, variable) %>%
-  slice_max(order_by = value, n = 1) %>%
-  ggplot(data = ., 
-         aes(x = year_active, y = value)) +
-  #geom_col(aes(fill = Park_Name), position = "dodge")+
-  geom_col(aes(fill = ride_name), position = "dodge")+
-  facet_grid(variable~., scales = "free_y")+
-  scale_y_continuous(name = NULL)+
-  theme(text = element_text(size = text.size),
-        legend.position = "bottom",
-        legend.direction = "horizontal",
-        legend.box = "vertical",
-        plot.background = element_rect(color = "black"))+
-  labs(title = "Tallest, Longest & Fastest Park by Year")+
-  #facet_wrap(~Park_Name.facet, scales = "free_y")+
-  scale_fill_discrete(name = "Park Name")+
-  scale_x_continuous(name = "Year")
-
-yearly.specs2 <- yearly.specs %>%
-  as.data.table() %>%
-  melt(., 
-       measure.vars = c("length.ft", "height.ft", "speed.mph")) %>%
-  as.data.frame() %>%
-  as_tibble() %>%
-  group_by(year_active, variable) %>%
-  slice_max(order_by = value, n = 1) %>%
-  group_by(ride_url_f, 
-           ride_name, 
-           Park_Name, 
-           Park_Name.facet, 
-           variable) %>%
-  summarise(XMIN = min(year_active), 
-            XMAX = max(year_active), 
-            YMIN = 0, 
-            YMAX = max(value))
-
-
-yearly.specs3 <- NULL
-for(i in 1:nrow(yearly.specs2)){
-  yearly.specs3 <- rbind(yearly.specs3, 
-                         data.frame(shape_id        = i, 
-                                    ride_url_f      = yearly.specs2$ride_url_f[i],
-                                    ride_name       = yearly.specs2$ride_name[i], 
-                                    Park_Name       = yearly.specs2$Park_Name[i],
-                                    Park_Name.facet = yearly.specs2$Park_Name.facet[i],
-                                    variable        = yearly.specs2$variable[i], 
-                                    x1 = c(yearly.specs2$XMIN[i], 
-                                           yearly.specs2$XMIN[i], 
-                                           yearly.specs2$XMAX[i]+1, 
-                                           yearly.specs2$XMAX[i]+1, 
-                                           yearly.specs2$XMIN[i]),
-                                    y1 = c(yearly.specs2$YMIN[i], 
-                                           yearly.specs2$YMAX[i], 
-                                           yearly.specs2$YMAX[i], 
-                                           yearly.specs2$YMIN[i], 
-                                           yearly.specs2$YMIN[i])) ) %>% as_tibble()
-}
-yearly.specs3
-
-
-
-
-ggplot(data = yearly.specs3) + 
-  geom_polygon(aes(x = x1, y = y1, 
-                   group = shape_id, 
-                   #fill = ride_name)) +
-                   fill = Park_Name)) +
-  facet_grid(variable~., scales = "free_y") +
-  scale_y_continuous(name = NULL)+
-  theme(text = element_text(size = text.size),
-        legend.position = "bottom",
-        legend.direction = "horizontal",
-        legend.box = "vertical",
-        plot.background = element_rect(color = "black"))+
-  labs(title = "Tallest, Longest & Fastest Park by Year")+
-  scale_fill_discrete(name = "Park Name")+
-  scale_x_continuous(name = "Year")
-
-
-# PARK RIDE HEIGHT PLOT EXPLORATION----
-SHINY_ride_heights$ride_height_f <- factor(SHINY_ride_heights$ride_height)
-
-temp <- as.data.table(SHINY_ride_heights) %>%
-  dcast(., 
-        park_name ~ ride_height_f, 
-        value.var = "ride_height", fun.aggregate = length, 
-        fill = 0) %>%
-  melt(., 
-       id.vars = "park_name", 
-       value.name = "count", 
-       variable.name = "height") %>%
-  as.data.frame()
-
-# for heights 35:72 what % of rides can you ride at each park? 
-
-master_ride_height <- NULL
-for(i_park in unique(SHINY_ride_heights$park_name)){
-  for(i_height in seq(36,54,by=2)){
-    # how many total rides at park? 
-    temp.total_park_rides <- SHINY_ride_heights[SHINY_ride_heights$park_name == i_park,]$ride_url %>%
-      unique() %>%
-      length()
-    # how many rides can be ridden at height i_height? 
-    temp.ride_park_rides  <- sum(SHINY_ride_heights[SHINY_ride_heights$park_name == i_park,]$ride_height <= i_height)
-    
-    master_ride_height <- rbind(master_ride_height, 
-                                data.frame(park_name = i_park, 
-                                           rider_height = i_height, 
-                                           t_park_rides = temp.total_park_rides, 
-                                           n_rideable = temp.ride_park_rides))
-    
-  }
-}
-
-master_ride_height <- master_ride_height %>%
-  mutate(., 
-         pct_rideable = n_rideable / t_park_rides)
-
-optimal_park_by.n_rides <- master_ride_height %>%
-  as_tibble() %>%
-  group_by(rider_height_f = factor(rider_height)) %>%
-  slice_max(., 
-            #order_by = n_rideable, 
-            order_by = n_rideable,
-            n = 1)
-optimal_park_by.pct_rides <- master_ride_height %>%
-  as_tibble() %>%
-  group_by(rider_height_f = factor(rider_height)) %>%
-  slice_max(., 
-            order_by = pct_rideable, 
-            #order_by = pct_rideable,
-            n = 1)
-
-ggplot(data = optimal_park_by.pct_rides[optimal_park_by.pct_rides$rider_height < 54,], 
-       aes(x = rider_height_f, y = pct_rideable)) + 
-  
-  geom_col(aes(fill = park_name), position = "dodge", 
-           color = "black")+
-  theme(legend.position = "bottom", 
-        legend.direction = "vertical")+
-  scale_y_continuous(name = "Percent of Rides", 
-                     labels = scales::percent, 
-                     breaks = seq(0,1,by=0.1), 
-                     minor_breaks = seq(0,1,by=0.05))+
-  scale_x_discrete(name = "Rider Height (inches)")+
-  labs(title = "Optimal Park by Rider Height", 
-       subtitle = "Percentage of Rides that can be ridden by riders ranging in height from 36 to 54 inches")
-
-ggplot(data = optimal_park_by.n_rides[optimal_park_by.n_rides$rider_height < 54,], 
-       aes(x = rider_height_f, y = n_rideable)) + 
-  
-  geom_col(aes(fill = park_name), position = "dodge", 
-           color = "black")+
-  theme(legend.position = "bottom", 
-        legend.direction = "vertical")+
-  scale_y_continuous(name = "Number of Rides", 
-                     labels = scales::comma, 
-                     breaks = seq(0,100,by=5), 
-                     minor_breaks = seq(0,100,by=1))+
-  scale_x_discrete(name = "Rider Height (inches)")+
-  labs(title = "Optimal Park by Rider Height", 
-       subtitle = "Number of Rides that can be ridden by riders ranging in height from 36 to 54 inches")
+# # TODO use this as plot2;
+# # when just 1 park selected show ride_names, 
+# # when 2 or more show park_names
+# yearly.specs %>%
+#   as.data.table() %>%
+#   melt(., 
+#        measure.vars = c("length.ft", "height.ft", "speed.mph")) %>%
+#   as.data.frame() %>%
+#   as_tibble() %>%
+#   group_by(year_active, variable) %>%
+#   slice_max(order_by = value, n = 1) %>%
+#   ggplot(data = ., 
+#          aes(x = year_active, y = value)) +
+#   #geom_col(aes(fill = Park_Name), position = "dodge")+
+#   geom_col(aes(fill = ride_name), position = "dodge")+
+#   facet_grid(variable~., scales = "free_y")+
+#   scale_y_continuous(name = NULL)+
+#   theme(text = element_text(size = text.size),
+#         legend.position = "bottom",
+#         legend.direction = "horizontal",
+#         legend.box = "vertical",
+#         plot.background = element_rect(color = "black"))+
+#   labs(title = "Tallest, Longest & Fastest Park by Year")+
+#   #facet_wrap(~Park_Name.facet, scales = "free_y")+
+#   scale_fill_discrete(name = "Park Name")+
+#   scale_x_continuous(name = "Year")
+# 
+# yearly.specs2 <- yearly.specs %>%
+#   as.data.table() %>%
+#   melt(., 
+#        measure.vars = c("length.ft", "height.ft", "speed.mph")) %>%
+#   as.data.frame() %>%
+#   as_tibble() %>%
+#   group_by(year_active, variable) %>%
+#   slice_max(order_by = value, n = 1) %>%
+#   group_by(ride_url_f, 
+#            ride_name, 
+#            Park_Name, 
+#            Park_Name.facet, 
+#            variable) %>%
+#   summarise(XMIN = min(year_active), 
+#             XMAX = max(year_active), 
+#             YMIN = 0, 
+#             YMAX = max(value))
+# 
+# 
+# yearly.specs3 <- NULL
+# for(i in 1:nrow(yearly.specs2)){
+#   yearly.specs3 <- rbind(yearly.specs3, 
+#                          data.frame(shape_id        = i, 
+#                                     ride_url_f      = yearly.specs2$ride_url_f[i],
+#                                     ride_name       = yearly.specs2$ride_name[i], 
+#                                     Park_Name       = yearly.specs2$Park_Name[i],
+#                                     Park_Name.facet = yearly.specs2$Park_Name.facet[i],
+#                                     variable        = yearly.specs2$variable[i], 
+#                                     x1 = c(yearly.specs2$XMIN[i], 
+#                                            yearly.specs2$XMIN[i], 
+#                                            yearly.specs2$XMAX[i]+1, 
+#                                            yearly.specs2$XMAX[i]+1, 
+#                                            yearly.specs2$XMIN[i]),
+#                                     y1 = c(yearly.specs2$YMIN[i], 
+#                                            yearly.specs2$YMAX[i], 
+#                                            yearly.specs2$YMAX[i], 
+#                                            yearly.specs2$YMIN[i], 
+#                                            yearly.specs2$YMIN[i])) ) %>% as_tibble()
+# }
+# 
+# 
+# 
+# 
+# 
+# ggplot(data = yearly.specs3) + 
+#   geom_polygon(aes(x = x1, y = y1, 
+#                    group = shape_id, 
+#                    #fill = ride_name)) +
+#                    fill = Park_Name)) +
+#   facet_grid(variable~., scales = "free_y") +
+#   scale_y_continuous(name = NULL)+
+#   theme(text = element_text(size = text.size),
+#         legend.position = "bottom",
+#         legend.direction = "horizontal",
+#         legend.box = "vertical",
+#         plot.background = element_rect(color = "black"))+
+#   labs(title = "Tallest, Longest & Fastest Park by Year")+
+#   scale_fill_discrete(name = "Park Name")+
+#   scale_x_continuous(name = "Year")
 
 
-SHINY_ride_heights %>%
-  group_by(park_name, ride_height, ride_height_f) %>%
-  summarise(n_rides = n_distinct(ride_url)) %>%
-  ggplot(data = ., 
-         aes(y = park_name, x = n_rides, fill = ride_height)) + 
-  geom_col(position = "fill", color = "white")+
-  theme(legend.position = "bottom", 
-        legend.direction = "horizontal")+
-  scale_fill_viridis_c(name = "Rider Height (inches)", 
-                       breaks = seq(36,54,by=6), 
-                       option = "D")
+# # PARK RIDE HEIGHT PLOT EXPLORATION----
+# SHINY_ride_heights$ride_height_f <- factor(SHINY_ride_heights$ride_height)
 
+# temp <- as.data.table(SHINY_ride_heights) %>%
+#   dcast(., 
+#         park_name ~ ride_height_f, 
+#         value.var = "ride_height", fun.aggregate = length, 
+#         fill = 0) %>%
+#   melt(., 
+#        id.vars = "park_name", 
+#        value.name = "count", 
+#        variable.name = "height") %>%
+#   as.data.frame()
+# 
+# # for heights 35:72 what % of rides can you ride at each park? 
+# 
+# master_ride_height <- NULL
+# for(i_park in unique(SHINY_ride_heights$park_name)){
+#   for(i_height in seq(36,54,by=2)){
+#     # how many total rides at park? 
+#     temp.total_park_rides <- SHINY_ride_heights[SHINY_ride_heights$park_name == i_park,]$ride_url %>%
+#       unique() %>%
+#       length()
+#     # how many rides can be ridden at height i_height? 
+#     temp.ride_park_rides  <- sum(SHINY_ride_heights[SHINY_ride_heights$park_name == i_park,]$ride_height <= i_height)
+#     
+#     master_ride_height <- rbind(master_ride_height, 
+#                                 data.frame(park_name = i_park, 
+#                                            rider_height = i_height, 
+#                                            t_park_rides = temp.total_park_rides, 
+#                                            n_rideable = temp.ride_park_rides))
+#     
+#   }
+# }
+# 
+# master_ride_height <- master_ride_height %>%
+#   mutate(., 
+#          pct_rideable = n_rideable / t_park_rides)
+# 
+# optimal_park_by.n_rides <- master_ride_height %>%
+#   as_tibble() %>%
+#   group_by(rider_height_f = factor(rider_height)) %>%
+#   slice_max(., 
+#             #order_by = n_rideable, 
+#             order_by = n_rideable,
+#             n = 1)
+# optimal_park_by.pct_rides <- master_ride_height %>%
+#   as_tibble() %>%
+#   group_by(rider_height_f = factor(rider_height)) %>%
+#   slice_max(., 
+#             order_by = pct_rideable, 
+#             #order_by = pct_rideable,
+#             n = 1)
+# 
+# ggplot(data = optimal_park_by.pct_rides[optimal_park_by.pct_rides$rider_height < 54,], 
+#        aes(x = rider_height_f, y = pct_rideable)) + 
+#   
+#   geom_col(aes(fill = park_name), position = "dodge", 
+#            color = "black")+
+#   theme(legend.position = "bottom", 
+#         legend.direction = "vertical")+
+#   scale_y_continuous(name = "Percent of Rides", 
+#                      labels = scales::percent, 
+#                      breaks = seq(0,1,by=0.1), 
+#                      minor_breaks = seq(0,1,by=0.05))+
+#   scale_x_discrete(name = "Rider Height (inches)")+
+#   labs(title = "Optimal Park by Rider Height", 
+#        subtitle = "Percentage of Rides that can be ridden by riders ranging in height from 36 to 54 inches")
+# 
+# ggplot(data = optimal_park_by.n_rides[optimal_park_by.n_rides$rider_height < 54,], 
+#        aes(x = rider_height_f, y = n_rideable)) + 
+#   
+#   geom_col(aes(fill = park_name), position = "dodge", 
+#            color = "black")+
+#   theme(legend.position = "bottom", 
+#         legend.direction = "vertical")+
+#   scale_y_continuous(name = "Number of Rides", 
+#                      labels = scales::comma, 
+#                      breaks = seq(0,100,by=5), 
+#                      minor_breaks = seq(0,100,by=1))+
+#   scale_x_discrete(name = "Rider Height (inches)")+
+#   labs(title = "Optimal Park by Rider Height", 
+#        subtitle = "Number of Rides that can be ridden by riders ranging in height from 36 to 54 inches")
+# 
+#
+# SHINY_ride_heights %>%
+#   group_by(park_name, ride_height, ride_height_f) %>%
+#   summarise(n_rides = n_distinct(ride_url)) %>%
+#   ggplot(data = ., 
+#          aes(y = park_name, x = n_rides, fill = ride_height)) + 
+#   geom_col(position = "fill", color = "white")+
+#   theme(legend.position = "bottom", 
+#         legend.direction = "horizontal")+
+#   scale_fill_viridis_c(name = "Rider Height (inches)", 
+#                        breaks = seq(36,54,by=6), 
+#                        option = "D")
+#
 # SHINY_ride_heights %>%
 #   # group_by(park_name) %>%
 #   # summarise(avg_ht = mean(ride_height), 
@@ -490,23 +490,23 @@ SHINY_ride_heights %>%
 #         legend.direction = "vertical")+
 #   scale_size_area()
 
-SHINY_ride_heights2 <- SHINY_ride_heights[SHINY_ride_heights$park_name %in%
-                                            c("kings_dominion", 
-                                              "kings_island"),]
-
-SHINY_ride_heights2$ride_name_f <- factor(SHINY_ride_heights2$ride_name, 
-                                          levels = unique(SHINY_ride_heights2$ride_name[order(SHINY_ride_heights2$park_name)]))
-ggplot() + 
-  geom_col(data = SHINY_ride_heights2, 
-           aes(y = ride_name_f, 
-               x = ride_height, 
-               fill = park_name), 
-           position = "dodge")+
-  facet_grid(ride_height_f~., 
-             scales = "free_y", 
-             space = "free_y")
-
-table(SHINY_ride_heights$ride_height)
-
-SHINY_ride_heights$ride_height_f
+# SHINY_ride_heights2 <- SHINY_ride_heights[SHINY_ride_heights$park_name %in%
+#                                             c("kings_dominion", 
+#                                               "kings_island"),]
+# 
+# SHINY_ride_heights2$ride_name_f <- factor(SHINY_ride_heights2$ride_name, 
+#                                           levels = unique(SHINY_ride_heights2$ride_name[order(SHINY_ride_heights2$park_name)]))
+# ggplot() + 
+#   geom_col(data = SHINY_ride_heights2, 
+#            aes(y = ride_name_f, 
+#                x = ride_height, 
+#                fill = park_name), 
+#            position = "dodge")+
+#   facet_grid(ride_height_f~., 
+#              scales = "free_y", 
+#              space = "free_y")
+# 
+# table(SHINY_ride_heights$ride_height)
+# 
+# SHINY_ride_heights$ride_height_f
 
