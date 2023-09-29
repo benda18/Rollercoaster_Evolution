@@ -64,6 +64,7 @@ ui <- fluidPage(headerPanel("Roller Coasters of the United States"),
                 
                 # mainPanel----
                 mainPanel(wellPanel(
+                  fluidRow(wellPanel(HTML(r'(What the App Shows)'))),
                           fluidRow(
                             plotOutput(outputId = "plot01", 
                                        height = plot.height)), 
@@ -74,7 +75,7 @@ ui <- fluidPage(headerPanel("Roller Coasters of the United States"),
                             column(6, plotOutput(outputId = "plot03", 
                                                height = plot.height, 
                                                width = "50%"))),
-                          fluidRow(wellPanel(HTML(r'(What the App Shows)'))),
+                          
                           fluidRow(wellPanel(HTML(r'(what the problem was)'))),
                           fluidRow(wellPanel(HTML(r'(how this app solved the problem)'))),
                           fluidRow(wellPanel(HTML(r'(www.rcdb.org)')))
