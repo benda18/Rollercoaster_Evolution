@@ -24,12 +24,23 @@ library(devtools)
 source("C:/Users/bende/Documents/R/play/rollercoaster_evolution/shiny/rollercoasters/module.R")
 
 # Define UI for application that draws a histogram 
-ui <- fluidPage(headerPanel(""),
-                titlePanel(""), 
-                sidebarPanel(h4(HTML(r"(<u>Plot Parks Together or Separate</u>)")), 
+ui <- fluidPage(headerPanel("Roller Coasters of the United States"),
+                titlePanel("Selected Features of past and present rides by Park"), 
+                #verticalLayout(sidebarPanel(shiny::wellPanel("foo")),
+                sidebarPanel(h3(HTML(r"(<b><u>Selection Filters</u></b>)")),
+                  # Multiple selectInput----
+                             selectInput(inputId  = "park_name01", #"Columns",
+                                         label    = h4(HTML(r"(<u>Select Parks</u>)")), #"Columns",
+                                         choices  = park.names.list, #names(mtcars), 
+                                         #selected = c("kings_island"),
+                                         #selected = ref.park.names$park_name[ref.park.names$park_operator == "cedar_fair"],
+                                         selected = ref.park.names$park_name[grepl(pattern = "^kings_|^carowinds", 
+                                                                                   x = ref.park.names$park_name)],
+                                         multiple = TRUE), 
+                             h4(HTML(r"(<u>Plot Parks Together or Separate</u>)")), 
                              checkboxInput("checkbox_f", 
                                            label = ("Separately (up to 16 parks)"), 
-                                           value = F
+                                           value = T
                              ),
                             
                              # ui.R RADIO BUTTIONS
@@ -39,37 +50,37 @@ ui <- fluidPage(headerPanel(""),
                                                          "Percent of Rides" = "fill"), 
                                           selected = "stack"
                              ), 
-                             # Multiple selectInput----
-                             selectInput(inputId  = "park_name01", #"Columns",
-                                         label    = h2(HTML(r"(<u>Select Parks</u>)")), #"Columns",
-                                         choices  = park.names.list, #names(mtcars), 
-                                         #selected = c("kings_island"),
-                                         #selected = ref.park.names$park_name[ref.park.names$park_operator == "cedar_fair"],
-                                         selected = ref.park.names$park_name[grepl(pattern = "^kings_|^carowinds", 
-                                                                                   x = ref.park.names$park_name)],
-                                         multiple = TRUE)
+                  h3(HTML(r"(<b><u>Legend</u></b><br><h4>Ride Design Examples</h4><br>)")),
+                  wellPanel(HTML(r"(* wing:&#9<a title="Jeremy Thompson from United States of America, CC BY 2.0 &lt;https://creativecommons.org/licenses/by/2.0&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:GateKeeper_020_(9547680779).jpg"><img width="90" alt="GateKeeper 020 (9547680779)\" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/GateKeeper_020_%289547680779%29.jpg/90px-GateKeeper_020_%289547680779%29.jpg"></a>)")),
+                  wellPanel((HTML(r"(* flying:&#9 <a title="Jeremy Thompson from United States of America, CC BY 2.0 &lt;https://creativecommons.org/licenses/by/2.0&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:Firehawk_horseshoe_element.jpg"><img width="90" alt="Firehawk horseshoe element" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Firehawk_horseshoe_element.jpg/90px-Firehawk_horseshoe_element.jpg"></a><br>)"))),
+                  wellPanel((HTML(r"(* sit-down:&#9 <a title="Eli Duke, CC BY-SA 2.0 &lt;https://creativecommons.org/licenses/by-sa/2.0&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:Cincinnati_Kings_Island.jpg"><img width="90" alt="Cincinnati Kings Island" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Cincinnati_Kings_Island.jpg/90px-Cincinnati_Kings_Island.jpg"></a><br>)"))),
+                  wellPanel((HTML(r"(* suspended:&#9 <a title="Chris Hagerman, CC BY-SA 3.0 &lt;http://creativecommons.org/licenses/by-sa/3.0/&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:PKI-Top_Gun.jpg"><img width="90" alt="PKI-Top Gun" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/PKI-Top_Gun.jpg/90px-PKI-Top_Gun.jpg"></a><br>)"))),
+                  wellPanel((HTML(r"(* inverted:&#9 <a title="uploader (User:Breakdancer), CC BY-SA 3.0 &lt;https://creativecommons.org/licenses/by-sa/3.0&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:Black_mamba_first_drop.jpg"><img width="90" alt="Black mamba first drop" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Black_mamba_first_drop.jpg/90px-Black_mamba_first_drop.jpg"></a><br>)"))),
+                  wellPanel((HTML(r"(* stand-up:&#9 <a title="Joekid, CC BY-SA 2.5 &lt;https://creativecommons.org/licenses/by-sa/2.5&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:King_Cobra_(Kings_Island).jpg"><img width="90" alt="King Cobra (Kings Island)\" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/King_Cobra_%28Kings_Island%29.jpg/90px-King_Cobra_%28Kings_Island%29.jpg"></a><br>)"))),
+                  wellPanel(HTML(r"(* pipeline:&#9 <a title="Chris Hagerman from New Port Richey, FL, US, CC BY 2.0 &lt;https://creativecommons.org/licenses/by/2.0&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:Ultra_Twister.jpg"><img width="90" alt="Ultra Twister" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Ultra_Twister.jpg/90px-Ultra_Twister.jpg"></a><br>)")),
+                  wellPanel((HTML(r"(* bobsled:&#9 <a title="WillMcC at English Wikipedia, CC BY-SA 3.0 &lt;http://creativecommons.org/licenses/by-sa/3.0/&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:BPBbobsled.jpg"><img width="90" alt="BPBbobsled" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/BPBbobsled.jpg/90px-BPBbobsled.jpg"></a>)")))
                 ),
                 
+                
                 # mainPanel----
-                mainPanel("", 
+                mainPanel(wellPanel(
                           fluidRow(
                             plotOutput(outputId = "plot01", 
-                                       height = plot.height)
-                          ), 
+                                       height = plot.height)), 
                           fluidRow(
                             column(6,plotOutput(outputId = "plot02b", #"plot02", 
                                                 height = plot.height, 
                                                 width = "50%")), 
                             column(6, plotOutput(outputId = "plot03", 
                                                height = plot.height, 
-                                               width = "50%")))
-                ),
+                                               width = "50%"))),
+                          fluidRow(wellPanel(HTML(r'(What the App Shows)'))),
+                          fluidRow(wellPanel(HTML(r'(what the problem was)'))),
+                          fluidRow(wellPanel(HTML(r'(how this app solved the problem)'))),
+                          fluidRow(wellPanel(HTML(r'(www.rcdb.org)')))
+                ))
                 # Future Table placement VVV
-                fluidRow(#tableOutput(outputId = "table04")
-                  #tableOutput(outputId = "table01"),
-                  #tableOutput(outputId = "table02"), 
-                  #tableOutput(outputId = "table03"),
-                ),
+                
 )
 
 # Define server logic required to draw a histogram
@@ -184,11 +195,11 @@ server <- function(input, output) {
       group_by(park_name, ride_height_o, ride_height_f) %>%
       summarise(n_rides = n_distinct(ride_url)) %>%
       ggplot(data = .) +
-      geom_col(aes(y = park_name, 
-                   x = n_rides,
-                   fill = ride_height_o), 
-               color = "white",
-               position = ifelse(input$radio == "fill", "fill", "stack"))+
+      # geom_col(aes(y = park_name, 
+      #              x = n_rides,
+      #              fill = ride_height_o), 
+      #          color = "white",
+      #          position = ifelse(input$radio == "fill", "fill", "stack"))+
       #facet_wrap(park_name~., scales = "free_y")+ #, space = "free_y")+
       scale_x_continuous(name = ifelse(input$radio == "fill", "Percent-share of Rides", "Number of Rides"), 
                          n.breaks = 10,
@@ -211,7 +222,25 @@ server <- function(input, output) {
             text = element_text(size = text.size),
             plot.background = element_rect(color = "black", fill = NULL))+
       labs(title = ifelse(input$radio == "fill", "Percent of Rides by Minimum Rider Height\nby Park", 
-                          "Number of Rides by Minimum Rider Height\nby Park"))
+                          "Number of Rides by Minimum Rider Height\nby Park"), 
+           caption = "Source: rcdb.com")
+    
+    if(input$checkbox_f){
+      the.plot.02b <- the.plot.02b + 
+        geom_col(aes(y = park_name, 
+                     x = n_rides,
+                     fill = ride_height_o), 
+                 color = "white",
+                 position = ifelse(input$radio == "fill", "fill", "stack"))
+    }else{
+      the.plot.02b <- the.plot.02b + 
+        geom_col(aes(y = "all parks", 
+                     x = n_rides,
+                     fill = ride_height_o), 
+                 color = "white",
+                 position = ifelse(input$radio == "fill", "fill", "stack"))
+    }
+    
     
     # print
     print(the.plot.02b)
@@ -270,8 +299,6 @@ server <- function(input, output) {
   # height = plot.height, 
   # width = plot.width/2)
   
-
-  
   output$plot03 <- renderPlot({
     
     the.plot.03 <- yearly.specs %>%
@@ -311,13 +338,15 @@ server <- function(input, output) {
         # by_park
         the.plot.03 <- the.plot.03 +
           geom_col(aes(fill = park_name), position = "dodge")+
-          labs(title = "Tallest, Longest & Fastest Park by Year")
+          labs(title = "Tallest, Longest & Fastest Park by Year", 
+               caption = "Source: rcdb.com")
           
       }else{
         # by_ride
         the.plot.03 <- the.plot.03 +
           geom_col(aes(fill = ride_name), position = "dodge")+
-          labs(title = "Tallest, Longest & Fastest Ride by Year")
+          labs(title = "Tallest, Longest & Fastest Ride by Year", 
+               caption = "Source: rcdb.com")
       }
     
     print(the.plot.03)
