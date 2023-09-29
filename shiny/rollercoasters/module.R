@@ -33,8 +33,8 @@ build_the_year2 <- function(yr1 = 1992,
 var_size.factor <- 1.7
 
 plot.height <- floor(750/var_size.factor)
-plot.width  <- floor(1100/1)
-text.size   <- 16 #18
+plot.width  <- floor(1050/1)
+text.size   <- 16 #18s
 
 # DIRS ----
 wd        <- list()

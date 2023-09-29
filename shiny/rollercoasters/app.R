@@ -24,8 +24,8 @@ library(devtools)
 source("C:/Users/bende/Documents/R/play/rollercoaster_evolution/shiny/rollercoasters/module.R")
 
 # Define UI for application that draws a histogram 
-ui <- fluidPage(headerPanel(""),
-                titlePanel(""), 
+ui <- fluidPage(headerPanel("Roller Coasters of the United States"),
+                titlePanel("Selected Features of past and present rides by Park"), 
                 #verticalLayout(sidebarPanel(shiny::wellPanel("foo")),
                 sidebarPanel(h3(HTML(r"(<b><u>Selection Filters</u></b>)")),
                   # Multiple selectInput----
@@ -57,30 +57,30 @@ ui <- fluidPage(headerPanel(""),
                   wellPanel((HTML(r"(* suspended:&#9 <a title="Chris Hagerman, CC BY-SA 3.0 &lt;http://creativecommons.org/licenses/by-sa/3.0/&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:PKI-Top_Gun.jpg"><img width="90" alt="PKI-Top Gun" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/PKI-Top_Gun.jpg/90px-PKI-Top_Gun.jpg"></a><br>)"))),
                   wellPanel((HTML(r"(* inverted:&#9 <a title="uploader (User:Breakdancer), CC BY-SA 3.0 &lt;https://creativecommons.org/licenses/by-sa/3.0&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:Black_mamba_first_drop.jpg"><img width="90" alt="Black mamba first drop" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Black_mamba_first_drop.jpg/90px-Black_mamba_first_drop.jpg"></a><br>)"))),
                   wellPanel((HTML(r"(* stand-up:&#9 <a title="Joekid, CC BY-SA 2.5 &lt;https://creativecommons.org/licenses/by-sa/2.5&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:King_Cobra_(Kings_Island).jpg"><img width="90" alt="King Cobra (Kings Island)\" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/King_Cobra_%28Kings_Island%29.jpg/90px-King_Cobra_%28Kings_Island%29.jpg"></a><br>)"))),
+                  wellPanel(HTML(r"(* pipeline:&#9 <a title="Chris Hagerman from New Port Richey, FL, US, CC BY 2.0 &lt;https://creativecommons.org/licenses/by/2.0&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:Ultra_Twister.jpg"><img width="90" alt="Ultra Twister" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Ultra_Twister.jpg/90px-Ultra_Twister.jpg"></a><br>)")),
                   wellPanel((HTML(r"(* bobsled:&#9 <a title="WillMcC at English Wikipedia, CC BY-SA 3.0 &lt;http://creativecommons.org/licenses/by-sa/3.0/&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:BPBbobsled.jpg"><img width="90" alt="BPBbobsled" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/BPBbobsled.jpg/90px-BPBbobsled.jpg"></a>)")))
                 ),
                 
                 
                 # mainPanel----
-                mainPanel("", 
+                mainPanel(wellPanel(
                           fluidRow(
                             plotOutput(outputId = "plot01", 
-                                       height = plot.height)
-                          ), 
+                                       height = plot.height)), 
                           fluidRow(
                             column(6,plotOutput(outputId = "plot02b", #"plot02", 
                                                 height = plot.height, 
                                                 width = "50%")), 
                             column(6, plotOutput(outputId = "plot03", 
                                                height = plot.height, 
-                                               width = "50%")))
-                ),
+                                               width = "50%"))),
+                          fluidRow(wellPanel(HTML(r'(What the App Shows)'))),
+                          fluidRow(wellPanel(HTML(r'(what the problem was)'))),
+                          fluidRow(wellPanel(HTML(r'(how this app solved the problem)'))),
+                          fluidRow(wellPanel(HTML(r'(www.rcdb.org)')))
+                ))
                 # Future Table placement VVV
-                fluidRow(#tableOutput(outputId = "table04")
-                  #tableOutput(outputId = "table01"),
-                  #tableOutput(outputId = "table02"), 
-                  #tableOutput(outputId = "table03"),
-                ),
+                
 )
 
 # Define server logic required to draw a histogram
