@@ -222,7 +222,8 @@ server <- function(input, output) {
             text = element_text(size = text.size),
             plot.background = element_rect(color = "black", fill = NULL))+
       labs(title = ifelse(input$radio == "fill", "Percent of Rides by Minimum Rider Height\nby Park", 
-                          "Number of Rides by Minimum Rider Height\nby Park"))
+                          "Number of Rides by Minimum Rider Height\nby Park"), 
+           caption = "Source: rcdb.com")
     
     # print
     print(the.plot.02b)
@@ -322,13 +323,15 @@ server <- function(input, output) {
         # by_park
         the.plot.03 <- the.plot.03 +
           geom_col(aes(fill = park_name), position = "dodge")+
-          labs(title = "Tallest, Longest & Fastest Park by Year")
+          labs(title = "Tallest, Longest & Fastest Park by Year", 
+               caption = "Source: rcdb.com")
           
       }else{
         # by_ride
         the.plot.03 <- the.plot.03 +
           geom_col(aes(fill = ride_name), position = "dodge")+
-          labs(title = "Tallest, Longest & Fastest Ride by Year")
+          labs(title = "Tallest, Longest & Fastest Ride by Year", 
+               caption = "Source: rcdb.com")
       }
     
     print(the.plot.03)
