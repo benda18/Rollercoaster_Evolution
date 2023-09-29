@@ -40,7 +40,7 @@ ui <- fluidPage(headerPanel(""),
                              h4(HTML(r"(<u>Plot Parks Together or Separate</u>)")), 
                              checkboxInput("checkbox_f", 
                                            label = ("Separately (up to 16 parks)"), 
-                                           value = F
+                                           value = T
                              ),
                             
                              # ui.R RADIO BUTTIONS
@@ -195,11 +195,11 @@ server <- function(input, output) {
       group_by(park_name, ride_height_o, ride_height_f) %>%
       summarise(n_rides = n_distinct(ride_url)) %>%
       ggplot(data = .) +
-      geom_col(aes(y = park_name, 
-                   x = n_rides,
-                   fill = ride_height_o), 
-               color = "white",
-               position = ifelse(input$radio == "fill", "fill", "stack"))+
+      # geom_col(aes(y = park_name, 
+      #              x = n_rides,
+      #              fill = ride_height_o), 
+      #          color = "white",
+      #          position = ifelse(input$radio == "fill", "fill", "stack"))+
       #facet_wrap(park_name~., scales = "free_y")+ #, space = "free_y")+
       scale_x_continuous(name = ifelse(input$radio == "fill", "Percent-share of Rides", "Number of Rides"), 
                          n.breaks = 10,
@@ -224,6 +224,23 @@ server <- function(input, output) {
       labs(title = ifelse(input$radio == "fill", "Percent of Rides by Minimum Rider Height\nby Park", 
                           "Number of Rides by Minimum Rider Height\nby Park"), 
            caption = "Source: rcdb.com")
+    
+    if(input$checkbox_f){
+      the.plot.02b <- the.plot.02b + 
+        geom_col(aes(y = park_name, 
+                     x = n_rides,
+                     fill = ride_height_o), 
+                 color = "white",
+                 position = ifelse(input$radio == "fill", "fill", "stack"))
+    }else{
+      the.plot.02b <- the.plot.02b + 
+        geom_col(aes(y = "all parks", 
+                     x = n_rides,
+                     fill = ride_height_o), 
+                 color = "white",
+                 position = ifelse(input$radio == "fill", "fill", "stack"))
+    }
+    
     
     # print
     print(the.plot.02b)
@@ -281,8 +298,6 @@ server <- function(input, output) {
   # }, 
   # height = plot.height, 
   # width = plot.width/2)
-  
-
   
   output$plot03 <- renderPlot({
     
