@@ -50,15 +50,14 @@ ui <- fluidPage(headerPanel(""),
                                                          "Percent of Rides" = "fill"), 
                                           selected = "stack"
                              ), 
-                  h3(HTML(r"(<b><u>Definitions</u></b><br><h4>RIDE DESIGN</h4><br>)")),
-                  wellPanel(HTML(r"(<a title="Jeremy Thompson from United States of America, CC BY 2.0 &lt;https://creativecommons.org/licenses/by/2.0&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:GateKeeper_020_(9547680779).jpg"><img width="90" alt="GateKeeper 020 (9547680779)\" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/GateKeeper_020_%289547680779%29.jpg/90px-GateKeeper_020_%289547680779%29.jpg"></a>)")),
-                  wellPanel(h4(HTML(r"(* wing:)"))), 
-                  wellPanel(h4(HTML(r"(* flying: <br>)"))),
-                  wellPanel(h4(HTML(r"(* sit-down: <br>)"))),
-                  wellPanel(h4(HTML(r"(* suspended: <br>)"))),
-                  wellPanel(h4(HTML(r"(* inverted: <br>)"))),
-                  wellPanel(h4(HTML(r"(* stand-up: <br>)"))),
-                  wellPanel(h4(HTML(r"(* bobsled: )")))
+                  h3(HTML(r"(<b><u>Legend</u></b><br><h4>Ride Design Examples</h4><br>)")),
+                  wellPanel(HTML(r"(* wing:&#9<a title="Jeremy Thompson from United States of America, CC BY 2.0 &lt;https://creativecommons.org/licenses/by/2.0&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:GateKeeper_020_(9547680779).jpg"><img width="90" alt="GateKeeper 020 (9547680779)\" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/GateKeeper_020_%289547680779%29.jpg/90px-GateKeeper_020_%289547680779%29.jpg"></a>)")),
+                  wellPanel((HTML(r"(* flying:&#9 <a title="Jeremy Thompson from United States of America, CC BY 2.0 &lt;https://creativecommons.org/licenses/by/2.0&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:Firehawk_horseshoe_element.jpg"><img width="90" alt="Firehawk horseshoe element" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Firehawk_horseshoe_element.jpg/90px-Firehawk_horseshoe_element.jpg"></a><br>)"))),
+                  wellPanel((HTML(r"(* sit-down:&#9 <a title="Eli Duke, CC BY-SA 2.0 &lt;https://creativecommons.org/licenses/by-sa/2.0&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:Cincinnati_Kings_Island.jpg"><img width="90" alt="Cincinnati Kings Island" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Cincinnati_Kings_Island.jpg/90px-Cincinnati_Kings_Island.jpg"></a><br>)"))),
+                  wellPanel((HTML(r"(* suspended:&#9 <a title="Chris Hagerman, CC BY-SA 3.0 &lt;http://creativecommons.org/licenses/by-sa/3.0/&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:PKI-Top_Gun.jpg"><img width="90" alt="PKI-Top Gun" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/PKI-Top_Gun.jpg/90px-PKI-Top_Gun.jpg"></a><br>)"))),
+                  wellPanel((HTML(r"(* inverted:&#9 <a title="uploader (User:Breakdancer), CC BY-SA 3.0 &lt;https://creativecommons.org/licenses/by-sa/3.0&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:Black_mamba_first_drop.jpg"><img width="90" alt="Black mamba first drop" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Black_mamba_first_drop.jpg/90px-Black_mamba_first_drop.jpg"></a><br>)"))),
+                  wellPanel((HTML(r"(* stand-up:&#9 <a title="Joekid, CC BY-SA 2.5 &lt;https://creativecommons.org/licenses/by-sa/2.5&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:King_Cobra_(Kings_Island).jpg"><img width="90" alt="King Cobra (Kings Island)\" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/King_Cobra_%28Kings_Island%29.jpg/90px-King_Cobra_%28Kings_Island%29.jpg"></a><br>)"))),
+                  wellPanel((HTML(r"(* bobsled:&#9 <a title="WillMcC at English Wikipedia, CC BY-SA 3.0 &lt;http://creativecommons.org/licenses/by-sa/3.0/&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:BPBbobsled.jpg"><img width="90" alt="BPBbobsled" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/BPBbobsled.jpg/90px-BPBbobsled.jpg"></a>)")))
                 ),
                 
                 
