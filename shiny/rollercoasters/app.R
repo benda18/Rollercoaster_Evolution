@@ -24,13 +24,13 @@ library(devtools)
 source("C:/Users/bende/Documents/R/play/rollercoaster_evolution/shiny/rollercoasters/module.R")
 
 # Define UI for application that draws a histogram 
-ui <- fluidPage(headerPanel("Roller Coasters of the United States"),
-                titlePanel("Selected Features of past and present rides by Park"), 
+ui <- fluidPage(headerPanel("History of Roller Coasters of Cedar Fair Parks"),
+                titlePanel("  Selected Features of past and present rides by Park"), 
                 #verticalLayout(sidebarPanel(shiny::wellPanel("foo")),
                 sidebarPanel(h3(HTML(r"(<b><u>Selection Filters</u></b>)")),
                   # Multiple selectInput----
                              selectInput(inputId  = "park_name01", #"Columns",
-                                         label    = h4(HTML(r"(<u>Select Parks</u>)")), #"Columns",
+                                         label    = h4(HTML(r"(<u>Select Parks</u><br><h5>(click inside the box below to add or remove parks)</h5>)")), #"Columns",
                                          choices  = park.names.list, #names(mtcars), 
                                          #selected = c("kings_island"),
                                          #selected = ref.park.names$park_name[ref.park.names$park_operator == "cedar_fair"],
@@ -39,7 +39,7 @@ ui <- fluidPage(headerPanel("Roller Coasters of the United States"),
                                          multiple = TRUE), 
                              h4(HTML(r"(<u>Plot Parks Together or Separate</u>)")), 
                              checkboxInput("checkbox_f", 
-                                           label = ("Separately (up to 16 parks)"), 
+                                           label = ("Separately"), 
                                            value = T
                              ),
                             
@@ -64,7 +64,7 @@ ui <- fluidPage(headerPanel("Roller Coasters of the United States"),
                 
                 # mainPanel----
                 mainPanel(wellPanel(
-                  fluidRow(wellPanel(HTML(r'(What the App Shows)'))),
+                  fluidRow(wellPanel(HTML(r'(Cedar Fair currently owns and operates 11 Amusement Parks in North America, including 10 in the United States. This dashboard attempts to show the evolution of the parks currently owned by Cedar Fair and of the roller coaser industry overall.<br><br> To the left are various filters for criteria that can be changed to modify what this dashboard displays. The charts below display the number, percent, or actual names of roller coasters at each park by year of operation, the type of ride ("design"), the evolution of maximum ride height, length and speed over time and which park had the ride with with the maximum value in each category in each year.<br><br>Additionally, there is a chart that shows the minimum ride heights for currently operating rides in 2023 at each park (historic data was not readily available for this metric).<br><br>Hopefully this will provide some insight into how the industry has evolved to provide new experiences over the past 40-50 years, how the race to chase extreme thrill rides has likely reached its peak, and most importantly - that you need to visit an amusement park soon.)'))),
                           fluidRow(
                             plotOutput(outputId = "plot01", 
                                        height = plot.height)), 
@@ -74,11 +74,11 @@ ui <- fluidPage(headerPanel("Roller Coasters of the United States"),
                                                 width = "50%")), 
                             column(6, plotOutput(outputId = "plot03", 
                                                height = plot.height, 
-                                               width = "50%"))),
+                                               width = "50%")))#,
                           
-                          fluidRow(wellPanel(HTML(r'(what the problem was)'))),
-                          fluidRow(wellPanel(HTML(r'(how this app solved the problem)'))),
-                          fluidRow(wellPanel(HTML(r'(www.rcdb.org)')))
+                          # fluidRow(wellPanel(HTML(r'(what the problem was)'))),
+                          # fluidRow(wellPanel(HTML(r'(how this app solved the problem)'))),
+                          # fluidRow(wellPanel(HTML(r'(www.rcdb.org)')))
                 ))
                 # Future Table placement VVV
                 
@@ -121,7 +121,7 @@ server <- function(input, output) {
              aes(x = year, y = n_rides, 
                  fill = design_f)) + 
       labs(title = "Ride-Design by Park by Year", 
-           subtitle = glue("Selected Parks in the United States, {min(SHINY_ride.design_by.year_by.park[SHINY_ride.design_by.year_by.park$park_name %in% 
+           subtitle = glue("Amusement Parks Currently Operated by Cedar Fair (US-Only), {min(SHINY_ride.design_by.year_by.park[SHINY_ride.design_by.year_by.park$park_name %in% 
                                                        input$park_name01,]$year)}-Present"), 
            caption = "Source: rcdb.com")+
       geom_col(position = input$radio) +
@@ -130,14 +130,17 @@ server <- function(input, output) {
             legend.position = "right", 
             legend.direction = "vertical", 
             legend.box = "vertical", 
-            axis.text.x = element_text(angle = 45, hjust =1, vjust = 1),
+            axis.text.x = element_text(angle = 90, hjust =1, vjust = 0.5),
             #panel.border = element_rect(color = "blue"),
             plot.background = element_rect(color = "black"))+
       scale_y_continuous(name = ifelse(input$radio == "fill", "Percent-share of Rides", "Number of Rides"), 
                          labels = ifelse(input$radio == "fill", 
                                          scales::percent, scales::comma))+
       scale_fill_discrete(name = "Ride Design")+
-      scale_color_discrete(name = "Park Name")
+      scale_color_discrete(name = "Park Name")+
+      scale_x_continuous(name = "Year", 
+                         breaks = seq(1890, 2040, by = 10), 
+                         minor_breaks = seq(1890, 2040, by = 5))
     
     # add facets here----
     
@@ -304,7 +307,7 @@ server <- function(input, output) {
     
     the.plot.03 <- yearly.specs %>%
       left_join(., 
-                ungroup(summarise(group_by(SHINY_park_inventory, ride_url, park_name))), 
+                ungroup(summarise(group_by(SHINY_park_inventory, ride_url))),#, park_name))), 
                 by = c("ride_url_f" = "ride_url")) %>%
       .[.$park_name %in% input$park_name01,] %>%
       #.[.$park_name %in% c("kings_island", "carowinds"),] %>%
@@ -324,8 +327,9 @@ server <- function(input, output) {
       scale_y_continuous(name = NULL, 
                          labels = scales::comma)+
       theme(text = element_text(size = text.size),
-            legend.position = "right",
+            legend.position = "bottom",
             legend.direction = "vertical",
+            strip.text.y = element_text(angle = 0),
             axis.text.x = element_text(angle = 45, 
                                        hjust = 1, 
                                        vjust = 1),
@@ -333,12 +337,15 @@ server <- function(input, output) {
             plot.background = element_rect(color = "black"))+
       #facet_wrap(~Park_Name.facet, scales = "free_y")+
       scale_fill_discrete(name = "Park Name")+
-      scale_x_continuous(name = "Year")
+      #scale_x_continuous(name = "Year")+
+      scale_x_continuous(name = "Year", 
+                         breaks = seq(1890, 2040, by = 10), 
+                         minor_breaks = seq(1890, 2040, by = 5))
       
       if(length(input$park_name01) > 1){
         # by_park
         the.plot.03 <- the.plot.03 +
-          geom_col(aes(fill = park_name), position = "dodge")+
+          geom_col(aes(fill = Park_Name), position = "dodge")+
           labs(title = "Tallest, Longest & Fastest Park by Year", 
                caption = "Source: rcdb.com")
           

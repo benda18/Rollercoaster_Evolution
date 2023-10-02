@@ -193,6 +193,13 @@ strwrap(x = .,
 ref.park.names$Park_Name.facet <- gsub(" \\(Cedar\nFair\\)$", "\n(Cedar Fair)", 
      ref.park.names$Park_Name.facet)
 
+# Filter down to cedar fair parks only----
+ref.park.names <- ref.park.names[ref.park.names$Park_Name %>% grepl("\\(Cedar Fair\\)", .),]
+# remove "\n\\(Cedar Fair\\)$" suffix from Park_Name
+ref.park.names$Park_Name.facet <- gsub("\n\\(Cedar Fair\\)$|\\(Cedar Fair\\)$", 
+                                       "", ref.park.names$Park_Name.facet)
+
+
 # make list of park names
 park.names.list <- as.list(ref.park.names$park_name)
 names(park.names.list) <- ref.park.names$Park_Name
@@ -282,6 +289,21 @@ for(i in min(c(yearly.specs$yro_best,
 yearly.specs <- full_join(yearly.specs, yearly.specs2)
 rm(yearly.specs2)
 
+# join names
+yearly.specs
+mutate(ref.park.names[,c("park_name", "Park_Name", "Park_Name.facet")], 
+       Park_Name = gsub(pattern = " \\(.*$", 
+                        replacement = "", 
+                        x = Park_Name))
+
+yearly.specs <- inner_join(yearly.specs[!colnames(yearly.specs) %in% "Park_Name.facet"], 
+           ref.park.names[,c("park_name", "Park_Name", "Park_Name.facet")]) %>%
+  group_by_all() %>%
+  summarise() %>%
+  ungroup() %>%
+  mutate(., 
+         Park_Name = gsub(" \\(.*$", "", 
+                          Park_Name)) 
 #yearly.specs$age.yrs <- yearly.specs$year_active - yearly.specs$yro_best
 
 # # TODO use this as plot2;
